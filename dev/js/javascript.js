@@ -1,0 +1,3 @@
+/*
+Document de code javascript
+*/
