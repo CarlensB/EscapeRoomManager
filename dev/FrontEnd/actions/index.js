@@ -1,8 +1,10 @@
-import * as loginPageActions from './loginAction';
+import {loginAction, newAccountAction} from './loginAction.js';
 import { combineActions } from 'redux-actions';
 
-const allActions = combineActions({
-    loginPageActions: loginPageActions
+
+const allActions = Redux.combineActions({
+    loginAction: loginAction,
+    newAccountAction: newAccountAction
 })
 
 export default allActions;
