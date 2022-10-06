@@ -1,7 +1,18 @@
 
 # *****************Initialisation BD*****************
 
-NOM_COMPAGNIE="ArcaneFabula"
+class initialiser_bd:
+
+    @staticmethod
+    def creation_utilisateur(nom_compagnie : str) -> str:
+        return f'''
+    '{nom_compagnie}_user'@'localhost' IDENTIFIED by '{nom_compagnie}1';
+    '''
+
+    @staticmethod
+    def donner_droit_sur_db(nom_compagnie : str) -> str:
+        return f'''GRANT ALL ON magix_db.* TO {nom_compagnie}_user'@'localhost';'''
+    
 COLLATE = "utf8_general_ci"
 CAR ='utf8'
 
@@ -13,14 +24,6 @@ COLLATE {COLLATE};
 
 UTILISER_DB = '''
 USE ERM_DB;
-'''
-
-CREATION_UTILISATEUR=f'''
-'{NOM_COMPAGNIE}_user'@'localhost' IDENTIFIED by '{NOM_COMPAGNIE}1';
-'''
-
-DROIT_UTILISATEUR=f'''
-GRANT ALL ON magix_db.* TO {NOM_COMPAGNIE}_user'@'localhost';
 '''
 
 # *****************Compagnie*****************
