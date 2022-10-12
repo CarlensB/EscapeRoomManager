@@ -6,13 +6,13 @@ class CentresDAO:
 
     def __init__(self) -> None:
         self.bd = ConnexionDAO()
-        self.curseur = self.bd.cursor
+        self.curseur = self.bd.curseur
     
-    def ajouter_centre(self, *args):
+    def ajouter_centre(self, *args : tuple[str | int]):
         sql = "INSERT INTO centres (nom, compagnie, adresse, ville, pays, code_postal) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (args)
         self.curseur.execute(sql, val)
-        self.bd.connexionconnexion.commit()
+        self.bd.connexion.commit()
 
     def selectionner_centre(self, centre : str) -> tuple:
         sql = "SELECT * from centres WHERE nom = %s"

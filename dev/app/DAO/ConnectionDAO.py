@@ -14,7 +14,7 @@ class ConnexionDAO:
         return self.__conn
 
     @property
-    def cursor(self):
+    def curseur(self):
         return self.__curs
 
     def __del__(self):
