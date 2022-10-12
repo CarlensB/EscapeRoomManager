@@ -10,18 +10,22 @@ class TypeClientsDAO:
     def ajouter_type_client(self, *args: tuple[str|int]):
         sql = "INSERT INTO typeclient (categorie, prix, compagnie) VALUES (%s, %s, %s)"
         val = (args) # str, str, int
-        self.curseur.execute(sql, val)
+        
+        if args[0][1]:
+            self.curseur.execute(sql, val)
+        else:
+            self.curseur.executemany(sql, val)
         self.bd.connexion.commit()
 
-    def ajouter_plusieurs_clients(self, *args: tuple[tuple[str|int]]):
-        sql = "INSERT INTO typeclient (categorie, prix, compagnie) VALUES (%s, %s, %s)"
-        val = (args) # str, str, int
-        self.curseur.executemany(sql, val)
-        self.bd.connexion.commit()
-
-    def selectionner_type_client(self, client_type: str) -> tuple:
+    def selectionner_type_client(self, client_type: str) -> list:
         sql = "SELECT * from typeclient WHERE categorie = %s"
         val = (client_type,)
         self.curseur.execute(sql, val)
+        result = self.curseur.fetchall()
+        return result
+
+    def selectionner_tous_type_client(self) -> list:
+        sql = "SELECT * FROM typeclient"
+        self.curseur.execute(sql)
         result = self.curseur.fetchall()
         return result

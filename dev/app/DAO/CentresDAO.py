@@ -11,13 +11,15 @@ class CentresDAO:
     def ajouter_centre(self, *args : tuple[str | int]):
         sql = "INSERT INTO centres (nom, compagnie, adresse, ville, pays, code_postal) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (args)
-        self.curseur.execute(sql, val)
+
+        if args[0][1]:
+            self.curseur.execute(sql, val)
+        else:
+            self.curseur.executemany(sql, val)
         self.bd.connexion.commit()
 
-    def selectionner_centre(self, centre : str) -> tuple:
-        sql = "SELECT * from centres WHERE nom = %s"
-        val = centre
-        self.curseur.execute(sql, val)
+    def selectionner_tous_centres(self) -> list:
+        sql = "SELECT * FROM centres"
+        self.curseur.execute(sql)
         result = self.curseur.fetchall()
         return result
-        

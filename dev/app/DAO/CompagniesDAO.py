@@ -13,7 +13,7 @@ class CompagniesDAO:
         self.curseur.execute(sql, val)
         self.bd.connexion.commit()
 
-    def selectionner_compagnie(self, compagnie : str) -> tuple:
+    def selectionner_compagnie(self, compagnie : str) -> list:
         sql = "SELECT * from compagnies WHERE nom = %s"
         val = (compagnie,)
         self.curseur.execute(sql, val)
