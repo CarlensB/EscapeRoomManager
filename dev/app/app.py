@@ -1,10 +1,11 @@
 from serveur_api import Serveur
-from DAO.CompagniesDAO import CompagniesDAO
 
-def main():
-    # ajouter un objet serveur qui contiendra flask
+
+def main():  
     print('on arrive')
     Serveur.demarrer_serveur()
+
+    
 
 if __name__=='__main__':
     quit(main())
