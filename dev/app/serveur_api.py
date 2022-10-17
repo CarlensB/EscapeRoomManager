@@ -12,4 +12,6 @@ class Serveur:
 
     @__app.route('/hello')
     def hello_world():
-        return 'Hello World!'
+        dict = {'Mot' : "Hello World" }
+        return json.dumps(dict)
+    
