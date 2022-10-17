@@ -1,6 +1,6 @@
 const newAccountReducer = (state = false, action) => {
     switch(action.type){
-        case CREATE_ACCOUNT:
+        case "CREATE_ACCOUNT":
             return true;
         default:
             return false;
