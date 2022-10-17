@@ -7,17 +7,17 @@ class HorairesDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter_horaire(self, *args : tuple[ str | str | int]):
+    def ajouter_horaire(self, *args : tuple[ str | str]):
         sql = '''
-        INSERT INTO horaires (heure_debut, heure_fin, intervalle)
-        VALUES(%s, %s, %s)
+        INSERT INTO horaires (heure_debut, heure_fin)
+        VALUES(%s, %s)
         '''
         val = (args)
         self.execute_query(sql, val)
 
-    def selectionner_horaire(self, *horaire : tuple[ str | str | int]) -> list:
-        sql = "SELECT * FROM horaires WHERE heure_debut = %s AND heure_fin = %s AND intervalle = %s"
-        val = (horaire)
+    def selectionner_horaire(self, salle : str) -> list:
+        sql = "SELECT * FROM view_salle_horaire WHERE salle = %s"
+        val = (salle,)
         self.curseur.execute(sql, val)
         result = self.curseur.fetchall()
         return result
