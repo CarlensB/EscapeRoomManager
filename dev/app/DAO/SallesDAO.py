@@ -7,10 +7,18 @@ class SallesDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter_salle(self, *args : tuple[str | str | int | int | float | int]):
+    def ajouter_salle(self, *args : tuple[str | str | int | int | float]):
         sql = '''
-        INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire, horaire)
-        VALUE(%s, %s, %s, %s, %s, %s)
+        INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire)
+        VALUE(%s, %s, %s, %s, %s)
+        '''
+        val = (args)
+        self.execute_query(sql, val)
+
+    def ajouter_horaire(self, *args : tuple[int | int]):
+        sql = '''
+        INSERT INTO hor_salle(id_horaire, id_salle)
+        VALUE(%s, %s)
         '''
         val = (args)
         self.execute_query(sql, val)

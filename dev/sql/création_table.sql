@@ -10,6 +10,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 
 -- Supression des tables
 DROP TABLE IF EXISTS emp_cent;
+DROP TABLE IF EXISTS hor_salle;
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS employes;
 DROP TABLE IF EXISTS typeclient;
@@ -22,6 +23,7 @@ DROP TABLE IF EXISTS compagnies;
 -- suppression des vues
 DROP VIEW IF EXISTS view_salles_compagnie;
 DROP VIEW IF EXISTS view_employes_lieu;
+DROP VIEW IF EXISTS view_salle_horaire;
 
 -- Création des tables
 CREATE TABLE compagnies(
@@ -63,10 +65,8 @@ CREATE TABLE horaires(
     id              INT         NOT NULL AUTO_INCREMENT,
     heure_debut     VARCHAR(10) NOT NULL,
     heure_fin       VARCHAR(10)	NOT NULL,
-    intervalle      INT   		NOT NULL,
 
-    PRIMARY KEY pk_horaire(id),
-    UNIQUE (heure_debut, heure_fin, intervalle)
+    PRIMARY KEY pk_horaire(id)
 )ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE centres(
@@ -89,11 +89,18 @@ CREATE TABLE salles(
     centre          INT        	NOT NULL,
     nb_max_joueur   INT         NOT NULL,
     prix_unitaire   FLOAT     	NOT NULL,
-    horaire         INT			NOT NULL,
     
     PRIMARY KEY pk_salle(id),
-    FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE,
-    FOREIGN KEY fy_s_horaire(horaire) REFERENCES horaires(id) ON DELETE CASCADE 
+    FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE
+)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE hor_salle(
+	id_horaire	INT	 NOT NULL,
+    id_salle	INT	 NOT NULL,
+    
+    PRIMARY KEY(id_horaire, id_salle),
+    FOREIGN KEY fk_lien_horaire(id_horaire) REFERENCES horaires(id) ON DELETE CASCADE,
+    FOREIGN KEY fk_lien_salle(id_salle) REFERENCES salles(id) ON DELETE CASCADE
 )ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE employes(
@@ -156,7 +163,12 @@ FROM employes
 INNER JOIN emp_cent ON employes.id = emp_cent.id_emp
 INNER JOIN centres ON emp_cent.id_centre = centres.id;
 
--- INNER JOIN view_salles_compagnie ON salles.centre = view_salles_compagnie.centre
+CREATE VIEW view_salle_horaire AS
+SELECT salles.nom AS 'salle', horaires.heure_debut AS 'depart', horaires.heure_fin AS 'fin'
+FROM salles
+INNER JOIN hor_salle ON salles.id = hor_salle.id_salle
+INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
+
 
 -- Insertion test
 INSERT INTO compagnies (nom, info_paiement, courriel, mot_de_passe)
@@ -174,15 +186,24 @@ VALUES(1, 1),
 	  (1, 2),
       (2, 3);
       
-INSERT INTO horaires (heure_debut, heure_fin, intervalle)
-VALUES ('10h', '22h', 20),
-	   ('16h', '24h', 10),	
-	   ('10h', '21h', 20);
+INSERT INTO horaires (heure_debut, heure_fin)
+VALUES ('10h', '11h'),
+	   ('11h30', '12h30'),	
+	   ('13h', '14h');
       
-INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire, horaire)
-VALUE('test', 'description de test', 1, 6, 25.00, 1),
-	 ('test2', 'description de test 2', 2, 8, 25.00, 2),
-     ('test', 'description de test', 3, 6, 30.00, 3);
+INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire)
+VALUE('Pirate', 'description de Pirate', 1, 6, 25.00),
+	 ('Horreur', 'description de Horreur', 2, 8, 25.00),
+     ('Temple', 'description de Temple', 3, 6, 30.00);
+     
+INSERT INTO hor_salle(id_horaire, id_salle)
+VALUE(1,4),
+	 (2,4),
+     (3,4),
+     (2,5),
+     (3,5),
+     (1,6),
+     (2,6);
 
 INSERT INTO reservations(nom_client, num_telephone, statut_reservation, salle,
         nb_personnes, courriel, heure, prix_total, date)
@@ -192,6 +213,7 @@ VALUES('Carlens Belony', 5555, 0, 3, 3, 'belony@email.com', 14, 250.00, '2022-12
 
 SELECT * FROM view_salles_compagnie;
 SELECT * FROM view_employes_lieu WHERE id_centre=2;
+SELECT * FROM view_salle_horaire WHERE salle='Pirate';
 
 SELECT * FROM centres;
 SELECT * FROM horaires;
@@ -199,6 +221,7 @@ SELECT * FROM salles;
 
 SELECT * FROM employes;
 SELECT * FROM emp_cent;
+SELECT * FROM hor_salle;
 SELECT * FROM compagnies;
 
 SELECT * FROM rabais;
