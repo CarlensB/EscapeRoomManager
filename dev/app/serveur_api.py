@@ -13,5 +13,5 @@ class Serveur:
     @__app.route('/hello')
     def hello_world():
         #http://127.0.0.1:5000/hello
-        dict = {'Mot' : 'Hello World'}
-        return json.dump(dict)
+        dict = {'Mot' : "Hello World" }
+        return json.dumps(dict)

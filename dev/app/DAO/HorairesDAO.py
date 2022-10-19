@@ -7,10 +7,10 @@ class HorairesDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter_horaire(self, *args : tuple[ str | str]):
+    def ajouter_horaire(self, *args : tuple[ str | str | int]):
         sql = '''
-        INSERT INTO horaires (heure_debut, heure_fin)
-        VALUES(%s, %s)
+        INSERT INTO horaires (heure_debut, heure_fin, intervalle)
+        VALUES(%s, %s, %s)
         '''
         val = (args)
         self.__execute_query(sql, val)
