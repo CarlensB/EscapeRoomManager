@@ -45,8 +45,11 @@ class ActionDAO:
         # Test pour salle
         try:
             s = SallesDAO()
-            s.ajouter_salle('salle1', 'desc salle1', id_centre, 6, 24.99, id_horaire)
+            s.ajouter_salle('salle1', 'desc salle1', id_centre, 6, 24.99)
             id_salle = s.selectionner_salles_centres(id_centre)[0][0]
+            id_horaire = h.selectionner_horaire('9h', '20h')[0][0]
+            s.ajouter_horaire(id_horaire, id_salle)
+
             print('succès d\'insertion salle')
         except:
             print('echec d\'insertion salle')
