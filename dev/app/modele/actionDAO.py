@@ -36,8 +36,8 @@ class ActionDAO:
         # Test pour horaire
         try:
             h = HorairesDAO()
-            h.ajouter_horaire('9h', '20h', 20)
-            id_horaire = h.selectionner_horaire('9h', '20h', 20)[0][0]
+            h.ajouter_horaire('9h', '20h')
+            id_horaire = h.selectionner_horaire('9h', '20h')[0][0]
             print('succès d\'insertion horaire')
         except:
             print('echec d\'insertion horaire')
@@ -47,7 +47,6 @@ class ActionDAO:
             s = SallesDAO()
             s.ajouter_salle('salle1', 'desc salle1', id_centre, 6, 24.99)
             id_salle = s.selectionner_salles_centres(id_centre)[0][0]
-            id_horaire = h.selectionner_horaire('9h', '20h')[0][0]
             s.ajouter_horaire(id_horaire, id_salle)
 
             print('succès d\'insertion salle')
@@ -153,7 +152,7 @@ class ActionDAO:
         # Test pour horaire
         try:
             h = HorairesDAO()
-            result = h.selectionner_horaire('9h', '20h', 20)
+            result = h.selectionner_horaire('9h', '20h')
             id_h = result[0][0]
             h.supprimer_horaire(id_h)
             print('succès suppression horaire')
