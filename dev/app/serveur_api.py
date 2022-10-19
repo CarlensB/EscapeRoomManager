@@ -1,8 +1,6 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 import flask as f
 import json
-
-from matplotlib.font_manager import json_dump
 from flask_utils import HOTE, PORT
 
 class Serveur:
@@ -14,4 +12,6 @@ class Serveur:
 
     @__app.route('/hello')
     def hello_world():
-        return json_dump('Mot', 'Hello World')
+        #http://127.0.0.1:5000/hello
+        dict = {'Mot' : 'Hello World'}
+        return json.dump(dict)
