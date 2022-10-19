@@ -1,30 +1,74 @@
-import { makeObservable, observable, action } from "mobx";
+import { autorun, configure, observable, makeAutoObservable } from "mobx";
+import remotedev from "mobx-remotedev"
+configure({
+    enforceActions: "never",
+})
 
-interface LoginItem {
-    LoginError: boolean;
-    CreationAccountError: boolean;
-    LoginPageActive: boolean;
+export enum ActivePage {
+    Login= 1,
+    CreateAccount= 2
 }
 
-class LoginStoreImpl {
+class LoginPage {
 
-    LoginPage: LoginItem;
-
-    constructor(){
-        makeObservable(this, {
-            LoginPage: observable,
-            VerifyLogin: action
-        });
+    constructor(
+        public LoginError: boolean,
+        public CreateAccountError: boolean,
+        public LoginPageActive: number,
+    )
+    {
+        makeAutoObservable(this);
+        this.LoginPageActive = ActivePage.Login
     }
 
-    VerifyLogin(username:string, password:string){
-        console.log(username);
-        console.log(password);
-        if (this.LoginPage.LoginError == false) {
-        this.LoginPage.LoginError=true
-        } else this.LoginPage.LoginError = false;
+    GoToCreateAcountPage() {
+        this.LoginPageActive = ActivePage.CreateAccount
     }
 
+    GoToLoginPage() {
+        this.CreateAccountError = false;
+        this.LoginPageActive = ActivePage.Login
+    }
+
+    LoginAction() {
+        if (this.LoginError == true)
+        this.LoginError = false;
+        else this.LoginError=true;
+    }
+
+    CreateAcountAction() {
+        if (this.CreateAccountError == true)
+        this.CreateAccountError = false;
+        else this.CreateAccountError=true;
+    }
+
+};
+
+class LoginStore {
+    public loginpage: LoginPage
+    constructor() {
+        makeAutoObservable(this);
+        remotedev(this, { global: true, name: this.constructor.name });
+        this.loginpage = new LoginPage(false, false, ActivePage.Login)
+      }
+
+// *fetchFriends() {
+//     this.status = "pending";
+//     try {
+//       const response = yield fetch("/data/friends.json").then((r) => r.json());
+//       this.friends = response.map(
+//         ({ id, firstName, lastName }) => new Friend(id, firstName, lastName)
+//       );
+//       this.status = "success";
+//     } catch (e) {
+//       this.status = "error";
+//     }
+//   }
+// }
 }
-const LoginStore = new LoginStoreImpl()
-export default LoginStore
+
+
+
+const loginStore = new LoginStore();
+
+export default loginStore
