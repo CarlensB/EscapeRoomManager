@@ -19,14 +19,19 @@ class LoginPage {
     {
         makeAutoObservable(this);
         this.LoginPageActive = ActivePage.Login
+        this.LoginError = false
+        this.CreateAccountError = false
     }
 
     GoToCreateAcountPage() {
+        this.CreateAccountError = false;
+        this.LoginError = false;
         this.LoginPageActive = ActivePage.CreateAccount
     }
 
     GoToLoginPage() {
         this.CreateAccountError = false;
+        this.LoginError = false;
         this.LoginPageActive = ActivePage.Login
     }
 
