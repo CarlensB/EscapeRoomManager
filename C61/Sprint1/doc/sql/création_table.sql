@@ -227,3 +227,5 @@ SELECT * FROM compagnies;
 SELECT * FROM rabais;
 SELECT * FROM typeclient;
 SELECT * FROM reservations;
+
+SELECT * FROM horaires WHERE heure_debut = '8h' AND heure_fin = '20h';

@@ -13,9 +13,18 @@ class HorairesDAO:
         VALUES(%s, %s)
         '''
         val = (args)
-        self.execute_query(sql, val)
+        self.__execute_query(sql, val)
 
-    def selectionner_horaire(self, salle : str) -> list:
+    def selectionner_horaire(self, *args : tuple[str | str]):
+        sql = '''
+        SELECT * FROM horaires WHERE heure_debut = %s AND heure_fin = %s
+        '''
+        val = (args)
+        self.curseur.execute(sql, val)
+        result = self.curseur.fetchall()
+        return result
+
+    def selectionner_horaire_salle(self, salle : str) -> list:
         sql = "SELECT * FROM view_salle_horaire WHERE salle = %s"
         val = (salle,)
         self.curseur.execute(sql, val)
@@ -25,8 +34,8 @@ class HorairesDAO:
     def supprimer_horaire(self, id : int) ->None:
         sql = "DELETE FROM horaires WHERE id = %s"
         val = (id,)
-        self.execute_query(sql, val)
+        self.__execute_query(sql, val)
 
-    def execute_query(self, sql : str, val : tuple = None):
+    def __execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)
         self.bd.connexion.commit()
