@@ -1,10 +1,10 @@
 from serveur_api import Serveur
-from modele.actionDAO import ActionDAO
+from modele.Modele import GestionSysteme, Enregistrement
 
 
-def main():  
-    ActionDAO.test_insertion()
-    ActionDAO.test_suppression_selection()
+def main(): 
+    print('Hello World')
+    print(Enregistrement('Embrouille', 'Visa','manager@embrouille.com','DBZ@ndroid18').msg)
     #Serveur.demarrer_serveur()
     
     

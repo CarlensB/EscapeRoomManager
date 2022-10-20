@@ -7,27 +7,27 @@ class ReservationsDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter_reservation(self, *args : tuple[str | int | int | int | int | str | int | int | int | str]):
+    def ajouter(self, *args : tuple[str | int | int | int | int | str | int | int | int | str]):
         sql ='''
         INSERT INTO reservations (nom_client, num_telephone, statut_reservation, salle,
         nb_personnes, courriel, heure, prix_total, date)
         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
         '''
         val = (args)
-        self.execute_query(sql, val)
+        self.__execute_query(sql, val)
 
-    def supprimer_reservation(self, id: int) -> None:
+    def supprimer(self, id: int) -> None:
         sql = "DELETE FROM reservations WHERE id = %s"
         val = (id,)
-        self.execute_query(sql, val)
+        self.__execute_query(sql, val)
 
-    def selectionner_tous_reservations(self, salle : int) -> list:
+    def selectionner(self, salle : int) -> list:
         sql = "SELECT * from reservations WHERE salle = %s"
         val = (salle,)
         self.curseur.execute(sql, val)
         result = self.curseur.fetchall()
         return result
 
-    def execute_query(self, sql : str, val : tuple = None):
+    def __execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)
         self.bd.connexion.commit()
