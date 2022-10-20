@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Union
 from .actionDAO import ActionDAO
-
+import bcrypt
 import re
+import codecs
 
 # une fonctionalité intégré dans python qui peut nous être utile pour gérer l'informations
 # une data classe n'est qu'un contenant et ne peut pas opérer son propre data.
@@ -23,6 +24,20 @@ class Enregistrement:
         cour_valide, cour_msg= self.__validation_courriel(courriel)
         mdp_valide, mdp_msg= self.__validation_mdp(mdp)
         self.__enregistrer_compagnie([cour_valide, mdp_valide], [cour_msg, mdp_msg])
+
+    @property
+    def msg(self) -> list[str]:
+        return self.__msg
+
+    def __crypter_mdp(self) -> None:
+        mdp = codecs.encode(self.__info[3])
+        sel = bcrypt.gensalt()
+        cryptage = bcrypt.hashpw(mdp, sel)
+        mdp = codecs.decode(cryptage)
+        self.__info = (self.__info[0], self.__info[1], self.__info[2],  mdp)
+
+        # codex : module encoder byte codex.encode
+        # decode pour retourner en str, lui donner le type et l'encodage comme utf-8
         
     def __validation_mdp(self, mdp: str) -> Union[bool,str]:
         # règle du mot de passe : 
@@ -58,14 +73,14 @@ class Enregistrement:
     def __enregistrer_compagnie(self, validation: list[bool], msg: list[str]):
         if not validation[0] or not validation[1]:
             self.__msg = msg
-        else:
-            self.__msg.append('Compagnie enregistrer')
+        
+        try:
+            self.__crypter_mdp()
             a = ActionDAO()
             a.requete_dao(a.Requete.INSERT, 'Compagnie', self.__info)
-
-    @property
-    def msg(self) -> list[str]:
-        return self.__msg
+            self.__msg.append('Compagnie enregistrer')
+        except:
+            self.__msg.append("Compagnie déjà existante")
         
 
 class GestionSysteme:
