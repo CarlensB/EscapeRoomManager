@@ -7,7 +7,8 @@ configure({
 
 export enum ActivePage {
     Login= 1,
-    CreateAccount= 2
+    CreateAccount= 2,
+    Loggedin= 3
 }
 
 class LoginPage {
@@ -44,8 +45,18 @@ class LoginPage {
         if (this.LoginError == true)
         this.LoginError = false;
         else this.LoginError=true;
-        console.log(this.loginInfos.username)
-        console.log(this.loginInfos.password)
+        // this.LoginPageActive = ActivePage.Loggedin
+        
+        try {
+            fetch('http://127.0.0.1:5000/hello')
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+      })
+          } catch (e) {
+              console.log("")
+          }
+
     }
 
     CreateAcountAction() {
@@ -56,6 +67,7 @@ class LoginPage {
         console.log(this.createAccountInfos.companyName)
         console.log(this.createAccountInfos.password)
         console.log(this.createAccountInfos.repeatpassword)
+        this.GoToLoginPage()
     }
 
 };
@@ -102,19 +114,6 @@ class LoginStore {
         this.loginpage = new LoginPage(false, false, ActivePage.Login, new LoginInfos(), new CreateAccountInfos())
       }
 
-// *fetchFriends() {
-//     this.status = "pending";
-//     try {
-//       const response = yield fetch("/data/friends.json").then((r) => r.json());
-//       this.friends = response.map(
-//         ({ id, firstName, lastName }) => new Friend(id, firstName, lastName)
-//       );
-//       this.status = "success";
-//     } catch (e) {
-//       this.status = "error";
-//     }
-//   }
-// }
 }
 
 

@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import React, {lazy, Suspense} from 'react';
 import reactDom from "react-dom";
+import { redirect } from 'react-router-dom';
 import "./Middlewares/LoginMW"
 import loginStore, { ActivePage } from './Middlewares/LoginMW';
 
@@ -13,13 +14,14 @@ export const LoginPageComps = observer(() => {
     return (React.createElement(
       'div',
       null, React.createElement(LoginPageComp)))
-    else return (React.createElement(
+    else if (loginpage.LoginPageActive == ActivePage.CreateAccount)
+    return (React.createElement(
       'div',
       null, React.createElement(CreateAccountComp)))
+    else window.location.href = "../public/accueilEmp.html?username=" + loginpage.loginInfos.username
+    
 }
 )
-
-const teste = () => {return( React.createElement('div', null, 'HAAAAAA'))};
 
 const LoginPageComp = observer(() => {
 
