@@ -7,7 +7,7 @@ class SallesDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args : tuple[str | str | int | int | float ]):
+    def ajouter(self, args : tuple[str | str | int | int | float ]):
         sql = '''
         INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire)
         VALUE(%s, %s, %s, %s, %s)
@@ -27,7 +27,7 @@ class SallesDAO:
         result = self.curseur.fetchall()
         return result
 
-    def ajouter_horaire(self, *args : tuple[int, int]):
+    def ajouter_horaire(self, args : tuple[int, int]):
         sql = "INSERT INTO hor_salle(id_horaire, id_salle) VALUES( %s, %s)"
         val = (args)
         self.__execute_query(sql, val)

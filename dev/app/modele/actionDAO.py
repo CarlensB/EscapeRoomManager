@@ -1,3 +1,4 @@
+from typing import Union
 from DAO.CompagniesDAO import CompagniesDAO
 from DAO.TypeClientsDAO import TypeClientsDAO
 from DAO.CentresDAO import CentresDAO
@@ -18,20 +19,31 @@ class ActionDAO:
         SELECT_ALL = 4
 
 
+    class Table(Enum):
+        COMPAGNIE = 1
+        CENTRE = 2
+        SALLE = 3
+        HORAIRE = 4
+        RESERVATION = 5
+        EMPLOYE = 6
+        RABAIS = 7
+        TYPECLIENT = 8
+
+
     def __init__(self) -> None:
         self.__dao = {
-            'Compagnie': CompagniesDAO,
-            'Centres': CentresDAO,
-            'Salle': SallesDAO,
-            'Horaire': HorairesDAO,
-            'Reservation': ReservationsDAO,
-            'Employe': EmployeDAO,
-            'Rabais': RabaisDAO,
-            'TypeClient': TypeClientsDAO
+            self.Table.COMPAGNIE: CompagniesDAO,
+            self.Table.CENTRE: CentresDAO,
+            self.Table.SALLE: SallesDAO,
+            self.Table.HORAIRE: HorairesDAO,
+            self.Table.RESERVATION: ReservationsDAO,
+            self.Table.EMPLOYE: EmployeDAO,
+            self.Table.RABAIS: RabaisDAO,
+            self.Table.TYPECLIENT: TypeClientsDAO
         }
 
 
-    def requete_dao(self, requete : Requete, recherche : str, args : tuple ):
+    def requete_dao(self, requete : Requete, recherche : Table, args : tuple ) -> Union[int, tuple]:
         result = 0
 
         dao = self.__dao[recherche]()
@@ -41,12 +53,14 @@ class ActionDAO:
         
         elif requete == self.Requete.INSERT:
             dao.ajouter(args)
+            result = (1, 'insertion fait')
 
         elif requete == self.Requete.DELETE:
             dao.supprimer(args)
+            result = (2, 'element supprimer')
 
         elif requete == self.Requete.SELECT_ALL:
-            dao.selectionner_all(args)
+            result = dao.selectionner_all(args)
         
         else:
             result = -1
@@ -62,13 +76,9 @@ class ActionDAO:
     
 
     def ajouter_employe_centre(self, *args : tuple[ int | int]):
-        # le tuple doit contenir les ids de l'employé et du centre où il travail
-        sql = '''
-        INSERT INTO emp_cent(id_emp, id_centre)
-        VALUES(%s, %s)
-        '''
-        val = (args)
-        self.execute_query(sql, val)
+        e = EmployeDAO()
+        e.lier_centre(args)
+        
 
 # Dans le modèle trier les salles et les employés par Centre
 # Sinon rajouter un élément d'énumération pour les query spécial

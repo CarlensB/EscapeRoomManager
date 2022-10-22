@@ -7,7 +7,7 @@ class TypeClientsDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args: tuple[str| float |int]):
+    def ajouter(self, args: tuple[str| float |int]):
         sql = "INSERT INTO typeclient (categorie, prix, compagnie) VALUES (%s, %s, %s)"
         val = (args) # str, str, int
         self.execute_query(sql, val)

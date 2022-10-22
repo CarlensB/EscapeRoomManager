@@ -1,12 +1,14 @@
 from serveur_api import Serveur
 from modele.Modele import GestionSysteme, Enregistrement
+from modele.actionDAO import ActionDAO
 
 
 def main(): 
     print('Hello World')
-    e = Enregistrement('Escape', 'Visa', '12@escape.com', 'CarlensBelony1!')
-    print(e.msg)
-    #Serveur.demarrer_serveur()
+    #gs.valider_connexion(courriel='manager@escape.com', mdp='CarlensBelony1!')
+
+    
+    Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':

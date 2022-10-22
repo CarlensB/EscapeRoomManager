@@ -7,7 +7,7 @@ class RabaisDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args : tuple[str | float | int | int | str]):
+    def ajouter(self, args : tuple[str | float | int | int | str]):
         sql = '''
         INSERT INTO rabais (nom, pourcentage, compagnie, isActive, date_fin)
         VALUES (%s, %s, %s, %s, %s)

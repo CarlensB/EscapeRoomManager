@@ -7,7 +7,7 @@ class HorairesDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args : tuple[ str | str | int]):
+    def ajouter(self, args : tuple[ str | str | int]):
         sql = '''
         INSERT INTO horaires (heure_debut, heure_fin)
         VALUES(%s, %s)
@@ -15,7 +15,7 @@ class HorairesDAO:
         val = (args)
         self.__execute_query(sql, val)
 
-    def selectionner(self, *args : tuple[str | str]):
+    def selectionner(self, args : tuple[str | str]):
         sql = '''
         SELECT * FROM horaires WHERE heure_debut = %s AND heure_fin = %s
         '''

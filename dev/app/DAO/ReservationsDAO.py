@@ -7,7 +7,7 @@ class ReservationsDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args : tuple[str | int | int | int | int | str | int | int | int | str]):
+    def ajouter(self, args : tuple[str | int | int | int | int | str | int | int | int | str]):
         sql ='''
         INSERT INTO reservations (nom_client, num_telephone, statut_reservation, salle,
         nb_personnes, courriel, heure, prix_total, date)
