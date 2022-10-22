@@ -28,13 +28,14 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	-- Création des tables
 	CREATE TABLE compagnies(
 		id              INT     		NOT NULL AUTO_INCREMENT,
-		nom             TEXT    		NOT NULL,
+		nom             VARCHAR(100)	NOT NULL,
 		info_paiement   TEXT    		NOT NULL,
 		courriel        VARCHAR(50)   	NOT NULL,
 		mot_de_passe    TEXT   			NOT NULL,
 		
 		PRIMARY KEY pk_compagnie(id),
-		UNIQUE (courriel)
+		UNIQUE (courriel),
+        UNIQUE (nom)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE typeclient(
@@ -108,11 +109,11 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		compagnie       INT         NOT NULL,
 		nom             TEXT        NOT NULL,
 		prenom          TEXT        NOT NULL,
-		salaire         FLOAT   	NOT NULL,
-		num_telephone   TEXT        NOT NULL,
-		niveau_acces    INT         NOT NULL,
+		salaire         FLOAT   	NULL,
+		num_telephone   TEXT        NULL,
+		niveau_acces    INT         NOT NULL DEFAULT 0,
 		courriel        VARCHAR(50) NOT NULL,
-		num_ass         INT         NOT NULL,
+		num_ass         INT         NULL,
 		mot_de_passe    TEXT        NOT NULL,
 		
 		PRIMARY KEY pk_employe(id),

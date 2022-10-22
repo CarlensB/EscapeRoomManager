@@ -47,7 +47,7 @@ class Enregistrement:
                    (self.__MESSAGE_MDP_MIN, r'[a-z]+'),
                    (self.__MESSAGE_MDP_CS, r'\W+')]
         valider = True
-        msg='valide'
+        msg='mot de passe valide'
 
         if not len(mdp) >= 12:
             valider = False
@@ -62,9 +62,9 @@ class Enregistrement:
         return valider, msg
 
     def __validation_courriel(self, courriel: str) -> Union[bool, str]:
-        pattern = '@'
-
-        if not re.search(pattern, courriel):
+        pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        # source = https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+        if not re.fullmatch(pattern, courriel):
             return False, 'Courriel invalide'
 
         return True, 'Courriel valide'
@@ -73,15 +73,15 @@ class Enregistrement:
     def __enregistrer_compagnie(self, validation: list[bool], msg: list[str]):
         if not validation[0] or not validation[1]:
             self.__msg = msg
-        
-        try:
-            self.__crypter_mdp()
-            a = ActionDAO()
-            a.requete_dao(a.Requete.INSERT, 'Compagnie', self.__info)
-            self.__msg.append('Compagnie enregistrer')
-        except:
-            self.__msg.append("Compagnie déjà existante")
-        
+        else: 
+            try:
+                self.__crypter_mdp()
+                a = ActionDAO()
+                a.requete_dao(a.Requete.INSERT, 'Compagnie', self.__info)
+                self.__msg.append('Compagnie enregistrer')
+            except:
+                self.__msg.append("Compagnie déjà existante")
+            
 
 class GestionSysteme:
 
