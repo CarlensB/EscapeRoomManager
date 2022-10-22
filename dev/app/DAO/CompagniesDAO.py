@@ -13,7 +13,7 @@ class CompagniesDAO:
         self.__execute_query(sql, val)
 
     def selectionner(self, compagnie : str) -> list:
-        sql = "SELECT * from compagnies WHERE nom = %s"
+        sql = "SELECT * from compagnies WHERE id = %s"
         val = (compagnie,)
         self.curseur.execute(sql, val)
         result = self.curseur.fetchall()

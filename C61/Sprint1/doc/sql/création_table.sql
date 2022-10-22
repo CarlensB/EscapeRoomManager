@@ -111,7 +111,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		prenom          TEXT        NOT NULL,
 		salaire         FLOAT   	NULL,
 		num_telephone   TEXT        NULL,
-		niveau_acces    INT         NOT NULL DEFAULT 0,
+		niveau_acces    INT         NOT NULL DEFAULT 1,
 		courriel        VARCHAR(50) NOT NULL,
 		num_ass         INT         NULL,
 		mot_de_passe    TEXT        NOT NULL,

@@ -7,7 +7,7 @@ class EmployeDAO:
         self.bd = ConnexionDAO()
         self.curseur = self.bd.curseur
 
-    def ajouter(self, *args : tuple[ int | str | str | float | str | int | str | int | str]):
+    def ajouter(self, args : tuple[ int | str | str | float | str | int | str | int | str]) -> None:
         sql = '''
         INSERT INTO employes (compagnie, nom, prenom, salaire,
         num_telephone, niveau_acces, courriel, num_ass, mot_de_passe)
@@ -16,14 +16,18 @@ class EmployeDAO:
         val = (args)
         self.__execute_query(sql, val)
         
-    def supprimer(self, employe: int) ->None:
+    def supprimer(self, employe: int) -> None:
         sql="DELETE FROM employes WHERE id = %s"
         val= (employe,)
         self.__execute_query(sql, val)
 
-    def selectionner(self, *employe : tuple[str]) -> list:
-        sql = "SELECT * FROM employes WHERE nom = %s AND prenom = %s"
-        val = (employe)
+    def selectionner(self, employe : tuple[str]) -> list:
+        if len(employe) > 1:
+            sql = "SELECT * FROM employes WHERE nom = %s AND prenom = %s"
+            val = (employe)
+        else:
+            sql = "SELECT * FROM employes WHERE courriel = %s"
+            val = (employe)
         self.curseur.execute(sql, val)
         result = self.curseur.fetchall()
         return result
@@ -35,6 +39,15 @@ class EmployeDAO:
         result = self.curseur.fetchall()
         return result
 
-    def __execute_query(self, sql : str, val : tuple = None):
+    def lier_centre(self, args: tuple) -> None:
+        # le tuple doit contenir les ids de l'employé et du centre où il travail
+        sql = '''
+        INSERT INTO emp_cent(id_emp, id_centre)
+        VALUES(%s, %s)
+        '''
+        val = (args)
+        self.__execute_query(sql, val)
+
+    def __execute_query(self, sql : str, val : tuple = None) -> None:
         self.curseur.execute(sql, val)
         self.bd.connexion.commit()
