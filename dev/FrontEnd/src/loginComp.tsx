@@ -2,8 +2,9 @@ import { observer } from 'mobx-react';
 import React, {lazy, Suspense} from 'react';
 import reactDom from "react-dom";
 import { redirect } from 'react-router-dom';
-import "./Middlewares/LoginMW"
-import loginStore, { ActivePage } from './Middlewares/LoginMW';
+import { ActivePage } from './Middlewares/Actions/LoginActions';
+import "./Middlewares/loginStore"
+import loginStore from './Middlewares/loginStore';
 
 
 export const LoginPageComps = observer(() => {
