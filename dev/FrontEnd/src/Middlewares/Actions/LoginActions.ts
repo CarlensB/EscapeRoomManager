@@ -40,11 +40,12 @@ export class LoginPageActions {
         if (this.LoginError == true)
         this.LoginError = false;
         else this.LoginError=true;
-
-        let formData = new FormData();
-        formData.append("username", this.loginInfos.username);
-        formData.append("password", this.loginInfos.password);
         this.LoginPageActive = ActivePage.Loggedin
+
+        // let formData = new FormData();
+        // formData.append("username", this.loginInfos.username);
+        // formData.append("password", this.loginInfos.password);
+        
         
     //     try {
     //         fetch('http://127.0.0.1:5000/hello',
@@ -71,7 +72,7 @@ export class LoginPageActions {
         console.log(this.createAccountInfos.companyName)
         console.log(this.createAccountInfos.password)
         console.log(this.createAccountInfos.repeatpassword)
-        this.GoToLoginPage()
+        // this.GoToLoginPage()
     }
 
 };

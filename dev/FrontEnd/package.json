@@ -1,133 +1,89 @@
 {
-  
-
-"scripts": {
-  
-
-  
-
-"preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
-  
-
-  
-
-"dev": "webpack serve",
-  
-
-  
-
-"build": "webpack --mode production"
-  
-
-},
-  
-
-"dependencies": {
-  
-
-  
-
-"mobx": "^6.6.2",
-  
-
-  
-
-"mobx-react": "^7.5.3",
-  
-
-  
-
-"mobx-remotedev": "^0.3.6",
-  
-
-  
-
-"react": "^18.2.0",
-  
-
-  
-
-"react-dom": "^18.2.0",
-  
-
-  
-
-"react-router-dom": "^6.4.1"
-  
-
-},
-  
-
-"devDependencies": {
-  
-
-  
-
-"@types/react": "^18.0.21",
-  
-
-  
-
-"eslint-plugin-react-hooks": "^4.6.0",
-  
-
-  
-
-"ts-loader": "^9.4.1",
-  
-
-  
-
-"webpack": "^5.74.0",
-  
-
-  
-
-"webpack-cli": "^4.10.0"
-  
-
-},
-  
-
-"plugins": [
-  
-
-  
-
-"react-hooks"
-  
-
-],
-  
-
-"rules": {
-  
-
-  
-
-"react-hooks/rules-of-hooks": "error",
-  
-
-  
-
-"react-hooks/exhaustive-deps": "warn"
-  
-
-},
-  
-
-"resolutions": {
-  
-
-  
-
-"@types/react": "17.0.2",
-  
-
-  
-
-"@types/react-dom": "17.0.2"
-  
-
-}
+  
+"scripts": {
+  
+  
+"preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
+  
+  
+"dev": "webpack serve",
+  
+  
+"build": "webpack --mode production"
+  
+},
+  
+"dependencies": {
+  
+  
+"mobx": "^6.6.2",
+  
+  
+"mobx-react": "^7.5.3",
+  
+  
+"mobx-remotedev": "^0.3.6",
+  
+  
+"react": "^18.2.0",
+  
+  
+"react-dom": "^18.2.0",
+  
+  
+"react-router-dom": "^6.4.1"
+  
+},
+  
+"devDependencies": {
+  
+  
+"@types/react": "^18.0.21",
+  
+  
+"css-loader": "^6.7.1",
+  
+  
+"eslint-plugin-react-hooks": "^4.6.0",
+  
+  
+"style-loader": "^3.3.1",
+  
+  
+"ts-loader": "^9.4.1",
+  
+  
+"webpack": "^5.74.0",
+  
+  
+"webpack-cli": "^4.10.0"
+  
+},
+  
+"plugins": [
+  
+  
+"react-hooks"
+  
+],
+  
+"rules": {
+  
+  
+"react-hooks/rules-of-hooks": "error",
+  
+  
+"react-hooks/exhaustive-deps": "warn"
+  
+},
+  
+"resolutions": {
+  
+  
+"@types/react": "17.0.2",
+  
+  
+"@types/react-dom": "17.0.2"
+  
+}
 }

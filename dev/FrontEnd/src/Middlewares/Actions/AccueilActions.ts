@@ -59,10 +59,10 @@ class Centre{
         public salles: Salle[] ,
     )
     {
-        this.getSalles()
+        this.genererSalles()
     }
 
-    getSalles(){
+    genererSalles(){
         let a=new Salle()
         a.nom = "Salle 1"
         this.salles.push(a)
@@ -78,6 +78,7 @@ export class Compagnie{
     constructor(
         public name: string = "Nom de Compagnie",
         public centres: Centre[],
+        public selection: number = 0,
     )
     {
         this.initialiserComp()
@@ -85,12 +86,14 @@ export class Compagnie{
     initialiserComp(){
         let a = new Centre("Centre laval", []);
         a.nom = "Centre 1"
-        a.getSalles()
+        a.genererSalles()
         this.centres.push(a)
 
         a = new Centre("Centre montreal", []);
         a.nom = "Centre 2"
-        a.getSalles()
+        a.genererSalles()
         this.centres.push(a)
     }
+
+    
 }

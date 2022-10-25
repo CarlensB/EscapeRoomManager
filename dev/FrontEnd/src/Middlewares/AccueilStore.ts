@@ -21,3 +21,7 @@ class AccueilStore {
     
 
 }
+
+const accueilStore = new AccueilStore();
+
+export default accueilStore

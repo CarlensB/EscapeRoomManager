@@ -5,9 +5,10 @@ import { redirect } from 'react-router-dom';
 import { ActivePage } from './Middlewares/Actions/LoginActions';
 import "./Middlewares/loginStore"
 import loginStore from './Middlewares/loginStore';
+import './CSS/Login.css'
 
 
-export const LoginPageComps = observer(() => {
+const LoginPageComps = observer(() => {
 
   const {loginpage} = loginStore;
 
@@ -26,67 +27,66 @@ export const LoginPageComps = observer(() => {
 
 const LoginPageComp = observer(() => {
 
-  const {loginpage} = loginStore;
+  const {loginpage} = loginStore
   const loginErr = loginpage.LoginError
-  let LoginMessage = ""
+  let errMessage = ""
   if (loginErr){
-    LoginMessage = "Le mot de passe ou l'indentifiant est erronné";
+    errMessage = "Le mot de passe ou l'indentifiant est erronné";
   }
   
   
   return(   
     React.createElement(
       'div',
-      null, 
-    React.createElement(
-      'div',
-      {className: 'subtitle'},
-      'Veuillez vous connecter'),
-  
-    React.createElement(
-      'div',
-      {className: 'label_container'},
+      {class:'form'}, 
+
+      React.createElement(
+        'h1',
+        null,
+        'EscapeRoom Manager'),
+
+      React.createElement(
+        'h3',
+        null,
+        'Veuillez vous connecter'),
   
       React.createElement(
         'label',
         {for: 'username'},
         'Adresse courriel'),
+
+      React.createElement(
+        'input',
+        {type: 'text', name: 'username', onChange:evt => {loginStore.loginpage.loginInfos.username = evt.currentTarget.value}},
+        null),
+
       React.createElement(
         'label',
         {for: 'password'},
         'Mot de Passe'),
-  
-      ),
-  
-    React.createElement(
-      'div',
-      {className: 'input_container'},
-  
-    React.createElement(
-      'input',
-      {type: 'text', name: 'username', class:'username', onChange:evt => {loginStore.loginpage.loginInfos.username = evt.currentTarget.value}},
-      null),
     
-    React.createElement(
-      'input',
-      {type: 'password', name: 'password', class:'password', onChange:evt => {loginStore.loginpage.loginInfos.password = evt.currentTarget.value}},
-      null),
-    ),  
+      React.createElement(
+        'input',
+        {type: 'password', name: 'password', onChange:evt => {loginStore.loginpage.loginInfos.password = evt.currentTarget.value}},
+        null),
+
+      React.createElement(
+        'div',
+        {class:"error_msg"},
+        errMessage
+    ),
+      
   
-    React.createElement(
-      'button',
-      { onClick:() => {loginpage.LoginAction()}},
-      'Submit'),
-    React.createElement(
-      'button',
-      { onClick:() => {loginpage.GoToCreateAcountPage()}},
-      'Créer un compte'),
+      React.createElement(
+        'button',
+        { onClick:() => {loginpage.LoginAction()}},
+        'Se Connecter'),
+      React.createElement(
+        'button',
+        { onClick:() => {loginpage.GoToCreateAcountPage()}},
+        'Créer un compte'),
     
-    React.createElement(
-      'div',
-      {class:"error_msg"},
-      LoginMessage
-    )
+      
   )
     )
     
@@ -96,84 +96,85 @@ const CreateAccountComp = observer(() => {
 
   const {loginpage} = loginStore;
   const createaccError = loginpage.CreateAccountError
-  const loginErr = loginpage.LoginError
+  let errMessage = ''
+  if (createaccError)
+    errMessage = "Les informations entrées sont invalides ou incomplètes."
 
   return(
     React.createElement(
       'div',
-      null,
+      {class:'form'},
+
+      React.createElement(
+        'h1',
+        null,
+        'EscapeRoom Manager'),
     
       React.createElement(
-        'div',
-        {className: 'subtitle'},
-        'Créer votre compte!'),
+        'h3',
+        null,
+        'Créez votre compte!'),
+
+      React.createElement(
+        'label',
+        {for: 'username'},
+        'Adresse courriel'),
+
+      React.createElement(
+        'input',
+        {type: 'text', name: 'username', onChange:evt => {loginStore.loginpage.createAccountInfos.username = evt.currentTarget.value}},
+        null),
+
+      React.createElement(
+        'label',
+        {for: 'nomCompagnie'},
+        'Nom de la compagnie'),
+
+      React.createElement(
+        'input',
+        {type: 'text', name: 'nomCompagnie', onChange:evt => {loginStore.loginpage.createAccountInfos.companyName = evt.currentTarget.value}},
+        null),
+
+      React.createElement(
+        'label',
+        {for: 'password'},
+        'Mot de Passe'),
+
+      React.createElement(
+        'input',
+        {type: 'password', name: 'password',onChange:evt => {loginStore.loginpage.createAccountInfos.password = evt.currentTarget.value}},
+        null),
+
+      React.createElement(
+        'label',
+        {for: 'repeatpassword'},
+        'Mot de Passe'),
+        
+      React.createElement(
+        'input',
+        {type: 'password', name: 'repeatpassword', onChange:evt => {loginStore.loginpage.createAccountInfos.repeatpassword = evt.currentTarget.value}},
+        null),
 
       React.createElement(
         'div',
-        {className: 'container_label'},
-
-        React.createElement(
-          'label',
-          {for: 'username', class: 'label'},
-          'Adresse courriel'),
-
-        React.createElement(
-          'label',
-          {for: 'nomCompagnie', class: 'label'},
-          'Nom de la compagnie'),
-
-        React.createElement(
-          'label',
-          {for: 'password', class: 'label'},
-          'Mot de Passe'),
-
-        React.createElement(
-          'label',
-          {for: 'repeatpassword', class: 'label'},
-          'Mot de Passe'),
-      ),
-
-      React.createElement(
-        'div',
-        {className: 'container_input'},
-
-        React.createElement(
-          'input',
-          {type: 'text', name: 'username', class:'input', onChange:evt => {loginStore.loginpage.createAccountInfos.username = evt.currentTarget.value}},
-          null),
-
-        
-        React.createElement(
-          'input',
-          {type: 'text', name: 'nomCompagnie', class:'input',onChange:evt => {loginStore.loginpage.createAccountInfos.companyName = evt.currentTarget.value}},
-          null),
-
-        
-        React.createElement(
-          'input',
-          {type: 'password', name: 'password', class:'input',onChange:evt => {loginStore.loginpage.createAccountInfos.password = evt.currentTarget.value}},
-          null),
-        
-        React.createElement(
-          'input',
-          {type: 'password', name: 'repeatpassword', class:'input',onChange:evt => {loginStore.loginpage.createAccountInfos.repeatpassword = evt.currentTarget.value}},
-          null),
-      ),
+        {class:"error_msg"},
+        errMessage
+    ),
 
       React.createElement(
         'button',
         { onClick:() => {loginpage.CreateAcountAction()}},
         "S'inscrire"),
-        React.createElement(
-          'button',
-          { onClick:() => {loginpage.GoToLoginPage()}},
-          'Se Connecter')
+      React.createElement(
+        'button',
+        { onClick:() => {loginpage.GoToLoginPage()}},
+        'Je possède déjà un compte')
       )
   )
 }
 )
 
 // source: https://www.youtube.com/watch?v=2ejs-uxSbAk
-const domContainer = document.querySelector('#boite');
+const domContainer = document.body;
 const root = reactDom.createRoot(domContainer);
 root.render(React.createElement(LoginPageComps));
