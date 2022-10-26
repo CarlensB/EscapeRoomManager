@@ -1,10 +1,8 @@
 # Pour enregistrer les informations des compagnies sur la base de données
-from .ConnectionDAO import ConnexionDAO
-
 class CompagniesDAO:
 
-    def __init__(self) -> None:
-        self.bd = ConnexionDAO()
+    def __init__(self, bd) -> None:
+        self.bd = bd
         self.curseur = self.bd.curseur
     
     def ajouter(self, args : tuple[str | str | str | str]):
@@ -23,6 +21,9 @@ class CompagniesDAO:
         sql = "DELETE FROM compagnies WHERE id = %s"
         val = (compagnie,)
         self.__execute_query(sql, val)
+
+    def modifier(self, table: tuple[str], val: tuple[str]):
+        pass
 
     def __execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)

@@ -1,10 +1,7 @@
-# Pour enregistrer les informations des horaires sur la base de données
-from .ConnectionDAO import ConnexionDAO
-
 class HorairesDAO:
     
-    def __init__(self) -> None:
-        self.bd = ConnexionDAO()
+    def __init__(self, bd) -> None:
+        self.bd = bd
         self.curseur = self.bd.curseur
 
     def ajouter(self, args : tuple[ str | str | int]):
@@ -36,6 +33,9 @@ class HorairesDAO:
         sql = "DELETE FROM horaires WHERE id = %s"
         val = (id,)
         self.__execute_query(sql, val)
+
+    def modifier(self, table: tuple[str], val: tuple[str]):
+        pass
 
     def __execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)

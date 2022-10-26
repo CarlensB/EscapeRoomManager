@@ -1,10 +1,7 @@
-# Pour enregistrer les informations des rabais sur la base de données
-from .ConnectionDAO import ConnexionDAO
-
 class RabaisDAO:
     
-    def __init__(self) -> None:
-        self.bd = ConnexionDAO()
+    def __init__(self, bd) -> None:
+        self.bd = bd
         self.curseur = self.bd.curseur
 
     def ajouter(self, args : tuple[str | float | int | int | str]):
@@ -33,6 +30,9 @@ class RabaisDAO:
         self.curseur.execute(sql, val)
         result = self.curseur.fetchall()
         return result
+
+    def modifier(self, table: tuple[str], val: tuple[str]):
+        pass
 
     def execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)

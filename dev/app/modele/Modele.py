@@ -11,6 +11,10 @@ import codecs
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
 
 class Enregistrement:
+    '''
+    La classe enregistrement permet d'enregistrer une nouvelle compagnie ou un autre usager
+    dans la table employe qui pourra se connecter au système de la compagnie auquel il appartient.
+    '''
 
     __MESSAGE_MDP_TAILLE= "La taille du mot de passe doit être de 12 caractères et plus."
     __MESSAGE_MDP_CS= "Le mot de passe doit contenir au moins 1 caractère spéciale."
@@ -154,16 +158,8 @@ class GestionSysteme:
         else:
             return False, 'mot de passe invalide'
     
-    def enregistrer(self, type: str, info: dict, centre: tuple) -> list[str]:
-        a = ActionDAO()
+    def enregistrer(self, type: str, info: dict) -> list[str]:
         e = Enregistrement(self.__action_table[type], info)
-        
-        if self.__action_table[type] == a.Table.EMPLOYE:
-            id_centre = self.__verifier_centre(a, centre)
-            id_emp = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['nom'], info['prenom']))[0][0]
-            a.ajouter_employe_centre(id_emp, id_centre)
-        else:
-            a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
         return e.msg
 
     def deconnexion(self):
