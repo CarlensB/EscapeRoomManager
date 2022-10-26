@@ -1,4 +1,7 @@
 from typing import Union
+from enum import Enum
+
+from DAO.ConnectionDAO import ConnexionDAO
 from DAO.CompagniesDAO import CompagniesDAO
 from DAO.TypeClientsDAO import TypeClientsDAO
 from DAO.CentresDAO import CentresDAO
@@ -8,7 +11,9 @@ from DAO.RabaisDAO import RabaisDAO
 from DAO.ReservationsDAO import ReservationsDAO
 from DAO.SallesDAO import SallesDAO
 
-from enum import Enum
+
+
+
 
 class ActionDAO:
     
@@ -17,6 +22,8 @@ class ActionDAO:
         INSERT = 2
         DELETE = 3
         SELECT_ALL = 4
+        UPDTAE = 5
+        LIER = 6
 
 
     class Table(Enum):
@@ -46,26 +53,31 @@ class ActionDAO:
     def requete_dao(self, requete : Requete, recherche : Table, args : tuple ) -> Union[int, tuple]:
         result = 0
 
-        dao = self.__dao[recherche]()
+        with ConnexionDAO() as bd:
+            dao = self.__dao[recherche](bd)
 
-        if requete == self.Requete.SELECT:
-            result = dao.selectionner(args)
-        
-        elif requete == self.Requete.INSERT:
-            dao.ajouter(args)
-            result = (1, 'insertion fait')
+            if requete == self.Requete.SELECT:
+                result = dao.selectionner(args)
+            
+            elif requete == self.Requete.INSERT:
+                dao.ajouter(args)
+                result = (1, 'insertion fait')
 
-        elif requete == self.Requete.DELETE:
-            dao.supprimer(args)
-            result = (2, 'element supprimer')
+            elif requete == self.Requete.DELETE:
+                dao.supprimer(args)
+                result = (1, 'element supprimer')
 
-        elif requete == self.Requete.SELECT_ALL:
-            result = dao.selectionner_all(args)
-        
-        else:
-            result = -1
+            elif requete == self.Requete.SELECT_ALL:
+                result = dao.selectionner_all(args)
 
-        return result
+            elif requete == self.Requete.LIER:
+                dao.lier(args)
+                result = (1, 'liaison faite')
+            
+            else:
+                result = -1
+
+            return result
 
     # fonction spécial
 
@@ -73,11 +85,6 @@ class ActionDAO:
         s = self.__dao['Salle']()
         for horaire in id_horaire:
             s.ajouter_horaire(id_salle, horaire)
-    
-
-    def ajouter_employe_centre(self, *args : tuple[ int | int]):
-        e = EmployeDAO()
-        e.lier_centre(args)
         
 
 # Dans le modèle trier les salles et les employés par Centre

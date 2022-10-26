@@ -1,10 +1,7 @@
-# Pour enregistrer les informations des salles sur la base de données
-from .ConnectionDAO import ConnexionDAO
-
 class SallesDAO:
     
-    def __init__(self) -> None:
-        self.bd = ConnexionDAO()
+    def __init__(self, bd) -> None:
+        self.bd = bd
         self.curseur = self.bd.curseur
 
     def ajouter(self, args : tuple[str | str | int | int | float ]):
@@ -31,6 +28,9 @@ class SallesDAO:
         sql = "INSERT INTO hor_salle(id_horaire, id_salle) VALUES( %s, %s)"
         val = (args)
         self.__execute_query(sql, val)
+
+    def modifier(self, table: tuple[str], val: tuple[str]):
+        pass
 
     def __execute_query(self, sql : str, val : tuple = None):
         self.curseur.execute(sql, val)

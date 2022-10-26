@@ -24,6 +24,10 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	DROP VIEW IF EXISTS view_salles_compagnie;
 	DROP VIEW IF EXISTS view_employes_lieu;
 	DROP VIEW IF EXISTS view_salle_horaire;
+    
+    -- suppression des triggers
+    DROP TRIGGER IF EXISTS centre_root;
+    DROP TRIGGER IF EXISTS employe_root;
 
 	-- Création des tables
 	CREATE TABLE compagnies(
@@ -169,19 +173,53 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	FROM salles
 	INNER JOIN hor_salle ON salles.id = hor_salle.id_salle
 	INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
+    
+-- Trigger
+DELIMITER //
+CREATE TRIGGER centre_root
+AFTER INSERT
+ON compagnies
+FOR EACH ROW
+INSERT INTO centres(nom, compagnie, adresse, ville, pays, code_postal)
+VALUES (new.nom, new.id, '*** rue', 'ville', 'Canada', 'H1H 1H1')//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER employe_root
+AFTER INSERT
+ON compagnies
+FOR EACH ROW
+INSERT INTO employes(compagnie, nom, prenom, courriel, mot_de_passe)
+VALUES (new.id, 'root', 'propriétaire', new.courriel, new.mot_de_passe)//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER lier_e_c
+AFTER INSERT
+ON employes
+FOR EACH ROW
+INSERT INTO emp_cent(id_emp, id_centre)
+VALUES (new.id, (SELECT id from centres WHERE compagnie = new.compagnie LIMIT 1))//
+DELIMITER ;
+
+-- Functions
+
+-- Procedure
+
+-- Peut être utile pour les rapports de mathématiques
 
 
 -- Insertion test
 INSERT INTO compagnies (nom, info_paiement, courriel, mot_de_passe)
-VALUES ('Escaparium', '4444 5555 0880 6006', 'manager@escaparium.com', 'escaparium1'),
-	   ('Immersium', '1111 0000 2222 1313', 'manager@immersium.com', 'immersium1');
+VALUES ('Escaparium', '4444 5555 0880 6006', 'manager@escaparium.com', 'escaparium1');
+	  -- ('Immersium', '1111 0000 2222 1313', 'manager@immersium.com', 'immersium1');
 INSERT INTO centres (nom, compagnie, adresse, ville, pays, code_postal)
 VALUES ('Montréal', 1, '2000 rue Ontario', 'Montréal', 'Canada', 'H10 2B2'),
 		('Longueuil', 1, '2000 rue Maisonneuve', 'Longueuil', 'Canada', 'J1K 2Y9'),
         ('Centre-Ville', 2, '1000 rue Saint-Denis', 'Montréal', 'Canada', 'H2k 0B0');
 INSERT INTO employes (compagnie, nom, prenom, salaire, num_telephone, niveau_acces, courriel, num_ass, mot_de_passe)
-VALUES (1, 'Guindon', 'Maxence', 13.75, '514 200-8815', 1, 'mguindon@escaparium.com', 000111222, 'guindon1'),
-(2, 'Guindon', 'Maxence', 13.75, '514 200-8815', 1, 'mguindon@immersium.com', 000111222, 'guindon1');
+VALUES (1, 'Guindon', 'Maxence', 13.75, '514 200-8815', 1, 'mguindon@escaparium.com', 000111222, 'guindon1');
+-- (2, 'Guindon', 'Maxence', 13.75, '514 200-8815', 1, 'mguindon@immersium.com', 000111222, 'guindon1');
 INSERT INTO emp_cent(id_emp, id_centre)
 VALUES(1, 1),
 	  (1, 2),

@@ -5,7 +5,8 @@ from modele.actionDAO import ActionDAO
 
 def main(): 
     print('Hello World')
-    #gs.valider_connexion(courriel='manager@escape.com', mdp='CarlensBelony1!')
+    # gs = GestionSysteme()
+    # print(gs.enregistrer('compagnie', dict_comp))
 
     
     Serveur.demarrer_serveur()

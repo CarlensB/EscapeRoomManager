@@ -1,10 +1,8 @@
 # Pour enregistrer les informations des employes sur la base de données
-from .ConnectionDAO import ConnexionDAO
-
 class EmployeDAO:
     
-    def __init__(self) -> None:
-        self.bd = ConnexionDAO()
+    def __init__(self, bd) -> None:
+        self.bd = bd
         self.curseur = self.bd.curseur
 
     def ajouter(self, args : tuple[ int | str | str | float | str | int | str | int | str]) -> None:
@@ -39,7 +37,10 @@ class EmployeDAO:
         result = self.curseur.fetchall()
         return result
 
-    def lier_centre(self, args: tuple) -> None:
+    def modifier(self, table: tuple[str], val: tuple[str]):
+        pass
+
+    def lier(self, args: tuple) -> None:
         # le tuple doit contenir les ids de l'employé et du centre où il travail
         sql = '''
         INSERT INTO emp_cent(id_emp, id_centre)
