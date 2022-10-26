@@ -1,35 +1,5 @@
 import { makeAutoObservable } from "mobx";
 
-// export enum ActivePage {
-//     Login= 1,
-//     CreateAccount= 2,
-//     Loggedin= 3
-// }
-
-// export class LoginPageActions {
-
-//     constructor(
-//         public LoginError: boolean,
-//         public CreateAccountError: boolean,
-
-//     )
-//     {
-//         makeAutoObservable(this);
-//         this.LoginError = false
-//         this.CreateAccountError = false
-//     }
-
-//     GoToCreateAcountPage() {
-//         this.CreateAccountError = false;
-
-//     }
-
-//     GoToLoginPage() {
-//         this.CreateAccountError = false;
-
-
-// };
-// }
 
 class Salle{
 
@@ -42,13 +12,9 @@ class Salle{
         public heureOuverture: number = 9,
         public heureFermeture: number = 9,
         public sallePrive: boolean = false,
-        public description: string = "",
+        public description: string = "Description de la salle",
     )
     {}
-        // reset() {
-        //     this.username = "";
-        //     this.password = "";
-        // }
 
 }
 
@@ -78,14 +44,16 @@ export class Compagnie{
     constructor(
         public name: string = "Nom de Compagnie",
         public centres: Centre[],
-        public selection: number = 0,
+        public selectionnee: number = 0,
     )
     {
+        makeAutoObservable(this);
         this.initialiserComp()
     }
     initialiserComp(){
         let a = new Centre("Centre laval", []);
         a.nom = "Centre 1"
+        a.genererSalles()
         a.genererSalles()
         this.centres.push(a)
 
