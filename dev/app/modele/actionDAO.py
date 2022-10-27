@@ -11,10 +11,6 @@ from DAO.RabaisDAO import RabaisDAO
 from DAO.ReservationsDAO import ReservationsDAO
 from DAO.SallesDAO import SallesDAO
 
-
-
-
-
 class ActionDAO:
     
     class Requete(Enum):

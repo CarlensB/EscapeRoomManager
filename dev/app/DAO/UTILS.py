@@ -1,6 +1,6 @@
 # Connection bd
 USER = 'erm_user'
-HOTE = '127.0.0.1'
-MDP = 'EscapeRoomManager'
+HOTE = '165.227.39.93'
+MDP = 'ERM@C61mc'
 # pour se connecter nous même à la bd : escaperoommanager
-DB = 'erm_db'
+DB = 'ERM_DB'

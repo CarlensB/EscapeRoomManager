@@ -1,15 +1,15 @@
-from serveur_api import Serveur
+from serveur_api import Serveur, dict_comp
 from modele.Modele import GestionSysteme, Enregistrement
 from modele.actionDAO import ActionDAO
 
 
 def main(): 
     print('Hello World')
-    # gs = GestionSysteme()
-    # print(gs.enregistrer('compagnie', dict_comp))
+    gs = GestionSysteme()
+    print(gs.enregistrer('compagnie', dict_comp))
 
     
-    Serveur.demarrer_serveur()
+    #Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':
