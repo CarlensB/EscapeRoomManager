@@ -1,9 +1,4 @@
-import { autorun, configure, observable, makeAutoObservable } from "mobx";
-import remotedev from "mobx-remotedev"
-import { resetGlobalState } from "mobx/dist/internal";
-configure({
-    enforceActions: "never",
-})
+import { makeAutoObservable } from "mobx";
 
 export enum ActivePage {
     Login= 1,
@@ -11,7 +6,7 @@ export enum ActivePage {
     Loggedin= 3
 }
 
-class LoginPage {
+export class LoginPageActions {
 
     constructor(
         public LoginError: boolean,
@@ -45,17 +40,27 @@ class LoginPage {
         if (this.LoginError == true)
         this.LoginError = false;
         else this.LoginError=true;
-        // this.LoginPageActive = ActivePage.Loggedin
+        this.LoginPageActive = ActivePage.Loggedin
+
+        // let formData = new FormData();
+        // formData.append("username", this.loginInfos.username);
+        // formData.append("password", this.loginInfos.password);
         
-        try {
-            fetch('http://127.0.0.1:5000/hello')
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-      })
-          } catch (e) {
-              console.log("")
-          }
+        
+    //     try {
+    //         fetch('http://127.0.0.1:5000/hello',
+    //         {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     console.log(response);
+    //     
+    //   })
+    //       } catch (e) {
+    //           console.log("")
+    //       }
 
     }
 
@@ -67,12 +72,12 @@ class LoginPage {
         console.log(this.createAccountInfos.companyName)
         console.log(this.createAccountInfos.password)
         console.log(this.createAccountInfos.repeatpassword)
-        this.GoToLoginPage()
+        // this.GoToLoginPage()
     }
 
 };
 
-class CreateAccountInfos{
+export class CreateAccountInfos{
 
     constructor(
         public username: string = "",
@@ -91,7 +96,7 @@ class CreateAccountInfos{
 
 }
 
-class LoginInfos{
+export class LoginInfos{
 
     constructor(
         public username: string = "",
@@ -104,20 +109,3 @@ class LoginInfos{
         }
 
 }
-
-class LoginStore {
-    public loginpage: LoginPage
-    
-    constructor() {
-        makeAutoObservable(this);
-        remotedev(this, { global: true, name: this.constructor.name });
-        this.loginpage = new LoginPage(false, false, ActivePage.Login, new LoginInfos(), new CreateAccountInfos())
-      }
-
-}
-
-
-
-const loginStore = new LoginStore();
-
-export default loginStore

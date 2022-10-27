@@ -1,0 +1,62 @@
+.body{
+    font-family: 'Poppins',sans-serif;
+}
+.ContainerCentres{
+    background-color: brown;
+    display: inline-block;
+    width: 70%;
+    padding: 1% 5% 1% 5%;
+
+}
+
+.centre{
+    display: inline-block;
+    margin: 10px 25px 10px 25px;
+    border: 5px solid black;
+}
+.selected{
+    background-color: blue;
+}
+
+/* ____________________________________SALLES______________________________ */
+
+.Containersalles{
+    background-color: blue;
+    display: inline-block;
+    width: 70%;
+    height: 60%;
+    padding: 1% 5% 1% 5%;
+    overflow: auto;
+}
+
+.ContainerSalle{
+    background-color: red;
+    display: inline-block;
+    margin: 20px;
+    width: 350;
+    height: 400px;
+}
+
+.NomSalle{
+    width: 350;
+    font-size: 32px;
+    background-color:wheat;
+}
+
+.DescriptionSalle{
+    font-size: 16px;
+    width: 350;
+    background-color: rgb(255, 226, 173);
+}
+
+.ContainerReservation{
+    background-color: rgb(0, 139, 219);
+    overflow: auto;
+    padding-left: 25;
+}
+
+.reservation{
+    width: 300px;
+    height: 60px;
+    background-color: white;
+}
