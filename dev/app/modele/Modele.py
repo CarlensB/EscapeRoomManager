@@ -91,12 +91,12 @@ class Enregistrement:
                 liste.append(self.__info[element])
 
             liste = tuple(liste)
-            try:
-                a = ActionDAO()
-                a.requete_dao(a.Requete.INSERT, self.__type, liste)
-                self.__msg.append(self.__element + ' enregistrer')
-            except:
-                self.__msg.append(self.__element +" déjà enregistrer")
+            #try:
+            a = ActionDAO()
+            a.requete_dao(a.Requete.INSERT, self.__type, liste)
+            #    self.__msg.append(self.__element + ' enregistrer')
+            #except:
+            #    self.__msg.append(self.__element +" déjà enregistrer")
 
 class GestionSysteme:
 
