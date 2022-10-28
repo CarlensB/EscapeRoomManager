@@ -25,6 +25,9 @@ class Serveur:
     def definir_controleur(controleur) -> None:
         Serveur.__controleur = controleur
 
+
+#  test 
+
     @__app.route('/hello')
     def hello_world():
         #http://127.0.0.1:5000/hello
@@ -34,28 +37,47 @@ class Serveur:
     @__app.route('/')
     def index():
         return render_template('login.html')
+    
+    
+# Pour la connexion et l'enregistrement de nouvelle compagnie ou employe
+    
+    @__app.route('/validation', methods=['GET', 'POST'])
+    def validation():
+        if request.method != 'GET':
+            info = request.form['nm']
+            result = Serveur.__controleur.valider_connexion(info)
+            return json.dumps(info)
+        
+    @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
+    def enregistrement(name):
+        if request.method != 'GET':
+            info = request.form['nm']
+            result = Serveur.__controleur.enregistrer(name, info)
+            return json.dumps(info)
 
-    @__app.route('/<name>', methods=['GET', 'POST'])
-    def requete(name):
+
+# insert et select pour la bd
+    @__app.route('/insert/<table>', methods=['GET', 'POST'])
+    def insert(table):
         if request.method == 'POST':
-            session['username'] = 'admin'
-            session['acces'] = '4'
+            info = request.form
+            print(info)
+            #print(info['nom'])
+            result = Serveur.__controleur.inserer(table, info)
+            return json.dumps(result)
+        else:
+            return json.dumps("GET request are ignored")
+        
+    @__app.route('/select/<name>', methods=['GET', 'POST'])
+    def select(name):
+        if request.method == 'POST':
             info = (name, request.form['nm'])
             return json.dumps(info)
         else:
-            session['acces'] = '4'
-            info = request.args.get('nm')
-            info = (name, 'Success')
-            return json.dumps(info)
+            return json.dumps("GET request are ignored")
 
+
+    # Pour avoir accès au variable de session
     @__app.route('/session')
     def session():
         return session
-
-        #return json.dumps(name)
-        #if request.methods == "POST":
-        #     Serveur.__controleur.page[name]
-        # result = Serveur.__controleur.enregistrer('compagnie',)
-        # result1 = Serveur.__controleur.enregistrer('employe', )
-        # json = json.dumps(result, result1)
-        # return json
