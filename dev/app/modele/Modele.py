@@ -147,7 +147,7 @@ class GestionSysteme:
     def valider_connexion(self, **info: str) -> tuple[bool, str]:
         # info, contient courriel et mdp
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.Employe, (info['courriel'],))
+        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
         information = result[0]
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
@@ -190,7 +190,7 @@ class GestionSysteme:
 
     def __get_client(self, index: int) -> str:
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.Compagnie, index)
+        result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, index)
         return result[0][1]
 
     def __determiner_prix(self, r: 'Reservation'):
