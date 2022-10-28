@@ -1,21 +1,17 @@
-import { observer } from 'mobx-react';
-import React from 'react';
-import reactDom from "react-dom";
-import accueilStore from './Middlewares/AccueilStore';
-import './CSS/Accueil.css'
+import { observer } from "mobx-react"
+import React from "react"
+import accueilStore from "../Middlewares/AccueilStore"
 
 
-function AccueilPageComp() {
-
-  return(
-      React.createElement(
-          'div',
-          null,
+export const AppAccueil = observer(() => {
+    return (React.createElement('div',
+          {class: 'AppRight'},
           React.createElement(Centres),
           React.createElement(Salles)
-      )
-  ) 
+          ))
 }
+
+)
 
 
 const Centres = observer(() => {
@@ -29,9 +25,9 @@ const Centres = observer(() => {
     )
 
     function genererCentres(){
-        let arrayCentres = []
         let listeCentres = accueilStore.compagnie
-
+        let arrayCentres = []
+        
         for (let i = 0; i<listeCentres.centres.length; i++)
         {
             if (i==listeCentres.selectionnee)
@@ -42,7 +38,8 @@ const Centres = observer(() => {
                 ))
             else arrayCentres.push(React.createElement(
                 'div',
-                {class: 'centre', onClick: () => {listeCentres.selectionnee = i}},
+                {class: 'centre', onClick: () => {listeCentres.selectionnee = i
+                    console.log(accueilStore.ActivePage)}},
                 listeCentres.centres[i].nom
             ))
         }
@@ -50,7 +47,6 @@ const Centres = observer(() => {
     }
   }
 )
-
 const Salles = observer(() => {
 
     return(
@@ -114,11 +110,3 @@ const Salles = observer(() => {
 
   }
 )
-
-
-
-
-
-const domContainer = document.body;
-const root = reactDom.createRoot(domContainer);
-root.render(React.createElement(AccueilPageComp));

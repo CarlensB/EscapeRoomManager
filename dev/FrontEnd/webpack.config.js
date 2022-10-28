@@ -1,13 +1,13 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/AccueilComp.tsx',
+    entry: './src/LoggedIn.tsx',
     output: {
         filename: 'accueil_bundled.js',
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
-        extensions: [".webpack.js", ".web.js", ".ts", ".js"]
+        extensions: [".webpack.js", ".web.js", ".ts", ".js", ".tsx"]
     },
     module: {
         rules: [{ test: /\.ts$/, loader: "ts-loader" },
