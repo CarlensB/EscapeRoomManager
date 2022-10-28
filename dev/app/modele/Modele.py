@@ -178,14 +178,13 @@ class GestionSysteme:
             liste.append(info[key])
         liste = tuple(liste)
             
-        a = ActionDAO
+        a = ActionDAO()
         t = self.__action_table[table]
         r = a.Requete.INSERT
-        result = a.requete_dao()
+        result = a.requete_dao(r, t, liste)
         return result
 
-    def création_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
-
+    def creation_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
         algo = AlgoContext()
         algo.demarrer_algorithme(info['algo_choix'], info['contraintes'])
 
