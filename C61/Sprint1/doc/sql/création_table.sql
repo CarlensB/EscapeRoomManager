@@ -94,6 +94,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		centre          INT        	NOT NULL,
 		nb_max_joueur   INT         NOT NULL,
 		prix_unitaire   FLOAT     	NOT NULL,
+		privee			INT			NOT NULL,
 		
 		PRIMARY KEY pk_salle(id),
 		FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE

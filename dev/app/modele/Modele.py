@@ -6,6 +6,7 @@ from .actionDAO import ActionDAO
 import bcrypt
 import re
 import codecs
+from .Algorithme import AlgoContext
 
 # source pour l'encodage et décodage du mot de passe :
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
@@ -170,6 +171,13 @@ class GestionSysteme:
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
 
+    def création_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
+        
+        algo = AlgoContext()
+        algo.demarrer_algorithme(info['algo_choix'], info['contraintes'])
+        
+
+
 #==============================================================================
 #           Fonctions protégés
 
@@ -225,6 +233,8 @@ class GestionSysteme:
         centre: str
         nb_joueur_max: int
         prix_unitaire: float
+        duree: float
+        privee: bool
         liste_horaire: list['GestionSysteme.Horaire']
 
     @dataclass()

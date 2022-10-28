@@ -123,6 +123,7 @@ def main():
                   "intervalle" : "30min",
                    }
     s = strategy_algo(0, dictionnaire)
+    print (s.data)
     for data in s.data:
         print(data/60)
 
