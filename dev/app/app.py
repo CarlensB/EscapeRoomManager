@@ -33,14 +33,15 @@ dict_emp = {
 def main(): 
     print('Hello World')
     gs = GestionSysteme()
+    Serveur.definir_controleur(gs)
     #gs.création_horaire(dictionnaire)
-    print(gs.valider_connexion(courriel='manager@escape.com', mdp='CarlensBelony1!'))
-    print(gs.utilisateur)
+    #print(gs.valider_connexion(courriel='manager@escape.com', mdp='CarlensBelony1!'))
+    #print(gs.utilisateur)
     #print(gs.enregistrer('compagnie', dict_comp))
     #gs.valider_connexion()
 
     
-    #Serveur.demarrer_serveur()
+    Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':

@@ -26,7 +26,7 @@ class Enregistrement:
     __MESSAGE_MDP_MIN = "Le mot de passe doit contenir au moins 1 lettre minuscule."
     __MESSAGE_MDP_CHIFFRE = "Le mot de passe doit contenir au moins 1 chiffre."
 
-    def __init__(self, table: ActionDAO.Table, info: dict) -> None:
+    def __init__(self, table: ActionDAO.Table, info: dict):
         self.__info = info
         self.__type = table
         self.__msg = []
@@ -34,7 +34,7 @@ class Enregistrement:
         self.__enregistrement()
 
     @property
-    def msg(self) -> list[str]:
+    def msg(self):
         return self.__msg
 
     def __enregistrement(self):
@@ -42,7 +42,7 @@ class Enregistrement:
         mdp_valide, mdp_msg = self.__validation_mdp(self.__info['mdp'])
         self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg])
 
-    def __crypter_mdp(self) -> None:
+    def __crypter_mdp(self):
         mdp = codecs.encode(self.__info['mdp'])
         sel = bcrypt.gensalt()
         cryptage = bcrypt.hashpw(mdp, sel)
@@ -52,7 +52,7 @@ class Enregistrement:
         # codex : module encoder byte codex.encode
         # decode pour retourner en str, lui donner le type et l'encodage comme utf-8
 
-    def __validation_mdp(self, mdp: str) -> tuple[bool, str]:
+    def __validation_mdp(self, mdp: str):
         # règle du mot de passe : 
         # 12 caractère minimum, une majuscule, une minuscule, un chiffre, un caractère spécial
         pattern = [(self.__MESSAGE_MDP_CHIFFRE, r'\d+'),
@@ -74,7 +74,7 @@ class Enregistrement:
 
         return valider, msg
 
-    def __validation_courriel(self, courriel: str) -> tuple[bool, str]:
+    def __validation_courriel(self, courriel: str):
         pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         # source = https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
         if not re.fullmatch(pattern, courriel):
@@ -107,7 +107,7 @@ class GestionSysteme:
         Gerant = 2
         Employe = 3
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.__client = None
         self.__user = None
         self.__id = None
@@ -144,7 +144,7 @@ class GestionSysteme:
     def acces(self):
         return self.__acces
 
-    def valider_connexion(self, **info: str) -> tuple[bool, str]:
+    def valider_connexion(self, **info: str):
         # info, contient courriel et mdp
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
@@ -160,7 +160,7 @@ class GestionSysteme:
         else:
             return False, 'mot de passe invalide'
 
-    def enregistrer(self, type: str, info: dict) -> list[str]:
+    def enregistrer(self, type: str, info: dict):
         e = Enregistrement(self.__action_table[type], info)
         return e.msg
 
@@ -171,6 +171,18 @@ class GestionSysteme:
         a = ActionDAO()
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
+    
+    def inserer(self, table: str, info: dict):
+        liste = []
+        for key in info.keys():
+            liste.append(info[key])
+        liste = tuple(liste)
+            
+        a = ActionDAO
+        t = self.__action_table[table]
+        r = a.Requete.INSERT
+        result = a.requete_dao()
+        return result
 
     def création_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
 
@@ -180,7 +192,7 @@ class GestionSysteme:
     # ==============================================================================
     #           Fonctions protégés
 
-    def __verifier_centre(self, a: ActionDAO, centre: tuple) -> bool:
+    def __verifier_centre(self, a: ActionDAO, centre: tuple):
         liste_centre = a.requete_dao(a.Requete.SELECT, a.Table.CENTRE, centre[1])
         for c in liste_centre:
             if centre[0] == c[1]:
@@ -188,7 +200,7 @@ class GestionSysteme:
         a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
         self.__verifier_centre(a, centre)
 
-    def __get_client(self, index: int) -> str:
+    def __get_client(self, index: int):
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, index)
         return result[0][1]
