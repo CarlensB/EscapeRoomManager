@@ -1,4 +1,4 @@
-from serveur_api import Serveur, dict_comp
+from serveur_api import Serveur
 from modele.Modele import GestionSysteme, Enregistrement
 from modele.actionDAO import ActionDAO
 
@@ -11,14 +11,34 @@ dictionnaire ={
                 }
 }
 
+dict_comp = {
+        'nom' : 'escape1',
+        'info_paiement': 'Visa',
+        'courriel' : 'manager@escape1.com',
+        'mdp' : 'CarlensBelony1!'}
+
+dict_emp = {
+    'compagnie' : 2,
+    'nom' : 'Guindon',
+    'prenom' : 'Maxence',
+    'salaire' : 13.75,
+    'num_telephone' : '514-207-0088',
+    'niveau_acces' : 2,
+    'courriel' : 'maxguindon@escape.com',
+    'num_ass': 111,
+    'mdp' : 'CarlensBelony1!'
+
+}
+
 def main(): 
     print('Hello World')
-    gs = GestionSysteme()
-    gs.création_horaire(dictionnaire)
+    #gs = GestionSysteme()
+    #gs.création_horaire(dictionnaire)
     #print(gs.enregistrer('compagnie', dict_comp))
+    #gs.valider_connexion()
 
     
-    #Serveur.demarrer_serveur()
+    Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':

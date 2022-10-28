@@ -1,37 +1,19 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
-import flask as f
 import json
 
 from modele.Modele import GestionSysteme
 from flask_utils import HOTE, PORT
-from flask import request, render_template, session, redirect
+from flask import Flask, request, render_template, session, redirect
 
 
 # info test
 
-dict_comp = {
-        'nom' : 'escape',
-        'info_paiement': 'Visa',
-        'courriel' : 'manager@escape.com',
-        'mdp' : 'CarlensBelony1!'}
 
-dict_emp = {
-    'compagnie' : 2,
-    'nom' : 'Guindon',
-    'prenom' : 'Maxence',
-    'salaire' : 13.75,
-    'num_telephone' : '514-207-0088',
-    'niveau_acces' : 2,
-    'courriel' : 'maxguindon@escape.com',
-    'num_ass': 111,
-    'mdp' : 'CarlensBelony1!'
-
-}
 
 centre = ('escape', 1, '2000 rue Ontario', 'Montréal', 'Canada', 'H1H 2B2')
 
 class Serveur:
-    __app = f.Flask(__name__)
+    __app = Flask(__name__)
     __app.secret_key = 'ERM'
     __controleur = None
     
@@ -61,8 +43,10 @@ class Serveur:
             info = (name, request.form['nm'])
             return json.dumps(info)
         else:
+            session['acces'] = '4'
             info = request.args.get('nm')
-            return name, info
+            info = (name, 'Success')
+            return json.dumps(info)
 
     @__app.route('/session')
     def session():
