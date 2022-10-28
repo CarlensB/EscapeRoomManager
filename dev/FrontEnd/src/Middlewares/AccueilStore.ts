@@ -1,20 +1,26 @@
-import { autorun, configure, observable, makeAutoObservable } from "mobx";
+import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { resetGlobalState } from "mobx/dist/internal";
-import { Compagnie } from "./Actions/AccueilActions";
+import { Compagnie, newCentreInfos } from "./Actions/AccueilActions";
 configure({
     enforceActions: "never",
 })
 
+export enum eActivePage {
+    Accueil= 1,
+    CreateCentre= 2,
+    CreateSalle=3,
+    CreateReservation= 4
+}
 
 
 class AccueilStore {
-    public compagnie: Compagnie
+    public compagnie: Compagnie;
+    public ActivePage: number = eActivePage.Accueil
     
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
-        this.compagnie = new Compagnie("Escaparium", []);
+        this.compagnie = new Compagnie("Escaparium", [], new newCentreInfos());
         this.compagnie.initialiserComp();
       }
 

@@ -1,6 +1,12 @@
 .body{
     font-family: 'Poppins',sans-serif;
 }
+
+.AppRight{
+    width: 70%;
+    padding-top: 5%;
+}
+
 .ContainerCentres{
     background-color: brown;
     display: inline-block;
@@ -59,4 +65,20 @@
     width: 300px;
     height: 60px;
     background-color: white;
+}
+/* ______________________ MENU _____________________________ */
+
+.ContainerMenu{
+    width: 30%;
+    padding-top: 10%;
+    
+}
+
+.menuItem{
+    width: 100%;
+    height: 45px;
+    border: 2px solid grey;
+}
+.App{
+    display: flex;
 }

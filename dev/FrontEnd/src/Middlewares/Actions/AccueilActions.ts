@@ -22,6 +22,7 @@ class Centre{
 
     constructor(
         public nom: string = "Centre Montreal",
+        public adresse: string = "Ville de la Compagnie",
         public salles: Salle[] ,
     )
     {
@@ -44,6 +45,7 @@ export class Compagnie{
     constructor(
         public name: string = "Nom de Compagnie",
         public centres: Centre[],
+        public newCentreInfos: newCentreInfos,
         public selectionnee: number = 0,
     )
     {
@@ -51,17 +53,38 @@ export class Compagnie{
         this.initialiserComp()
     }
     initialiserComp(){
-        let a = new Centre("Centre laval", []);
+        let a = new Centre("Centre laval", "1 place ville-marie", []);
         a.nom = "Centre 1"
         a.genererSalles()
         a.genererSalles()
         this.centres.push(a)
 
-        a = new Centre("Centre montreal", []);
+        a = new Centre("Centre montreal", "1 place ville-marie", []);
         a.nom = "Centre 2"
         a.genererSalles()
         this.centres.push(a)
     }
 
+    AjouterCentre(nom:string, adresse:string){
+        this.centres.push(new Centre(nom, adresse, []))
+    }
+
     
 }
+
+export class newCentreInfos{
+
+    constructor(
+        public nom: string = "",
+        public adresse: string = "",
+    )
+    {}
+        reset() {
+            this.nom = "";
+            this.adresse = "";
+        }
+
+}
+
+
+

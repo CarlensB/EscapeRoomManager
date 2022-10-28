@@ -1,6 +1,5 @@
-import { autorun, configure, observable, makeAutoObservable } from "mobx";
+import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { resetGlobalState } from "mobx/dist/internal";
 import { LoginPageActions, ActivePage, LoginInfos, CreateAccountInfos } from "./Actions/LoginActions";
 configure({
     enforceActions: "never",
@@ -10,7 +9,7 @@ configure({
 
 class LoginStore {
     public loginpage: LoginPageActions
-    public 
+
     
     constructor() {
         makeAutoObservable(this);
