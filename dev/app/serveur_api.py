@@ -51,12 +51,13 @@ class Serveur():
     def insert(action, table):
         if request.method == 'POST':
             info = request.form
-            print(info)
-            # print(info['nom'])
-            result = Serveur.__controleur.inserer(table, info)
+            result = Serveur.__controleur.interaction_dao(action, table, info)
             return json.dumps(result)
         else:
-            return json.dumps("GET request are ignored")
+            #return json.dumps("GET request are ignored")
+            info = {'index': 1}
+            result = Serveur.__controleur.interaction_dao(action, table, info)
+            return json.dumps(result)
 
     # Pour avoir accès au variable de session
     @__app.route('/session')

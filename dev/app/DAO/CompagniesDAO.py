@@ -23,18 +23,18 @@ class CompagniesDAO:
         val = args
         self.__execute_query(sql, val)
 
-    def selectionner(self, compagnie: int) -> list[tuple]:
+    def selectionner(self, compagnie: list[tuple[int]]) -> list[tuple]:
         sql = "SELECT * from compagnies WHERE id = %s"
-        val = (compagnie,)
+        val = compagnie[0]
         return self.__select(sql, val)
 
-    def selectionner_all(self, args: int) -> list[tuple]:
+    def selectionner_all(self, args: list[tuple[int]]) -> list[tuple]:
         sql = "SELECT nom FROM compagnies"
         return self.__select(sql)
 
-    def supprimer(self, compagnie: int) -> None:
+    def supprimer(self, compagnie: list[tuple[int]]) -> None:
         sql = "DELETE FROM compagnies WHERE id = %s"
-        val = [(compagnie,)]
+        val = compagnie
         self.__execute_query(sql, val)
 
     def modifier(self, args: list[tuple[str, str, str, str]]) -> None:
@@ -43,9 +43,9 @@ class CompagniesDAO:
         val = args
         self.__execute_query(sql, val)
 
-    def recuper_salle(self, compagnie: int) -> list:
+    def recuper_salle(self, compagnie: list[tuple[int]]) -> list:
         sql = '''SELECT salle FROM view_salles_compagnie WHERE id_compagnie = %s'''
-        val = (compagnie,)
+        val = compagnie[0]
         return self.__select(sql, val)
 
     def __execute_query(self, sql: str, val: list[tuple] = None) -> None:

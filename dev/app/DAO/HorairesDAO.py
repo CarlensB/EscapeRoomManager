@@ -23,22 +23,22 @@ class HorairesDAO:
         val = args
         self.__execute_query(sql, val)
 
-    def selectionner(self, horaire: int) -> None:
+    def selectionner(self, horaire: list[tuple[int]]) -> None:
         sql = '''
         SELECT * FROM horaires WHERE id= %s
         '''
-        val = (horaire,)
+        val = horaire[0]
         return self.__select(sql, val)
 
-    def selectionner_all(self, salle : str) -> list:
+    def selectionner_all(self, salle: list[tuple[int]]) -> list:
         # Seulement tous les horaires pour une salle
         sql = "SELECT * FROM view_salle_horaire WHERE salle = %s"
-        val = (salle,)
+        val = salle[0]
         return self.__select(sql, val)
 
-    def supprimer(self, horaire: int) ->None:
+    def supprimer(self, horaire: list[tuple[int]]) ->None:
         sql = "DELETE FROM horaires WHERE id = %s"
-        val = [(horaire,)]
+        val = horaire
         self.__execute_query(sql, val)
 
     def modifier(self, args: list[tuple[str, str, int]]) -> None:
