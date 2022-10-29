@@ -158,7 +158,7 @@ class GestionSysteme:
     def dao(self):
         return self.__dao
 
-    def valider_connexion(self, **info: str):
+    def valider_connexion(self, **info: dict):
         # info, contient courriel et mdp
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
@@ -174,8 +174,8 @@ class GestionSysteme:
         else:
             return False, 'mot de passe invalide'
 
-    def enregistrer(self, type: str, info: dict):
-        e = Enregistrement(self.__action_table[type], info)
+    def enregistrer(self, table: str, info: dict):
+        e = Enregistrement(self.__action_table[table], info)
         return e.msg
 
     def deconnexion(self):
