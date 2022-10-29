@@ -5,12 +5,6 @@ from modele.Modele import GestionSysteme
 from flask_utils import HOTE, PORT
 from flask import Flask, request, render_template, session, redirect
 
-# info test
-
-
-centre = ('escape', 1, '2000 rue Ontario', 'Montréal', 'Canada', 'H1H 2B2')
-
-
 class Serveur():
     __app = Flask(__name__)
     __app.secret_key = 'ERM'
