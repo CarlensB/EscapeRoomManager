@@ -124,6 +124,15 @@ class GestionSysteme:
             'typeclient': ActionDAO.Table.TYPECLIENT
         }
 
+        self.__action = {
+                'selectionner': ActionDAO.Requete.SELECT,
+                'ajouter': ActionDAO.Requete.INSERT,
+                'supprimer': ActionDAO.Requete.DELETE,
+                'selectionner_all': ActionDAO.Requete.SELECT_ALL,
+                'modifier': ActionDAO.Requete.UPDATE,
+                'lier': ActionDAO.Requete.LIER
+            }
+
         self.page = {
             'register': 'register',
             'login': 'login'
@@ -149,7 +158,7 @@ class GestionSysteme:
     def dao(self):
         return self.__dao
 
-    def valider_connexion(self, **info: str):
+    def valider_connexion(self, **info: dict):
         # info, contient courriel et mdp
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
@@ -165,8 +174,8 @@ class GestionSysteme:
         else:
             return False, 'mot de passe invalide'
 
-    def enregistrer(self, type: str, info: dict):
-        e = Enregistrement(self.__action_table[type], info)
+    def enregistrer(self, table: str, info: dict):
+        e = Enregistrement(self.__action_table[table], info)
         return e.msg
 
     def deconnexion(self):
@@ -177,16 +186,17 @@ class GestionSysteme:
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
     
-    def inserer(self, table: str, info: dict):
+    def interaction_dao(self, action: str, table: str, info: dict):
         liste = []
+
         for key in info.keys():
             liste.append(info[key])
-        liste = tuple(liste)
-            
-        a = ActionDAO()
+        liste = [tuple(liste)]
+
         t = self.__action_table[table]
-        r = a.Requete.INSERT
-        result = a.requete_dao(r, t, liste)
+        r = self.__action[action]
+        result = self.__dao.requete_dao(r, t, liste)
+
         return result
 
     def creation_horaire(self, info: dict) -> list['GestionSysteme.Salle']:

@@ -34,26 +34,24 @@ class Serveur():
 
     @__app.route('/validation', methods=['GET', 'POST'])
     def validation():
-        if request.method != 'GET':
+        if request.method == 'POST':
             info = request.form['nm']
             result = Serveur.__controleur.valider_connexion(info)
-            return json.dumps(info)
+            return json.dumps(result)
 
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
     def enregistrement(name):
-        if request.method != 'GET':
+        if request.method == 'POST':
             info = request.form['nm']
             result = Serveur.__controleur.enregistrer(name, info)
-            return json.dumps(info)
+            return json.dumps(result)
 
     # insert et select pour la bd
     @__app.route('/<action>/<table>', methods=['GET', 'POST'])
     def insert(action, table):
         if request.method == 'POST':
             info = request.form
-            print(info)
-            # print(info['nom'])
-            result = Serveur.__controleur.inserer(table, info)
+            result = Serveur.__controleur.interaction_dao(action, table, info)
             return json.dumps(result)
         else:
             return json.dumps("GET request are ignored")

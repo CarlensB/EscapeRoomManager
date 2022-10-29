@@ -26,20 +26,19 @@ class EmployeDAO:
         val = args
         self.__execute_query(sql, val)
         
-    def supprimer(self, employe: int) -> None:
+    def supprimer(self, employe: list[tuple[int]]) -> None:
         sql="DELETE FROM employes WHERE id = %s"
-        val= [(employe,)]
+        val= employe
         self.__execute_query(sql, val)
 
-    def selectionner(self, employe : int) -> list:
+    def selectionner(self, employe : list[tuple[int]]) -> list:
         sql = "SELECT * FROM employes WHERE id= %s"
-        val = (employe,)
-
+        val = employe[0]
         return self.__select(sql, val)
 
-    def selectionner_all(self, compagnie : int) -> list:
+    def selectionner_all(self, compagnie : list[tuple[int]]) -> list:
         sql = "SELECT * FROM employes WHERE compagnie = %s"
-        val = (compagnie,)
+        val = compagnie[0]
         return self.__select(sql, val)
 
     def modifier(self, args: list[tuple[str]]) -> None:

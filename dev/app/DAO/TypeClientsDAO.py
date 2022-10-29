@@ -20,19 +20,19 @@ class TypeClientsDAO:
         val = args # str, str, int
         self.__execute_query(sql, val)
     
-    def supprimer(self, tc: int) ->None:
+    def supprimer(self, tc: list[tuple[int]]) ->None:
         sql = "DELETE FROM typeclient WHERE id = %s"
-        val = [(tc,)]
+        val = tc
         self.__execute_query(sql, val)
 
-    def selectionner(self, client_type: int) -> list:
+    def selectionner(self, client_type: list[tuple[int]]) -> list:
         sql = "SELECT * from typeclient WHERE id = %s"
-        val = (client_type,)
+        val = client_type[0]
         return self.__select(sql, val)
 
-    def selectionner_all(self, compagnie : int) -> list:
+    def selectionner_all(self, compagnie: list[tuple[int]]) -> list:
         sql = "SELECT * FROM typeclient WHERE compagnie = %s"
-        val = (compagnie,)
+        val = compagnie[0]
         return self.__select(sql, val)
 
     def modifier(self, args: list[tuple[str| float |int]]) -> None:
