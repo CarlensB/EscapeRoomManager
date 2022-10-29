@@ -52,6 +52,7 @@ class AlgoNaif:
     def __creation_horaire(self):
         for s in self.__salles:
             s.liste_horaire.append(self.__listing(s.duree))
+
     
     def __listing(self, duree: int):
         self.__horaires.append(self.__heures[0])
@@ -67,6 +68,16 @@ class AlgoNaif:
 #...
 
 class BackChecking:
+    '''
+    L'algorithme de Back checking ou back tracking est un algorithme naif qui avance vers une solution jusqu'à ce que
+    celle-ci soit déterminée comme correct ou incorrect, auquelle cas, l'algorithme reviendra en arrière pour essayer une
+    nouvelle solution.
+    La classe BackChecking fait l'implémentation de cette algorithme.
+    Source :
+    https://medium.com/algorithms-and-leetcode/backtracking-e001561b9f28
+    https://www.tutorialspoint.com/python_data_structure/python_backtracking.htm#:~:text=Practical%20Data%20Science%20using%20Python&text=Backtracking%20is%20a%20form%20of,not%20give%20the%20required%20solution.
+    '''
+
     pass
 
 #...
