@@ -1,39 +1,55 @@
 class RabaisDAO:
     
     def __init__(self, bd) -> None:
-        self.bd = bd
-        self.curseur = self.bd.curseur
+        self.__bd = bd
+        self.__curseur = self.__bd.curseur
+        self.__fonction ={
+            'ajouter': self.ajouter,
+            'selectionner': self.selectionner,
+            'supprimer': self.supprimer,
+            'selectionner_all': self.selectionner_all,
+            'modifier': self.modifier,
+        }
 
-    def ajouter(self, args : tuple[str | float | int | int | str]):
+    @property
+    def fonction(self):
+        return self.__fonction
+
+    def ajouter(self, args: list[tuple[str, float, int, int, str]]) -> None:
         sql = '''
         INSERT INTO rabais (nom, pourcentage, compagnie, isActive, date_fin)
         VALUES (%s, %s, %s, %s, %s)
         '''
-        val = (args)
-        self.execute_query(sql, val)
-    
+        val = args
+        self.__execute_query(sql, val)
+
+    def selectionner(self, rabais : int) -> list:
+        sql = "SELECT * FROM rabais WHERE id = %s"
+        val = (rabais,)
+        return self.__select(sql, val)
+
     def supprimer(self, id: int) -> None:
         sql = "DELETE FROM rabais WHERE id = %s"
-        val = (id,)
-        self.execute_query(sql, val)
-
-    def selectionner(self, rabais : str) -> list:
-        sql = "SELECT * FROM rabais WHERE nom = %s"
-        val = (rabais,)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
-        return result
+        val = [(id,)]
+        self.__execute_query(sql, val)
 
     def selectionner_all(self, compagnie : int) -> list:
         sql = "SELECT * FROM rabais WHERE compagnie =%s"
         val = (compagnie,)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
+        return self.__select(sql, val)
+        
+    def modifier(self, args: list[tuple[str, float, int, int, str, int]]) -> None:
+        sql = '''UPDATE rabais
+                 SET nom= %s, pourcentage= %s, compagnie= %s, isActive= %s, date_fin= %s
+                 WHERE id= %s'''
+        val = args
+        self.__execute_query(sql, val)
+
+    def __select(self, sql: str, val: tuple) -> list:
+        self.__curseur.execute(sql, val)
+        result = self.__curseur.fetchall()
         return result
 
-    def modifier(self, table: tuple[str], val: tuple[str]):
-        pass
-
-    def execute_query(self, sql : str, val : tuple = None):
-        self.curseur.execute(sql, val)
-        self.bd.connexion.commit()
+    def __execute_query(self, sql : str, val : tuple = None):
+        self.__curseur.executemany(sql, val)
+        self.__bd.connexion.commit()

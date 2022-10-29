@@ -1,42 +1,57 @@
 class HorairesDAO:
     
     def __init__(self, bd) -> None:
-        self.bd = bd
-        self.curseur = self.bd.curseur
+        self.__bd = bd
+        self.__curseur = self.__bd.curseur
+        self.__fonction ={
+            'ajouter': self.ajouter,
+            'selectionner': self.selectionner,
+            'supprimer': self.supprimer,
+            'selectionner_all': self.selectionner_all,
+            'modifier': self.modifier,
+        }
 
-    def ajouter(self, args : tuple[ str | str | int]):
+    @property
+    def fonction(self):
+        return self.__fonction
+
+    def ajouter(self, args: list[tuple[str, str]]) -> None:
         sql = '''
         INSERT INTO horaires (heure_debut, heure_fin)
         VALUES(%s, %s)
         '''
-        val = (args)
+        val = args
         self.__execute_query(sql, val)
 
-    def selectionner(self, args : tuple[str | str]):
+    def selectionner(self, horaire: int) -> None:
         sql = '''
-        SELECT * FROM horaires WHERE heure_debut = %s AND heure_fin = %s
+        SELECT * FROM horaires WHERE id= %s
         '''
-        val = (args)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
-        return result
+        val = (horaire,)
+        return self.__select(sql, val)
 
     def selectionner_all(self, salle : str) -> list:
         # Seulement tous les horaires pour une salle
         sql = "SELECT * FROM view_salle_horaire WHERE salle = %s"
         val = (salle,)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
-        return result
+        return self.__select(sql, val)
 
-    def supprimer(self, id : int) ->None:
+    def supprimer(self, horaire: int) ->None:
         sql = "DELETE FROM horaires WHERE id = %s"
-        val = (id,)
+        val = [(horaire,)]
         self.__execute_query(sql, val)
 
-    def modifier(self, table: tuple[str], val: tuple[str]):
-        pass
+    def modifier(self, args: list[tuple[str, str, int]]) -> None:
+        sql = '''UPDATE horaires SET heure_debut= %s, heure_fin= %s
+                 WHERE id= %s '''
+        val = args
+        self.__execute_query(sql, val)
+    
+    def __select(self, sql: str, val: tuple) -> list:
+        self.__curseur.execute(sql, val)
+        result = self.__curseur.fetchall()
+        return result
 
-    def __execute_query(self, sql : str, val : tuple = None):
-        self.curseur.execute(sql, val)
-        self.bd.connexion.commit()
+    def __execute_query(self, sql: str, val: tuple = None) -> None:
+        self.__curseur.executemany(sql, val)
+        self.__bd.connexion.commit()

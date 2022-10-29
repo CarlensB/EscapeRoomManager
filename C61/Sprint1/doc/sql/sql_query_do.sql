@@ -59,7 +59,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		pourcentage     FLOAT 	    NOT NULL,
 		compagnie       INT         NOT NULL,
 		isActive        INT			NOT NULL DEFAULT 0,
-		date_fin        TIMESTAMP   NOT NULL,
+		date_fin        TEXT   NOT NULL,
 
 		PRIMARY KEY pk_rab(id),
 		FOREIGN KEY fk_rab_comp(compagnie) REFERENCES compagnies(id) ON DELETE CASCADE,
@@ -71,7 +71,8 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		heure_debut     VARCHAR(10) NOT NULL,
 		heure_fin       VARCHAR(10)	NOT NULL,
 
-		PRIMARY KEY pk_horaire(id)
+		PRIMARY KEY pk_horaire(id),
+		UNIQUE(heure_debut, heure_fin)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE centres(
@@ -137,14 +138,14 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	CREATE TABLE reservations(
 		id                  INT         NOT NULL AUTO_INCREMENT,
 		nom_client          TEXT        NOT NULL,
-		num_telephone       INT         NOT NULL,
+		num_telephone       TEXT         NOT NULL,
 		statut_reservation  INT         NOT NULL,
 		salle				INT			NOT NULL,
 		nb_personnes        INT         NOT NULL,
 		courriel            TEXT        NOT NULL,
 		heure               TEXT        NOT NULL,
 		prix_total          FLOAT	    NOT NULL,
-		date                TIMESTAMP   NOT NULL,
+		date                TEXT		NOT NULL,
 		
 		PRIMARY KEY pk_resa(id),
 		FOREIGN KEY fk_r_salle(salle) REFERENCES salles(id) ON DELETE CASCADE,
@@ -173,6 +174,15 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	FROM salles
 	INNER JOIN hor_salle ON salles.id = hor_salle.id_salle
 	INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
+
+	CREATE VIEW view_reservation_compagnie AS
+	SELECT reservations.id AS 'id_reservation', reservations.nom_client AS 'client',
+	reservations.nb_personnes AS 'participants', reservations.prix_total AS 'prix',
+	reservations.num_telephone AS 'telephone', salles.id AS 'id_salle', salles.nom AS 'salle',
+	centres.nom AS 'centre', centres.id AS 'id_centre', centres.compagnie AS 'id_compagnie'
+	FROM reservations
+	INNER JOIN salles ON salles.id = reservations.salle
+	INNER JOIN centres ON centres.id = salles.centre;
     
 -- Trigger
 DELIMITER //

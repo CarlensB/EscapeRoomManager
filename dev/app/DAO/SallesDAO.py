@@ -1,37 +1,63 @@
 class SallesDAO:
     
     def __init__(self, bd) -> None:
-        self.bd = bd
-        self.curseur = self.bd.curseur
+        self.__bd = bd
+        self.__curseur = self.__bd.curseur
+        self.__fonction ={
+            'ajouter': self.ajouter,
+            'selectionner': self.selectionner,
+            'supprimer': self.supprimer,
+            'selectionner_all': self.selectionner_all,
+            'modifier': self.modifier,
+            'lier': self.lier
+        }
 
-    def ajouter(self, args : tuple[str | str | int | int | float ]):
+    @property
+    def fonction(self):
+        return self.__fonction
+
+    def ajouter(self, args : list[tuple[str, str, int, int, float, int]]) -> None:
         sql = '''
-        INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire)
-        VALUE(%s, %s, %s, %s, %s)
+        INSERT INTO salles (nom, description, centre, nb_max_joueur, prix_unitaire, privee)
+        VALUE(%s, %s, %s, %s, %s, %s)
         '''
-        val = (args)
+        val = args
         self.__execute_query(sql, val)
+
+    def selectionner(self, salle: int) -> list:
+        sql = '''SELECT * FROM salles WHERE id = %s'''
+        val = (salle,)
+        return self.__select(sql, val)
 
     def supprimer(self, salle: int) -> None:
         sql = "DELETE FROM salles WHERE id = %s"
-        val = (salle,)
+        val = [(salle,)]
         self.__execute_query(sql, val)
 
-    def selectioner(self, compagnie : int) -> list:
-        sql = "SELECT * FROM view_salles_compagnie WHERE id_compagnie = %s"
+    def selectionner_all(self, compagnie : int) -> list:
+        sql = "SELECT * FROM salles WHERE centre = %s"
         val = (compagnie,)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
-        return result
+        return self.__select(sql, val)
 
-    def ajouter_horaire(self, args : tuple[int, int]):
-        sql = "INSERT INTO hor_salle(id_horaire, id_salle) VALUES( %s, %s)"
-        val = (args)
+    def modifier(self, args: list[tuple[str, str, int, int, float, int]]) -> None:
+        sql = '''UPDATE salles
+                 SET nom= %s, description= %s, centre= %s, nb_max_joueur= %s, prix_unitaire= %s, privee= %s
+                 WHERE id = %s'''
+        val = args
         self.__execute_query(sql, val)
 
-    def modifier(self, table: tuple[str], val: tuple[str]):
-        pass
+    def lier(self, liste_id: list[tuple[int, int]]) -> None:
+        ''' le tuple des id doit avoir cette configuraiton(id_horaire, id_salle)'''
+        sql = "INSERT INTO hor_salle(id_horaire, id_salle) VALUES( %s, %s)"
+        val = liste_id
+        self.__execute_query(sql, val)
+        
 
-    def __execute_query(self, sql : str, val : tuple = None):
-        self.curseur.execute(sql, val)
-        self.bd.connexion.commit()
+    def __execute_query(self, sql : str, val : tuple = None) -> None:
+        self.__curseur.executemany(sql, val)
+        self.__bd.connexion.commit()
+
+    def __select(self, sql: str, val: tuple) -> list:
+        self.__curseur.execute(sql, val)
+        result = self.__curseur.fetchall()
+        return result

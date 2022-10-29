@@ -18,7 +18,7 @@ class ActionDAO:
         INSERT = 2
         DELETE = 3
         SELECT_ALL = 4
-        UPDTAE = 5
+        UPDATE = 5
         LIER = 6
 
 
@@ -32,6 +32,11 @@ class ActionDAO:
         RABAIS = 7
         TYPECLIENT = 8
 
+    __MODIFICATION = 'Modification réussi'
+    __INSERTION = 'Insertion réussi'
+    __SUPPRESSION = 'Suppression réussi'
+    __LIAISON = 'Liaison réussi'
+
     def __init__(self):
             self.__dao = {
                 self.Table.COMPAGNIE: CompagniesDAO,
@@ -42,44 +47,33 @@ class ActionDAO:
                 self.Table.EMPLOYE: EmployeDAO,
                 self.Table.RABAIS: RabaisDAO,
                 self.Table.TYPECLIENT: TypeClientsDAO
-            }    
+            }
+            self.__action = {
+                self.Requete.SELECT: 'selectionner',
+                self.Requete.INSERT: 'ajouter',
+                self.Requete.DELETE: 'supprimer',
+                self.Requete.SELECT_ALL: 'selectionner_all',
+                self.Requete.UPDATE: 'modifier',
+                self.Requete.LIER: 'lier'
+
+            }
+
+            self.__msg = {
+                self.Requete.UPDATE: self.__MODIFICATION,
+                self.Requete.INSERT: self.__INSERTION,
+                self.Requete.DELETE: self.__SUPPRESSION,
+                self.Requete.LIER: self.__LIAISON
+                }
         
-    def requete_dao(self, requete: Requete, recherche: Table, args: tuple ):
-        result = 0
+    def requete_dao(self, requete: Requete, recherche: Table, args: list[tuple] | int):
 
         with ConnexionDAO() as bd:
             dao = self.__dao[recherche](bd)
+            f = self.__action[requete]
+            result = dao.fonction[f](args)
 
-            if requete == self.Requete.SELECT:
-                result = dao.selectionner(args)
-            
-            elif requete == self.Requete.INSERT:
-                dao.ajouter(args)
-                result = (1, 'insertion fait')
-
-            elif requete == self.Requete.DELETE:
-                dao.supprimer(args)
-                result = (1, 'element supprimer')
-
-            elif requete == self.Requete.SELECT_ALL:
-                result = dao.selectionner_all(args)
-
-            elif requete == self.Requete.LIER:
-                dao.lier(args)
-                result = (1, 'liaison faite')
-            
-            else:
-                result = -1
+            if result == None:
+                result = self.__msg[requete]
 
             return result
-
-    # fonction spécial
-
-    def lier_horaire_salle(self, id_salle : int, id_horaire : list[int]):
-        s = self.__dao['Salle']()
-        for horaire in id_horaire:
-            s.ajouter_horaire(id_salle, horaire)
         
-
-# Dans le modèle trier les salles et les employés par Centre
-# Sinon rajouter un élément d'énumération pour les query spécial
