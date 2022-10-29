@@ -32,21 +32,19 @@ class ActionDAO:
         RABAIS = 7
         TYPECLIENT = 8
 
-
-    def __init__(self) -> None:
-        self.__dao = {
-            self.Table.COMPAGNIE: CompagniesDAO,
-            self.Table.CENTRE: CentresDAO,
-            self.Table.SALLE: SallesDAO,
-            self.Table.HORAIRE: HorairesDAO,
-            self.Table.RESERVATION: ReservationsDAO,
-            self.Table.EMPLOYE: EmployeDAO,
-            self.Table.RABAIS: RabaisDAO,
-            self.Table.TYPECLIENT: TypeClientsDAO
-        }
-
-
-    def requete_dao(self, requete : Requete, recherche : Table, args : tuple ) -> Union[int, tuple]:
+    def __init__(self):
+            self.__dao = {
+                self.Table.COMPAGNIE: CompagniesDAO,
+                self.Table.CENTRE: CentresDAO,
+                self.Table.SALLE: SallesDAO,
+                self.Table.HORAIRE: HorairesDAO,
+                self.Table.RESERVATION: ReservationsDAO,
+                self.Table.EMPLOYE: EmployeDAO,
+                self.Table.RABAIS: RabaisDAO,
+                self.Table.TYPECLIENT: TypeClientsDAO
+            }    
+        
+    def requete_dao(self, requete: Requete, recherche: Table, args: tuple ):
         result = 0
 
         with ConnexionDAO() as bd:

@@ -4,9 +4,12 @@ from enum import Enum
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
+# installation : python pip.exe install bcrypt
+# folder : C:\Python310\Scripts
 import re
 import codecs
 from .Algorithme import AlgoContext
+
 
 # source pour l'encodage et décodage du mot de passe :
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
@@ -17,30 +20,29 @@ class Enregistrement:
     dans la table employe qui pourra se connecter au système de la compagnie auquel il appartient.
     '''
 
-    __MESSAGE_MDP_TAILLE= "La taille du mot de passe doit être de 12 caractères et plus."
-    __MESSAGE_MDP_CS= "Le mot de passe doit contenir au moins 1 caractère spéciale."
-    __MESSAGE_MDP_MAJ= "Le mot de passe doit contenir au moins 1 lettre majuscule."
-    __MESSAGE_MDP_MIN= "Le mot de passe doit contenir au moins 1 lettre minuscule."
-    __MESSAGE_MDP_CHIFFRE= "Le mot de passe doit contenir au moins 1 chiffre."
+    __MESSAGE_MDP_TAILLE = "La taille du mot de passe doit être de 12 caractères et plus."
+    __MESSAGE_MDP_CS = "Le mot de passe doit contenir au moins 1 caractère spéciale."
+    __MESSAGE_MDP_MAJ = "Le mot de passe doit contenir au moins 1 lettre majuscule."
+    __MESSAGE_MDP_MIN = "Le mot de passe doit contenir au moins 1 lettre minuscule."
+    __MESSAGE_MDP_CHIFFRE = "Le mot de passe doit contenir au moins 1 chiffre."
 
-
-    def __init__(self, type: ActionDAO.Table, info: dict) -> None:
+    def __init__(self, table: ActionDAO.Table, info: dict):
         self.__info = info
-        self.__type = type
+        self.__type = table
         self.__msg = []
         self.__element = str(type).split('.')[1]
         self.__enregistrement()
-        
+
     @property
-    def msg(self) -> list[str]:
+    def msg(self):
         return self.__msg
 
     def __enregistrement(self):
-        cour_valide, cour_msg= self.__validation_courriel(self.__info['courriel'])
-        mdp_valide, mdp_msg= self.__validation_mdp(self.__info['mdp'])
+        cour_valide, cour_msg = self.__validation_courriel(self.__info['courriel'])
+        mdp_valide, mdp_msg = self.__validation_mdp(self.__info['mdp'])
         self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg])
 
-    def __crypter_mdp(self) -> None:
+    def __crypter_mdp(self):
         mdp = codecs.encode(self.__info['mdp'])
         sel = bcrypt.gensalt()
         cryptage = bcrypt.hashpw(mdp, sel)
@@ -49,8 +51,8 @@ class Enregistrement:
 
         # codex : module encoder byte codex.encode
         # decode pour retourner en str, lui donner le type et l'encodage comme utf-8
-        
-    def __validation_mdp(self, mdp: str) -> Union[bool,str]:
+
+    def __validation_mdp(self, mdp: str):
         # règle du mot de passe : 
         # 12 caractère minimum, une majuscule, une minuscule, un chiffre, un caractère spécial
         pattern = [(self.__MESSAGE_MDP_CHIFFRE, r'\d+'),
@@ -58,28 +60,27 @@ class Enregistrement:
                    (self.__MESSAGE_MDP_MIN, r'[a-z]+'),
                    (self.__MESSAGE_MDP_CS, r'\W+')]
         valider = True
-        msg='mot de passe valide'
+        msg = 'mot de passe valide'
 
         if not len(mdp) >= 12:
             valider = False
             msg = self.__MESSAGE_MDP_TAILLE
         else:
             for p in pattern:
-                if not re.search (p[1], mdp):
+                if not re.search(p[1], mdp):
                     valider = False
-                    msg=p[0]
+                    msg = p[0]
                     break
-        
+
         return valider, msg
 
-    def __validation_courriel(self, courriel: str) -> Union[bool, str]:
+    def __validation_courriel(self, courriel: str):
         pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         # source = https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
         if not re.fullmatch(pattern, courriel):
             return False, 'Courriel invalide'
 
         return True, 'Courriel valide'
-
 
     def __enregistrer(self, validation: list[bool], msg: list[str]):
         liste = []
@@ -92,21 +93,21 @@ class Enregistrement:
                 liste.append(self.__info[element])
 
             liste = tuple(liste)
-            try:
-                a = ActionDAO()
-                a.requete_dao(a.Requete.INSERT, self.__type, liste)
-                self.__msg.append(self.__element + ' enregistrer')
-            except:
-                self.__msg.append(self.__element +" déjà enregistrer")
+            # try:
+            a = ActionDAO()
+            a.requete_dao(a.Requete.INSERT, self.__type, liste)
+            # self.__msg.append(self.__element + ' enregistrer')
+            # except:
+            #     self.__msg.append(self.__element +" déjà enregistrer")
+
 
 class GestionSysteme:
-
     class NiveauAcces(Enum):
         Proprietaire = 1
         Gerant = 2
         Employe = 3
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.__client = None
         self.__user = None
         self.__id = None
@@ -125,10 +126,10 @@ class GestionSysteme:
         self.page = {
             'register': 'register',
             'login': 'login'
-            #...
+            # ...
         }
-        self.fonction ={
-            'var' : 'var'
+        self.fonction = {
+            'var': 'var'
         }
 
     @property
@@ -143,10 +144,10 @@ class GestionSysteme:
     def acces(self):
         return self.__acces
 
-    def valider_connexion(self, **info : str) -> tuple[bool|str]:
+    def valider_connexion(self, **info: str):
         # info, contient courriel et mdp
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.Employe, (info['courriel'],))
+        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
         information = result[0]
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
@@ -158,8 +159,8 @@ class GestionSysteme:
             return True, 'Connexion Validé'
         else:
             return False, 'mot de passe invalide'
-    
-    def enregistrer(self, type: str, info: dict) -> list[str]:
+
+    def enregistrer(self, type: str, info: dict):
         e = Enregistrement(self.__action_table[type], info)
         return e.msg
 
@@ -170,18 +171,27 @@ class GestionSysteme:
         a = ActionDAO()
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
+    
+    def inserer(self, table: str, info: dict):
+        liste = []
+        for key in info.keys():
+            liste.append(info[key])
+        liste = tuple(liste)
+            
+        a = ActionDAO()
+        t = self.__action_table[table]
+        r = a.Requete.INSERT
+        result = a.requete_dao(r, t, liste)
+        return result
 
-    def création_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
-        
+    def creation_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
         algo = AlgoContext()
         algo.demarrer_algorithme(info['algo_choix'], info['contraintes'])
-        
 
+    # ==============================================================================
+    #           Fonctions protégés
 
-#==============================================================================
-#           Fonctions protégés
-
-    def __verifier_centre(self, a: ActionDAO, centre: tuple) -> bool:
+    def __verifier_centre(self, a: ActionDAO, centre: tuple):
         liste_centre = a.requete_dao(a.Requete.SELECT, a.Table.CENTRE, centre[1])
         for c in liste_centre:
             if centre[0] == c[1]:
@@ -189,21 +199,19 @@ class GestionSysteme:
         a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
         self.__verifier_centre(a, centre)
 
-
-    def __get_client(self, id : int) -> str:
+    def __get_client(self, index: int):
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.Compagnie, id)
+        result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, index)
         return result[0][1]
 
-
-    def __determiner_prix(self, r : 'Reservation'):
+    def __determiner_prix(self, r: 'Reservation'):
         tps = 0.05
         tvq = 0.09975
         cout_base = self.__participant * self.__salle.prix
-        r.prix_total = cout_base + cout_base*tps + cout_base*tvq
+        r.prix_total = cout_base + cout_base * tps + cout_base * tvq
 
-#==============================================================================
-#           DataClass interne
+    # ==============================================================================
+    #           DataClass interne
 
     @dataclass()
     class Reservation:
@@ -215,15 +223,13 @@ class GestionSysteme:
         num_telephone: str = '514-000-0000'
         participant: int = 0
         statut: bool = False
-        prix_total: float  = 0.0 
-
+        prix_total: float = 0.0
 
     @dataclass()
     class Horaire:
         id: int
         heure_debut: str
         heure_fin: str
-
 
     @dataclass()
     class Salle:
@@ -261,9 +267,9 @@ class GestionSysteme:
     class Rabais:
         id: int
         nom: str
-        pourcentage: float # Exemple 0.15 pour 15%
+        pourcentage: float  # Exemple 0.15 pour 15%
         actif: bool
-    
+
     @dataclass()
     class TypeClient:
         id: int
