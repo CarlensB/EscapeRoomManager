@@ -1,31 +1,58 @@
-# Pour enregistrer les informations des compagnies sur la base de données
+#from modele.actionDAO import ActionDAO
+
 class CompagniesDAO:
 
     def __init__(self, bd) -> None:
-        self.bd = bd
-        self.curseur = self.bd.curseur
-    
-    def ajouter(self, args : tuple[str | str | str | str]):
+        self.__bd = bd
+        self.__curseur = self.__bd.curseur
+        self.__fonction ={
+            'ajouter': self.ajouter,
+            'selectionner': self.selectionner,
+            'supprimer': self.supprimer,
+            'selectionner_all': self.selectionner_all,
+            'modifier': self.modifier,
+            'recuper_salle': self.recuper_salle
+        }
+
+    @property
+    def fonction(self):
+        return self.__fonction
+
+    def ajouter(self, args: list[tuple[str, str, str, str]]) -> None:
         sql = "INSERT INTO compagnies (nom, info_paiement, courriel, mot_de_passe) VALUES (%s, %s, %s, %s)"
-        val = (args)
+        val = args
         self.__execute_query(sql, val)
 
-    def selectionner(self, compagnie : str) -> list:
+    def selectionner(self, compagnie: int) -> list[tuple]:
         sql = "SELECT * from compagnies WHERE id = %s"
         val = (compagnie,)
-        self.curseur.execute(sql, val)
-        result = self.curseur.fetchall()
-        return result
+        return self.__select(sql, val)
 
-    def supprimer(self, compagnie : int) -> None:
+    def selectionner_all(self, args: int) -> list[tuple]:
+        sql = "SELECT nom FROM compagnies"
+        return self.__select(sql)
+
+    def supprimer(self, compagnie: int) -> None:
         sql = "DELETE FROM compagnies WHERE id = %s"
-        val = (compagnie,)
+        val = [(compagnie,)]
         self.__execute_query(sql, val)
 
-    def modifier(self, table: tuple[str], val: tuple[str]):
-        pass
+    def modifier(self, args: list[tuple[str, str, str, str]]) -> None:
+        sql = '''UPDATE compagnies SET nom= %s, info_paiement= %s, courriel= %s, mot_de_passe= %s
+                 WHERE id= %s'''
+        val = args
+        self.__execute_query(sql, val)
 
-    def __execute_query(self, sql : str, val : tuple = None):
-        self.curseur.execute(sql, val)
-        self.bd.connexion.commit()
-        
+    def recuper_salle(self, compagnie: int) -> list:
+        sql = '''SELECT salle FROM view_salles_compagnie WHERE id_compagnie = %s'''
+        val = (compagnie,)
+        return self.__select(sql, val)
+
+    def __execute_query(self, sql: str, val: list[tuple] = None) -> None:
+        self.__curseur.executemany(sql, val)
+        self.__bd.connexion.commit()
+
+    def __select(self, sql: str, val: tuple = None) -> list:
+        self.__curseur.execute(sql, val)
+        result = self.__curseur.fetchall()
+        return result

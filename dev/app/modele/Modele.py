@@ -30,7 +30,7 @@ class Enregistrement:
         self.__info = info
         self.__type = table
         self.__msg = []
-        self.__element = str(type).split('.')[1]
+        self.__element = str(table).split('.')[1]
         self.__enregistrement()
 
     @property
@@ -92,13 +92,13 @@ class Enregistrement:
             for element in self.__info:
                 liste.append(self.__info[element])
 
-            liste = tuple(liste)
-            # try:
-            a = ActionDAO()
-            a.requete_dao(a.Requete.INSERT, self.__type, liste)
-            # self.__msg.append(self.__element + ' enregistrer')
-            # except:
-            #     self.__msg.append(self.__element +" déjà enregistrer")
+            liste = [tuple(liste)]
+            try:
+                a = ActionDAO()
+                a.requete_dao(a.Requete.INSERT, self.__type, liste)
+                self.__msg.append(self.__element + ' enregistrer')
+            except:
+                 self.__msg.append(self.__element +" déjà enregistrer")
 
 
 class GestionSysteme:
@@ -112,6 +112,7 @@ class GestionSysteme:
         self.__user = None
         self.__id = None
         self.__acces = None
+        self.__dao = ActionDAO()
         self.__action_table = {
             'compagnie': ActionDAO.Table.COMPAGNIE,
             'centre': ActionDAO.Table.CENTRE,
@@ -143,6 +144,10 @@ class GestionSysteme:
     @property
     def acces(self):
         return self.__acces
+
+    @property
+    def dao(self):
+        return self.__dao
 
     def valider_connexion(self, **info: str):
         # info, contient courriel et mdp

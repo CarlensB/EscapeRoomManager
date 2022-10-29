@@ -59,7 +59,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		pourcentage     FLOAT 	    NOT NULL,
 		compagnie       INT         NOT NULL,
 		isActive        INT			NOT NULL DEFAULT 0,
-		date_fin        TIMESTAMP   NOT NULL,
+		date_fin        TEXT   NOT NULL,
 
 		PRIMARY KEY pk_rab(id),
 		FOREIGN KEY fk_rab_comp(compagnie) REFERENCES compagnies(id) ON DELETE CASCADE,
@@ -71,7 +71,8 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		heure_debut     VARCHAR(10) NOT NULL,
 		heure_fin       VARCHAR(10)	NOT NULL,
 
-		PRIMARY KEY pk_horaire(id)
+		PRIMARY KEY pk_horaire(id),
+		UNIQUE(heure_debut, heure_fin)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE centres(
@@ -144,7 +145,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		courriel            TEXT        NOT NULL,
 		heure               TEXT        NOT NULL,
 		prix_total          FLOAT	    NOT NULL,
-		date                TIMESTAMP   NOT NULL,
+		date                TEXT		NOT NULL,
 		
 		PRIMARY KEY pk_resa(id),
 		FOREIGN KEY fk_r_salle(salle) REFERENCES salles(id) ON DELETE CASCADE,

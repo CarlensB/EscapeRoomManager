@@ -36,10 +36,10 @@ class ConnexionDAO:
 
     def __connexion_bd(self) -> None:
         self.__conn = mysql.connector.connect(
-            user= USER,
-            host= HOTE,
-            password= MDP,
-            database= DB
+            user=USER,
+            host=HOTE,
+            password=MDP,
+            database=DB
         )
         self.__curs = self.__conn.cursor()
 

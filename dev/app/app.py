@@ -1,39 +1,42 @@
+import datetime as dt
 from serveur_api import Serveur
 from modele.Modele import GestionSysteme, Enregistrement
-from modele.actionDAO import ActionDAO
-
-dictionnaire ={
-    'algo_choix': 1,
-    'contraintes': {'salles': ['Salle1', 'Salle2', 'Salle3'],
-                    'heures': [9, 1],
-                    'intervalle': 15,
-                    'employe': 2
-                }
-}
 
 dict_comp = {
-        'nom' : 'escape1',
-        'info_paiement': 'Visa',
-        'courriel' : 'manager@escape1.com',
-        'mdp' : 'CarlensBelony1!'}
-
-dict_emp = {
-    'compagnie' : 2,
-    'nom' : 'Guindon',
-    'prenom' : 'Maxence',
-    'salaire' : 13.75,
-    'num_telephone' : '514-207-0088',
-    'niveau_acces' : 2,
-    'courriel' : 'maxguindon@escape.com',
-    'num_ass': 111,
-    'mdp' : 'CarlensBelony1!'
-
+    'nom': 'Escape',
+    'info_paiement': '1111 2222 3333 4444',
+    'courriel': 'escape@gmail.com',
+    'mdp': 'CarlensBelony1!'
 }
 
 def main(): 
-    print('Hello World')
     gs = GestionSysteme()
-    Serveur.definir_controleur(gs)
+    #Serveur.definir_controleur(gs)
+
+    #print(gs.enregistrer('compagnie', dict_comp))
+    for i in range(5):
+        i += 1
+        if i == 1:
+            # Select
+            info = 1
+        elif i == 2:
+            # Insert
+            info = [('Rabais1', 0.10, 1, 1, dt.datetime(2022, 11, 30))]
+        elif i == 3:
+            # Delete
+            info = 1
+        elif i == 4:
+            # Select_all
+            info = 1
+        elif i == 5:
+            # Update
+            info = [('Rabais1', 0.05, 1, 0, dt.datetime(2022, 11, 30), 2)]
+        elif i == 6:
+            # Lier
+            pass
+        print(gs.dao.requete_dao(gs.dao.Requete(i), gs.dao.Table.RABAIS, info))
+    #print(gs.dao.requete_dao(gs.dao.Requete(6), gs.dao.Table.SALLE, [(2,1)]))
+    
     #gs.création_horaire(dictionnaire)
     #print(gs.valider_connexion(courriel='manager@escape.com', mdp='CarlensBelony1!'))
     #print(gs.utilisateur)
@@ -41,7 +44,7 @@ def main():
     #gs.valider_connexion()
 
     
-    Serveur.demarrer_serveur()
+    #Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':

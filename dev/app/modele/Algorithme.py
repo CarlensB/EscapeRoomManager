@@ -22,7 +22,7 @@ class AlgoContext:
         
     @property
     def choice(self):
-        return self.__choice 
+        return self.__choix
 
     def demarrer_algorithme(self, choice: int, contraintes: dict):
         algo = self.__algo_d[self.AlgoChoix(choice)](**contraintes)
