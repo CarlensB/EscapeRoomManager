@@ -38,6 +38,8 @@ class Centre{
         this.salles.push(b)
     }
 
+    
+
 }
 
 export class Compagnie{
