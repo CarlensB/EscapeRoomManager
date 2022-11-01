@@ -69,13 +69,13 @@ const Salles = observer(() => {
 
                 React.createElement(
                     'div',
-                    {class: 'NomSalle'},
+                    {class: 'NomSalleNouveau'},
                     listeSalles[i].nom
                 ),
 
                 React.createElement(
                     'div',
-                    {class: 'DescriptionSalle'},
+                    {class: 'DescriptionSalleNouveau'},
                     listeSalles[i].description
                 ),
 
