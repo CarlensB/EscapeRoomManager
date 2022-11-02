@@ -1,0 +1,3 @@
+mdp root de DO : C61!ProjetSynthese
+mdp mysql sur DO : ProjetC61!ERM
+user : carlens mdp:ermC61admin

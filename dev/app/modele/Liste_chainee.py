@@ -49,9 +49,11 @@ class DoubleLinkedList:
     def data_type(self):
         return self.__data_type
 
+    @property
     def get_first(self):
         return self.__front_node
 
+    @property
     def get_last(self):
         return self.__last_node
 
