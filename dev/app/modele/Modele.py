@@ -220,7 +220,7 @@ class GestionSysteme:
 
     def __get_client(self, index: int):
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, (index,))
+        result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, [(index,)])
         return result[0][1]
 
     def __determiner_prix(self, r: 'Reservation'):
