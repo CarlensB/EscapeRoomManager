@@ -25,7 +25,7 @@ class CompagniesDAO:
 
     def selectionner(self, compagnie: list[tuple[int]]) -> list[tuple]:
         sql = "SELECT * from compagnies WHERE id = %s"
-        val = compagnie[0]
+        val = compagnie
         return self.__select(sql, val)
 
     def selectionner_all(self, args: list[tuple[int]]) -> list[tuple]:
