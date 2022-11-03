@@ -9,7 +9,8 @@ export enum eActivePage {
     Accueil= 1,
     CreateCentre= 2,
     CreateSalle=3,
-    CreateReservation= 4
+    CreateReservation= 4,
+    Login=5
 }
 
 

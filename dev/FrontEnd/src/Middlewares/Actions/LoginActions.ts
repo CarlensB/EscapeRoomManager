@@ -37,30 +37,30 @@ export class LoginPageActions {
     }
 
     LoginAction() {
-        if (this.LoginError == true)
-        this.LoginError = false;
-        else this.LoginError=true;
-        this.LoginPageActive = ActivePage.Loggedin
+        // if (this.LoginError == true)
+        // this.LoginError = false;
+        // else this.LoginError=true;
+        // this.LoginPageActive = ActivePage.Loggedin
 
-    //     let formData = new FormData();
-    //     formData.append("courriel", this.loginInfos.username);
-    //     formData.append("mdp", this.loginInfos.password);
+        let formData = new FormData();
+        formData.append("courriel", this.loginInfos.username);
+        formData.append("mdp", this.loginInfos.password);
         
         
-    //     try {
-    //         fetch('http://127.0.0.1:5000/validation',
-    //         {
-    //             method: 'POST',
-    //             body: formData
-    //         })
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     console.log(response);
+        try {
+            fetch('http://127.0.0.1:5000/validation',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response[1]);
         
-    //   })
-    //       } catch (e) {
-    //           console.log("")
-    //       }
+      })
+          } catch (e) {
+              console.log("")
+          }
 
     }
 
