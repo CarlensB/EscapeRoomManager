@@ -161,7 +161,7 @@ class GestionSysteme:
     def valider_connexion(self, info: dict):
         # info, contient courriel et mdp
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
+        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, [(info['courriel'],)])
         information = result[0]
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
@@ -175,7 +175,11 @@ class GestionSysteme:
             return False, 'mot de passe invalide'
 
     def enregistrer(self, table: str, info: dict):
-        e = Enregistrement(self.__action_table[table], info)
+        d = {}
+        for key in info.keys():
+            d[key] = info[key]
+            
+        e = Enregistrement(self.__action_table[table], d)
         return e.msg
 
     def deconnexion(self):

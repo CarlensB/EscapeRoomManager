@@ -42,7 +42,7 @@ class Serveur():
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
     def enregistrement(name):
         if request.method == 'POST':
-            info = request.form['nm']
+            info = request.form
             result = Serveur.__controleur.enregistrer(name, info)
             return json.dumps(result)
 
