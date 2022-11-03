@@ -22,6 +22,7 @@ class AccueilStore {
         remotedev(this, { global: true, name: this.constructor.name });
         this.compagnie = new Compagnie("Escaparium", [], new newCentreInfos());
         this.compagnie.initialiserComp();
+        console.log("On est loggedIn")
       }
 
     

@@ -42,13 +42,13 @@ export class LoginPageActions {
         else this.LoginError=true;
         this.LoginPageActive = ActivePage.Loggedin
 
-        // let formData = new FormData();
-        // formData.append("username", this.loginInfos.username);
-        // formData.append("password", this.loginInfos.password);
+    //     let formData = new FormData();
+    //     formData.append("courriel", this.loginInfos.username);
+    //     formData.append("mdp", this.loginInfos.password);
         
         
     //     try {
-    //         fetch('http://127.0.0.1:5000/hello',
+    //         fetch('http://127.0.0.1:5000/validation',
     //         {
     //             method: 'POST',
     //             body: formData
@@ -56,7 +56,7 @@ export class LoginPageActions {
     //   .then(response => response.json())
     //   .then(response => {
     //     console.log(response);
-    //     
+        
     //   })
     //       } catch (e) {
     //           console.log("")
@@ -72,7 +72,30 @@ export class LoginPageActions {
         console.log(this.createAccountInfos.companyName)
         console.log(this.createAccountInfos.password)
         console.log(this.createAccountInfos.repeatpassword)
-        // this.GoToLoginPage()
+
+        let formData = new FormData();
+        formData.append("nom", this.createAccountInfos.companyName);
+        formData.append("info_paiement", "Visa");
+        formData.append("courriel", this.createAccountInfos.username);
+        formData.append("mdp", this.createAccountInfos.password);
+
+        
+        try {
+            fetch('http://127.0.0.1:5000/enregistrement/compagnie',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        
+      })
+          } catch (e) {
+              console.log("")
+          }
+
+
     }
 
 };

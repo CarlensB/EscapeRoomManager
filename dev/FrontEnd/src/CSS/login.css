@@ -1,6 +1,8 @@
 body{
-    background-color: #080710;
+    background-image: src('.\CSS\images\background1.jpg'); 
 }
+    
+
 
 .form{
     width: 400px;
@@ -17,7 +19,7 @@ body{
 }
 .form *{
     font-family: 'Poppins',sans-serif;
-    color: #ffffff;
+    color: #000000;
     letter-spacing: 0.5px;
     outline: none;
     border: none;
@@ -59,7 +61,7 @@ input{
 button{
     margin-top: 50px;
     width: 100%;
-    background-color: #ffffff;
+    background-color: #c1ec00;
     color: #080710;
     padding: 15px 0;
     font-size: 18px;
