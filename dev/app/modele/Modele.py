@@ -158,7 +158,7 @@ class GestionSysteme:
     def dao(self):
         return self.__dao
 
-    def valider_connexion(self, **info: dict):
+    def valider_connexion(self, info: dict):
         # info, contient courriel et mdp
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))

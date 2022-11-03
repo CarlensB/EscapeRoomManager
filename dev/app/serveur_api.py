@@ -35,7 +35,7 @@ class Serveur():
     @__app.route('/validation', methods=['GET', 'POST'])
     def validation():
         if request.method == 'POST':
-            info = request.form['nm']
+            info = request.form
             result = Serveur.__controleur.valider_connexion(info)
             return json.dumps(result)
 
@@ -54,7 +54,10 @@ class Serveur():
             result = Serveur.__controleur.interaction_dao(action, table, info)
             return json.dumps(result)
         else:
-            return json.dumps("GET request are ignored")
+            info = request.form
+            result = Serveur.__controleur.interaction_dao(action, table, info)
+            return json.dumps(result)
+            #return json.dumps("GET request are ignored")
 
     # Pour avoir accès au variable de session
     @__app.route('/session')
