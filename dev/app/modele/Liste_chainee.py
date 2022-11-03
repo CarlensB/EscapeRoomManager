@@ -61,6 +61,9 @@ class DoubleLinkedList:
         return self.__last_node
 
     def add_first(self, new_data: any) -> None:
+        '''
+        Add an element at the first position of the list.
+        '''
         new_node = self._Node(new_data)
         if self.__front_node is not None:
             self.__verify_data((new_data,))
@@ -73,6 +76,9 @@ class DoubleLinkedList:
         self.__front_node = new_node
     
     def add_last(self, new_data: any) -> None:
+        '''
+        Add an element at the last position of the list.
+        '''
         new_node = self._Node(new_data)
         if self.__front_node is None:
             self.__determine_data_type(new_data)
@@ -85,25 +91,33 @@ class DoubleLinkedList:
             new_node._prev_node = self.__last_node
             self.__last_node = new_node
         
-    def add(self, new_data: any,  prev_data: any = None) -> _Node:
-        if not isinstance(prev_data, self.__data_type):
-            raise ValueError(self.__ERROR_MSG + f" The data: {self.__data_type}, wrong value type: {prev_data.__class__}")
-        self.__verify_data((new_data,))
-        new_node = self._Node(new_data)
+    def add(self, new_data: any,  prev_data: any = None) -> None:
+        '''
+        Add an element in the liste with the possibility to add it behind another element.
+        '''
         if prev_data is not None:
-            search_node = self.__front_node
-            while search_node._data != prev_data:
-                search_node = search_node._next_node
-            new_node._prev_node = search_node
-            new_node._next_node = search_node._next_node
-            search_node._next_node = new_node
+            self.__verify_data((prev_data,))
+        if self.__data_type is not None:
+            self.__verify_data((new_data,))
+        new_node = self._Node(new_data)
+        if prev_data is not None and self.__front_node is not None:
+            try:
+                search_node = self.__front_node
+                while search_node._data != prev_data:
+                    search_node = search_node._next_node
+                new_node._prev_node = search_node
+                new_node._next_node = search_node._next_node
+                search_node._next_node = new_node
+            except AttributeError:
+                raise ValueError(f"The object passed as previous data is not in the list {prev_data}")
         else:
             if self.__front_node is not None:
                 new_node._prev_node = self.__last_node
                 self.__last_node._next_node = new_node
-                new_node = self.__last_node
+                self.__last_node = new_node
             else:
                 self.__front_node = new_node
+                self.__last_node = new_node
                 self.__determine_data_type(new_data)
             
             
@@ -127,3 +141,18 @@ class DoubleLinkedList:
     def __verify_data(self, value: tuple) -> None:
         for v in value:
             if self.__data_type != v.__class__ : raise ValueError(self.__ERROR_MSG + f" The data: {self.__data_type}, wrong value type: {v.__class__}")
+            
+# Test
+#===============================================================
+
+if __name__ == '__main__':
+    list = DoubleLinkedList(9,11)
+    list.add(13)
+    list.add(15)
+    list.add(17)
+    list.add(19, 15)
+    list.add(18, 17)
+    list.add_first(1)
+    list.add_last(30)
+    for v in list:
+        print(v)
