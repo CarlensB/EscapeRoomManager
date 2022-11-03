@@ -32,6 +32,7 @@ class Enregistrement:
         self.__msg = []
         self.__element = str(table).split('.')[1]
         self.__enregistrement()
+        print(info.keys())
 
     @property
     def msg(self):
@@ -40,7 +41,8 @@ class Enregistrement:
     def __enregistrement(self):
         cour_valide, cour_msg = self.__validation_courriel(self.__info['courriel'])
         mdp_valide, mdp_msg = self.__validation_mdp(self.__info['mdp'])
-        self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg])
+        print(cour_msg, mdp_msg)
+        print(self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg]))
 
     def __crypter_mdp(self):
         mdp = codecs.encode(self.__info['mdp'])

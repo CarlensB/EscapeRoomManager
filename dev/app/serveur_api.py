@@ -45,19 +45,18 @@ class Serveur():
             info = request.form
             result = Serveur.__controleur.enregistrer(name, info)
             return json.dumps(result)
+        else:
+            return json.dumps("GET request are ignored")
 
     # insert et select pour la bd
     @__app.route('/<action>/<table>', methods=['GET', 'POST'])
-    def insert(action, table):
+    def execute(action, table):
         if request.method == 'POST':
             info = request.form
             result = Serveur.__controleur.interaction_dao(action, table, info)
             return json.dumps(result)
         else:
-            info = request.form
-            result = Serveur.__controleur.interaction_dao(action, table, info)
-            return json.dumps(result)
-            #return json.dumps("GET request are ignored")
+            return json.dumps("GET request are ignored")
 
     # Pour avoir accès au variable de session
     @__app.route('/session')
