@@ -32,7 +32,7 @@ class EmployeDAO:
         self.__execute_query(sql, val)
 
     def selectionner(self, employe : list[tuple[int]]) -> list:
-        sql = "SELECT * FROM employes WHERE id= %s"
+        sql = "SELECT * FROM employes WHERE courriel= %s"
         val = employe[0]
         return self.__select(sql, val)
 

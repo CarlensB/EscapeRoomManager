@@ -175,6 +175,6 @@ const CreateAccountComp = observer(() => {
 )
 
 // source: https://www.youtube.com/watch?v=2ejs-uxSbAk
-const domContainer = document.body;
+const domContainer = document.getElementById('pageWeb');
 const root = reactDom.createRoot(domContainer);
 root.render(React.createElement(LoginPageComps));

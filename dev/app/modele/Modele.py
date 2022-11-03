@@ -161,7 +161,7 @@ class GestionSysteme:
     def valider_connexion(self, info: dict):
         # info, contient courriel et mdp
         a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, (info['courriel'],))
+        result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, [(info['courriel'],)])
         information = result[0]
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
