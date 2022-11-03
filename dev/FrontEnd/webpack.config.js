@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/loginComp.tsx',
+    entry: './src/LoggedIn.tsx',
     output: {
-        filename: 'login_bundled.js',
+        filename: 'accueil_bundled.js',
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
