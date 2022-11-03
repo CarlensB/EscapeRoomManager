@@ -29,7 +29,7 @@ class CompagniesDAO:
         return self.__select(sql, val)
 
     def selectionner_all(self, args: list[tuple[int]]) -> list[tuple]:
-        sql = "SELECT nom FROM compagnies"
+        sql = "SELECT * FROM compagnies"
         return self.__select(sql)
 
     def supprimer(self, compagnie: list[tuple[int]]) -> None:
