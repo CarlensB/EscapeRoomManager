@@ -10,7 +10,9 @@ import { AppCreerSucursalle } from './Comps/CreerCentreComp';
 
 const AccueilPageComp = observer(() => {
     
-
+    if (accueilStore.ActivePage == eActivePage.Login){
+        window.location.href = "../public/login.html"
+    }
   return(
       React.createElement(
           'div',
@@ -35,29 +37,24 @@ const Menu = observer(() => {
     function genererMenus(){
         
         let ArrayMenu = []
-        if (accueilStore.ActivePage == eActivePage.Accueil)
+        let active_page = accueilStore.ActivePage
+
         ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem selected', onClick: () => {accueilStore.ActivePage = eActivePage.Accueil}},
-        'Accueil'))
-        else ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.Accueil}},
+        {class: active_page == eActivePage.Accueil ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.Accueil}},
         'Accueil'))
         
-        if (accueilStore.ActivePage == eActivePage.CreateCentre)
         ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem selected', onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
+        {class: active_page == eActivePage.CreateCentre ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
         'Gérer Succursales'))
-        else ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
-        'Gérer Succursales'))
+       
+        ArrayMenu.push(React.createElement('div',
+        {class: active_page == eActivePage.CreateSalle ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
+        'Gérer Salles'))
 
-        if (accueilStore.ActivePage == eActivePage.CreateSalle)
         ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem selected', onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
-        'Gérer Salles'))
-        else ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
-        'Gérer Salles'))
+        {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.Login}},
+        'Déconnecter'))
+        
 
         return ArrayMenu
     }
