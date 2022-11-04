@@ -1,6 +1,3 @@
-from hashlib import new
-
-
 class DoubleLinkedList:
 
     __ERROR_MSG = f"The type of the element you place are not the same. They need to be of the same type."
@@ -26,6 +23,7 @@ class DoubleLinkedList:
         self.__front_node = None
         self.__last_node = None
         self.__data_type = None
+        self.__lenght = 0
         if value:
             self.__place_value(value)
 
@@ -58,7 +56,11 @@ class DoubleLinkedList:
         res += "]"
         return res
 
-    # source pour représenté la liste chainé avec repr:
+    def __len__(self) -> int:
+        return self.__lenght
+
+
+    # source pour représenté la liste chainé avec repr ainsi que len:
     # https://otfried.org/courses/cs206/notes/linkedlists.pdf
     
     def __bool__(self) -> bool:
@@ -98,6 +100,7 @@ class DoubleLinkedList:
             self.__determine_data_type(new_data)
         new_node._next_node = self.__front_node
         self.__front_node = new_node
+        self.__lenght += 1
     
     def add_last(self, new_data: any) -> None:
         '''
@@ -114,36 +117,43 @@ class DoubleLinkedList:
             self.__last_node._next_node = new_node
             new_node._prev_node = self.__last_node
             self.__last_node = new_node
+        self.__lenght += 1
         
     def add(self, new_data: any,  prev_data: any = None) -> None:
         '''
         Add an element in the liste with the possibility to add it behind another element.
         '''
-        if prev_data is not None:
-            self.__verify_data((prev_data,))
-        if self.__data_type is not None:
-            self.__verify_data((new_data,))
-        new_node = self._Node(new_data)
         if prev_data is not None and not self.is_empty:
+            self.__verify_data((prev_data,))
+
+            if self.__data_type is not None:
+                self.__verify_data((new_data,))
+
+            new_node = self._Node(new_data)
+
             try:
-                search_node = self.__front_node
-                while search_node._data != prev_data:
-                    search_node = search_node._next_node
+                first = self.__front_node
+                last = self.__last_node
+                # Essayer d'aller 2 fois plus vite!
+                # Pour comprendre que j'avais besoin d'un and ici
+                # Source : https://stackoverflow.com/questions/54163163/python-while-with-two-conditions-and-or-or
+                while first._data != prev_data and last._data != prev_data:
+                    first = first._next_node
+                    last = last._prev_node
+                search_node = first if last._data != prev_data else last
                 new_node._prev_node = search_node
                 new_node._next_node = search_node._next_node
+                if search_node is not self.__last_node:
+                    search_node._next_node._prev_node = new_node
                 search_node._next_node = new_node
+                self.__last_node = new_node if search_node is self.__last_node else self.__last_node
+                self.__lenght += 1
+                
             except AttributeError:
                 raise ValueError(f"The object passed as previous data is not in the list {prev_data}")
         else:
-            if not self.is_empty:
-                new_node._prev_node = self.__last_node
-                self.__last_node._next_node = new_node
-                self.__last_node = new_node
-            else:
-                self.__front_node = new_node
-                self.__last_node = new_node
-                self.__determine_data_type(new_data)
-            
+            self.add_last(new_data)
+   
             
     def delete_node(self, data: any) -> None:
         search_node = self.__front_node
@@ -177,5 +187,6 @@ if __name__ == '__main__':
     list.add(19, 15)
     list.add(18, 17)
     list.add_first(1)
+    list.add(21, 1)
     list.add_last(30)
     print(list)
