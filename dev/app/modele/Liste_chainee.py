@@ -44,9 +44,25 @@ class DoubleLinkedList:
     # source __iter__ et __next__
     # Source : https://www.programiz.com/python-programming/iterator
     # Titre : Building Custom Iterators
+
+    def __repr__(self) -> str:
+        if self.is_empty:
+            return "[]"
+        res = "["
+        node = self.__front_node
+        while node is not None:
+            res += repr(node)
+            if node._next_node is not None:
+                res += ", "
+            node = node._next_node
+        res += "]"
+        return res
+
+    # source pour représenté la liste chainé avec repr:
+    # https://otfried.org/courses/cs206/notes/linkedlists.pdf
     
     def __bool__(self) -> bool:
-        return self.__front_node is not None
+        return not self.is_empty
 
     @property
     def data_type(self):
@@ -60,12 +76,20 @@ class DoubleLinkedList:
     def get_last(self):
         return self.__last_node
 
+    @property
+    def is_empty(self) -> bool:
+        '''
+        Return a bool detecting if the list is empty
+        '''
+        # Source : l'idée me vient de la même source que pour la représentation avec repr
+        return self.__front_node is None
+
     def add_first(self, new_data: any) -> None:
         '''
         Add an element at the first position of the list.
         '''
         new_node = self._Node(new_data)
-        if self.__front_node is not None:
+        if not self.is_empty:
             self.__verify_data((new_data,))
             self.__front_node._prev_node = new_node
             if self.__front_node._next_node is None:
@@ -80,7 +104,7 @@ class DoubleLinkedList:
         Add an element at the last position of the list.
         '''
         new_node = self._Node(new_data)
-        if self.__front_node is None:
+        if self.is_empty:
             self.__determine_data_type(new_data)
             self.__front_node = new_node
             if self.__front_node._next_node is None:
@@ -100,7 +124,7 @@ class DoubleLinkedList:
         if self.__data_type is not None:
             self.__verify_data((new_data,))
         new_node = self._Node(new_data)
-        if prev_data is not None and self.__front_node is not None:
+        if prev_data is not None and not self.is_empty:
             try:
                 search_node = self.__front_node
                 while search_node._data != prev_data:
@@ -111,7 +135,7 @@ class DoubleLinkedList:
             except AttributeError:
                 raise ValueError(f"The object passed as previous data is not in the list {prev_data}")
         else:
-            if self.__front_node is not None:
+            if not self.is_empty:
                 new_node._prev_node = self.__last_node
                 self.__last_node._next_node = new_node
                 self.__last_node = new_node
@@ -154,5 +178,4 @@ if __name__ == '__main__':
     list.add(18, 17)
     list.add_first(1)
     list.add_last(30)
-    for v in list:
-        print(v)
+    print(list)
