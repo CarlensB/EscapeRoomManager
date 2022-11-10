@@ -38,6 +38,10 @@ class Centre{
         this.salles.push(b)
     }
 
+    getSalles(){
+        return this.salles;
+    }
+
     
 
 }
@@ -46,7 +50,7 @@ export class Compagnie{
 
     constructor(
         public name: string = "Nom de Compagnie",
-        public centres: Centre[],
+        private centres: Centre[],
         public newCentreInfos: newCentreInfos,
         public selectionnee: number = 0,
     )
@@ -69,6 +73,22 @@ export class Compagnie{
 
     AjouterCentre(nom:string, adresse:string){
         this.centres.push(new Centre(nom, adresse, []))
+    }
+
+    getCentres(){
+        return this.centres;
+    }
+
+    getSelection(){
+        return this.selectionnee;
+    }
+
+    setSelection(selection: number){
+        this.selectionnee = selection;
+    }
+
+    getCurrentSalle(){
+        return this.centres[this.selectionnee].getSalles();
     }
 
     

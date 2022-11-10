@@ -25,22 +25,21 @@ const Centres = observer(() => {
     )
 
     function genererCentres(){
-        let listeCentres = accueilStore.compagnie
+        let listeCentres = accueilStore.getCentres()
         let arrayCentres = []
         
-        for (let i = 0; i<listeCentres.centres.length; i++)
+        for (let i = 0; i<listeCentres.length; i++)
         {
-            if (i==listeCentres.selectionnee)
+            if (i==accueilStore.getSelection())
                 arrayCentres.push(React.createElement(
                     'div',
-                    {class: 'centre selected', onClick: () => {listeCentres.selectionnee = i}},
-                    listeCentres.centres[i].nom
+                    {class: 'centre selected', onClick: () => {accueilStore.setSelection(i)}},
+                    listeCentres[i].nom
                 ))
             else arrayCentres.push(React.createElement(
                 'div',
-                {class: 'centre', onClick: () => {listeCentres.selectionnee = i
-                    console.log(accueilStore.ActivePage)}},
-                listeCentres.centres[i].nom
+                {class: 'centre', onClick: () => {accueilStore.setSelection(i)}},
+                listeCentres[i].nom
             ))
         }
         return arrayCentres
@@ -59,7 +58,7 @@ const Salles = observer(() => {
 
     function genererSalles(){
         let arraySalles = []
-        let listeSalles = accueilStore.compagnie.centres[accueilStore.compagnie.selectionnee].salles
+        let listeSalles = accueilStore.getSalles();
 
         for (let i = 0; i<listeSalles.length; i++)
         {  

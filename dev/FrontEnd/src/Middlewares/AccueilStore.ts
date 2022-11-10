@@ -15,7 +15,7 @@ export enum eActivePage {
 
 
 class AccueilStore {
-    public compagnie: Compagnie;
+    private compagnie: Compagnie;
     public ActivePage: number = eActivePage.Accueil
     
     constructor() {
@@ -26,7 +26,25 @@ class AccueilStore {
         console.log("On est loggedIn")
       }
 
-    
+    getCompany(){
+        return this.compagnie;
+    }
+
+    getCentres(){
+        return this.compagnie.getCentres();
+    }
+
+    getSelection(){
+        return this.compagnie.getSelection();
+    }
+
+    setSelection(selection: number){
+        this.compagnie.setSelection(selection);
+    }
+
+    getSalles(){
+        return this.compagnie.getCurrentSalle();
+    }
 
 }
 
