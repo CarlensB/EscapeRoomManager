@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { newCentreInfos } from "../AccueilStore";
 
 
 class Salle{
@@ -23,7 +24,7 @@ class Centre{
     constructor(
         public nom: string = "Centre Montreal",
         public adresse: string = "Ville de la Compagnie",
-        public salles: Salle[] ,
+        public salles: Salle[] = [],
     )
     {
         this.genererSalles()
@@ -51,29 +52,26 @@ export class Compagnie{
     constructor(
         public name: string = "Nom de Compagnie",
         private centres: Centre[],
-        public newCentreInfos: newCentreInfos,
-        public selectionnee: number = 0,
+        private selectionnee: number = 0,
     )
     {
         makeAutoObservable(this);
         this.initialiserComp()
     }
     initialiserComp(){
-        let a = new Centre("Centre laval", "1 place ville-marie", []);
+        let a = new Centre("Centre laval", "1 place ville-marie");
         a.nom = "Centre 1"
         a.genererSalles()
         a.genererSalles()
         this.centres.push(a)
 
-        a = new Centre("Centre montreal", "1 place ville-marie", []);
+        a = new Centre("Centre montreal", "1 place ville-marie");
         a.nom = "Centre 2"
         a.genererSalles()
         this.centres.push(a)
     }
 
-    AjouterCentre(nom:string, adresse:string){
-        this.centres.push(new Centre(nom, adresse, []))
-    }
+    
 
     getCentres(){
         return this.centres;
@@ -91,22 +89,15 @@ export class Compagnie{
         return this.centres[this.selectionnee].getSalles();
     }
 
+    ajouterCentre(infos: newCentreInfos){
+        let centre = new Centre(infos.nom, infos.adresse);
+        this.centres.push(centre);
+    }
+
     
 }
 
-export class newCentreInfos{
 
-    constructor(
-        public nom: string = "",
-        public adresse: string = "",
-    )
-    {}
-        reset() {
-            this.nom = "";
-            this.adresse = "";
-        }
-
-}
 
 
 

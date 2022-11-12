@@ -1,5 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { UNSAFE_enhanceManualRouteObjects } from "react-router-dom"
 import accueilStore from "../Middlewares/AccueilStore"
 
 
@@ -15,7 +16,10 @@ export const AppCreerSucursalle = observer(() => {
 
 const Formulaire = observer(() => {
     return(
-        React.createElement(ModifierCentres, AjouterCentres)
+        React.createElement(
+          'div',
+          null,
+          React.createElement(ModifierCentres),React.createElement(AjouterCentres))
     )
   }
 )
@@ -24,8 +28,8 @@ const ModifierCentres = observer(() => {
 
   let errMessage = ""
   let centreChoix = listeCentre()
-  let selection = accueilStore.compagnie.selectionnee
-  let centres = accueilStore.compagnie.centres
+  let selection = accueilStore.getSelection()
+  let centres = accueilStore.getCentres()
   
   return(
     React.createElement(
@@ -33,7 +37,7 @@ const ModifierCentres = observer(() => {
       {class:'ModifierCentreFormulaire'},
   
       React.createElement('select',
-      {name:'centreChoix', onChange:evt =>{accueilStore.compagnie.selectionnee = parseInt(evt.currentTarget.value)}},
+      {name:'centreChoix', onChange:evt =>{accueilStore.setSelection(parseInt(evt.currentTarget.value))}},
       centreChoix,
       ),
   
@@ -78,7 +82,7 @@ const ModifierCentres = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.compagnie.newCentreInfos.nom = evt.currentTarget.value}},
+          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
           null),
       ),
   
@@ -93,7 +97,7 @@ const ModifierCentres = observer(() => {
       
         React.createElement(
           'input',
-          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.compagnie.newCentreInfos.nom = evt.currentTarget.value}},
+          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
           null),
       ),
   
@@ -116,10 +120,10 @@ const ModifierCentres = observer(() => {
   
 
   function listeCentre(){
-    let selection = accueilStore.compagnie.selectionnee
-    let centres = accueilStore.compagnie.centres
+    let selection = accueilStore.getSelection()
+    let centres = accueilStore.getCentres()
     let liste = []
-      for (let i = 0; i<accueilStore.compagnie.centres.length; i++)
+      for (let i = 0; i<centres.length; i++)
         {
           if (i == selection)
           liste.push(React.createElement('option',
@@ -158,7 +162,7 @@ const AjouterCentres = observer(() => {
 
       React.createElement(
         'input',
-        {type: 'text', name: 'nom', onChange:evt => {accueilStore.compagnie.newCentreInfos.nom = evt.currentTarget.value}},
+        {type: 'text', name: 'nom', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
         null),
 
       React.createElement(
@@ -168,7 +172,7 @@ const AjouterCentres = observer(() => {
     
       React.createElement(
         'input',
-        {type: 'text', name: 'adresse', onChange:evt => {accueilStore.compagnie.newCentreInfos.nom = evt.currentTarget.value}},
+        {type: 'text', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
         null),
 
       React.createElement(
@@ -178,7 +182,7 @@ const AjouterCentres = observer(() => {
 
     React.createElement(
       'button',
-      {class:"submit_button", onClick:()=>{console.log(accueilStore.compagnie.newCentreInfos.nom)}},
+      {class:"submit_button", onClick:()=>{accueilStore.ajouterCentre()}},
       'Ajouter une succursale')
   ),
 
