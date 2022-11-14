@@ -1,50 +1,49 @@
 import { makeAutoObservable } from "mobx";
+import { CreateAccountInfos, LoginInfos } from "../loginStore";
 
-export enum ActivePage {
-    Login= 1,
-    CreateAccount= 2,
-    Loggedin= 3
-}
+
 
 export class LoginPageActions {
-
+    
     constructor(
-        public LoginError: boolean,
-        public CreateAccountError: boolean,
-        public LoginPageActive: number,
-        public loginInfos: LoginInfos,
-        public createAccountInfos: CreateAccountInfos
-    )
-    {
-        makeAutoObservable(this);
-        this.LoginPageActive = ActivePage.Login
-        this.LoginError = false
-        this.CreateAccountError = false
+        private LoginError: boolean = false,
+        private CreateAccountError: boolean = false,
+        )
+        
+        {
+            makeAutoObservable(this);
+            this.LoginError = false
+            this.CreateAccountError = false
+        }
+        
+    getCreateAccountError() {
+        return this.CreateAccountError
     }
 
+    getLoginError() {
+        return this.LoginError
+    }
     GoToCreateAcountPage() {
         this.CreateAccountError = false;
         this.LoginError = false;
-        this.LoginPageActive = ActivePage.CreateAccount
-        this.createAccountInfos.reset()
+        
     }
 
     GoToLoginPage() {
         this.CreateAccountError = false;
         this.LoginError = false;
-        this.LoginPageActive = ActivePage.Login
-        this.loginInfos.reset()
+        
     }
 
-    LoginAction() {
+    LoginAction(loginInfos: LoginInfos) {
         // if (this.LoginError == true)
         // this.LoginError = false;
         // else this.LoginError=true;
         // this.LoginPageActive = ActivePage.Loggedin
 
         let formData = new FormData();
-        formData.append("courriel", this.loginInfos.username);
-        formData.append("mdp", this.loginInfos.password);
+        formData.append("courriel", loginInfos.username);
+        formData.append("mdp", loginInfos.password);
         
         
         try {
@@ -56,28 +55,27 @@ export class LoginPageActions {
       .then(response => response.json())
       .then(response => {
         console.log(response[1]);
-        
+        return true
       })
           } catch (e) {
               console.log("")
+              this.LoginError = true;
+              return false
           }
 
     }
 
-    CreateAcountAction() {
+    CreateAcountAction(createAccountInfos: CreateAccountInfos) {
         if (this.CreateAccountError == true)
         this.CreateAccountError = false;
         else this.CreateAccountError=true;
-        console.log(this.createAccountInfos.username)
-        console.log(this.createAccountInfos.companyName)
-        console.log(this.createAccountInfos.password)
-        console.log(this.createAccountInfos.repeatpassword)
+        
 
         let formData = new FormData();
-        formData.append("nom", this.createAccountInfos.companyName);
+        formData.append("nom", createAccountInfos.companyName);
         formData.append("info_paiement", "Visa");
-        formData.append("courriel", this.createAccountInfos.username);
-        formData.append("mdp", this.createAccountInfos.password);
+        formData.append("courriel", createAccountInfos.username);
+        formData.append("mdp", createAccountInfos.password);
 
         
         try {
@@ -100,35 +98,4 @@ export class LoginPageActions {
 
 };
 
-export class CreateAccountInfos{
 
-    constructor(
-        public username: string = "",
-        public companyName: string = "",
-        public password: string = "",
-        public repeatpassword: string = ""
-    )
-    {}
-        reset() {
-            this.username = "";
-            this.companyName = "";
-            this.password = "";
-            this.repeatpassword = "";
-        }
-    
-
-}
-
-export class LoginInfos{
-
-    constructor(
-        public username: string = "",
-        public password: string = "",
-    )
-    {}
-        reset() {
-            this.username = "";
-            this.password = "";
-        }
-
-}
