@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import React from "react";
-import loginStore from "src/Middlewares/loginStore";
+import loginStore from "../../src/Middlewares/loginStore"
+
 
 export const CreateAccountComp = observer(() => {
 
