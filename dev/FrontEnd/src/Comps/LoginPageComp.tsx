@@ -5,8 +5,7 @@ import loginStore from "src/Middlewares/loginStore";
 
 export const LoginPageComp = observer(() => {
 
-    const {loginpage} = loginStore
-    const loginErr = loginpage.LoginError
+    const loginErr = loginStore.getLoginError()
     let errMessage = ""
     if (loginErr){
       errMessage = "Le mot de passe ou l'indentifiant est erronné";
@@ -35,7 +34,7 @@ export const LoginPageComp = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', name: 'username', onChange:evt => {loginStore.loginpage.loginInfos.username = evt.currentTarget.value}},
+          {type: 'text', name: 'username', onChange:evt => {loginStore.updateLoginInfos_username(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -45,7 +44,7 @@ export const LoginPageComp = observer(() => {
       
         React.createElement(
           'input',
-          {type: 'password', name: 'password', onChange:evt => {loginStore.loginpage.loginInfos.password = evt.currentTarget.value}},
+          {type: 'password', name: 'password', onChange:evt => {loginStore.updateLoginInfos_password(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -57,11 +56,11 @@ export const LoginPageComp = observer(() => {
     
         React.createElement(
           'button',
-          { onClick:() => {loginpage.LoginAction()}},
+          { onClick:() => {loginStore.Login()}},
           'Se Connecter'),
         React.createElement(
           'button',
-          { onClick:() => {loginpage.GoToCreateAcountPage()}},
+          { onClick:() => {loginStore.GoToCreateAcountPage()}},
           'Créer un compte'),
       
         

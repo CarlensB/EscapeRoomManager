@@ -4,8 +4,7 @@ import loginStore from "src/Middlewares/loginStore";
 
 export const CreateAccountComp = observer(() => {
 
-    const {loginpage} = loginStore;
-    const createaccError = loginpage.CreateAccountError
+    const createaccError = loginStore.getLoginError()
     let errMessage = ''
     if (createaccError)
       errMessage = "Les informations entrées sont invalides ou incomplètes."
@@ -32,7 +31,7 @@ export const CreateAccountComp = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', name: 'username', onChange:evt => {loginStore.loginpage.createAccountInfos.username = evt.currentTarget.value}},
+          {type: 'text', name: 'username', onChange:evt => {loginStore.updateCreateAccountInfos_username(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -42,7 +41,7 @@ export const CreateAccountComp = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', name: 'nomCompagnie', onChange:evt => {loginStore.loginpage.createAccountInfos.companyName = evt.currentTarget.value}},
+          {type: 'text', name: 'nomCompagnie', onChange:evt => {loginStore.updateCreateAccountInfos_companyName(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -52,7 +51,7 @@ export const CreateAccountComp = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'password', name: 'password',onChange:evt => {loginStore.loginpage.createAccountInfos.password = evt.currentTarget.value}},
+          {type: 'password', name: 'password',onChange:evt => {loginStore.updateCreateAccountInfos_password(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -62,7 +61,7 @@ export const CreateAccountComp = observer(() => {
           
         React.createElement(
           'input',
-          {type: 'password', name: 'repeatpassword', onChange:evt => {loginStore.loginpage.createAccountInfos.repeatpassword = evt.currentTarget.value}},
+          {type: 'password', name: 'repeatpassword', onChange:evt => {loginStore.updateCreateAccountInfos_repeatpassword(evt.currentTarget.value)}},
           null),
   
         React.createElement(
@@ -73,11 +72,11 @@ export const CreateAccountComp = observer(() => {
   
         React.createElement(
           'button',
-          { onClick:() => {loginpage.CreateAcountAction()}},
+          { onClick:() => {loginStore.CreateAccount()}},
           "S'inscrire"),
         React.createElement(
           'button',
-          { onClick:() => {loginpage.GoToLoginPage()}},
+          { onClick:() => {loginStore.GoToLoginPage()}},
           'Je possède déjà un compte')
         )
     )
