@@ -1,6 +1,5 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { UNSAFE_enhanceManualRouteObjects } from "react-router-dom"
 import accueilStore from "../Middlewares/AccueilStore"
 
 
@@ -32,6 +31,15 @@ const ModifierCentres = observer(() => {
   let centres = accueilStore.getCentres()
   
   return(
+    React.createElement('div',
+  {class:'ContainerFormulaire'},
+
+    React.createElement(
+      'div',
+      {class:'title'},
+      'Modifier ou supprimer une succursalle'
+    ),
+
     React.createElement(
       'div',
       {class:'ModifierCentreFormulaire'},
@@ -116,6 +124,7 @@ const ModifierCentres = observer(() => {
             ),  
     )
   )
+  )
 
   
 
@@ -151,39 +160,45 @@ const AjouterCentres = observer(() => {
   return(React.createElement('div',
   {class:'ContainerFormulaire'},
 
-  React.createElement(
-    'div',
-    {class:'nouveauCentreFormulaire'},    
+    React.createElement(
+      'div',
+      {class:'title'},
+      'Ajouter une succursalle'
+    ),
 
     React.createElement(
-        'label',
-        {for: 'nom'},
-        'Nom: '),
+      'div',
+      {class:'nouveauCentreFormulaire'},    
 
       React.createElement(
-        'input',
-        {type: 'text', name: 'nom', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
-        null),
+          'label',
+          {for: 'nom'},
+          'Nom: '),
+
+        React.createElement(
+          'input',
+          {type: 'text', name: 'nom', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
+          null),
+
+        React.createElement(
+          'label',
+          {for: 'adresse'},
+          'Adresse:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
+          null),
+
+        React.createElement(
+          'div',
+          {class:"error_msg"},
+          errMessage),
 
       React.createElement(
-        'label',
-        {for: 'adresse'},
-        'Adresse:'),
-    
-      React.createElement(
-        'input',
-        {type: 'text', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
-        null),
-
-      React.createElement(
-        'div',
-        {class:"error_msg"},
-        errMessage),
-
-    React.createElement(
-      'button',
-      {class:"submit_button", onClick:()=>{accueilStore.ajouterCentre()}},
-      'Ajouter une succursale')
+        'button',
+        {class:"submit_button", onClick:()=>{accueilStore.ajouterCentre()}},
+        'Ajouter une succursale')
   ),
 
   )
