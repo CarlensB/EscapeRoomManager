@@ -30,17 +30,42 @@ export class newCentreInfos{
 
 class AccueilStore {
     private compagnie: Compagnie;
-    public ActivePage: number = eActivePage.Accueil
-    public newCentreInfos: newCentreInfos;
+    private ActivePage: number = eActivePage.Accueil
+    private newCentreInfos: newCentreInfos = new newCentreInfos()
+    private modCentreInfos: newCentreInfos = new newCentreInfos()
     
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
         this.compagnie = new Compagnie("Escaparium", []);
-        this.newCentreInfos = new newCentreInfos()
-        this.compagnie.initialiserComp();
+        // this.compagnie.initialiserComp();
         console.log("On est loggedIn")
       }
+
+    getActivePage(){
+        return this.ActivePage;
+    }
+
+    setActivePage(page:eActivePage){
+        this.ActivePage = page;
+    }
+
+    updateModCentreInfosNom(nom:string){
+        this.newCentreInfos.nom = nom;
+    }
+
+    updateModCentreInfosAdresse(adresse:string){
+        this.newCentreInfos.adresse = adresse;
+    }
+
+    modifierCentre(){
+        let valide = (this.modCentreInfos.nom.length > 0 && this.modCentreInfos.nom.length > 0)
+        if (valide)
+        {
+            this.compagnie.modifierCentre(this.modCentreInfos)
+        }
+        else console.log("Il n'y a pas assez d'infos :(")
+    }
 
     updateNewCentreInfosNom(nom:string){
         this.newCentreInfos.nom = nom;
@@ -57,6 +82,10 @@ class AccueilStore {
             this.compagnie.ajouterCentre(this.newCentreInfos)
         }
         else console.log("Il n'y a pas assez d'infos :(")
+    }
+
+    supprimerCentre(){
+        this.compagnie.supprimerCentre();
     }
 
     getCompany(){

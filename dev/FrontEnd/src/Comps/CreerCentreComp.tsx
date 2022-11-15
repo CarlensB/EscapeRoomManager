@@ -18,7 +18,7 @@ const Formulaire = observer(() => {
         React.createElement(
           'div',
           null,
-          React.createElement(ModifierCentres),React.createElement(AjouterCentres))
+          (accueilStore.getCentres.length > 0) ? React.createElement(ModifierCentres) : "",React.createElement(AjouterCentres))
     )
   }
 )
@@ -90,7 +90,7 @@ const ModifierCentres = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
+          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateModCentreInfosNom(evt.currentTarget.value)}},
           null),
       ),
   
@@ -105,17 +105,17 @@ const ModifierCentres = observer(() => {
       
         React.createElement(
           'input',
-          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
+          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateModCentreInfosAdresse(evt.currentTarget.value)}},
           null),
       ),
   
         React.createElement(
           'button',
-          {class:"submit_button"},
+          {class:"submit_button", onClick:()=>{accueilStore.modifierCentre()}},
           'Modifier la succursale'),
         React.createElement(
           'button',
-          {class:"submit_button"},
+          {class:"submit_button", onChange:evt => {accueilStore.supprimerCentre()}},
           'Supprimer la succursale'),
           React.createElement(
             'div',

@@ -71,7 +71,9 @@ export class Compagnie{
         this.centres.push(a)
     }
 
-    
+    supprimerCentre(){
+        this.centres.splice(this.selectionnee, 1)
+    }
 
     getCentres(){
         return this.centres;
@@ -92,6 +94,11 @@ export class Compagnie{
     ajouterCentre(infos: newCentreInfos){
         let centre = new Centre(infos.nom, infos.adresse);
         this.centres.push(centre);
+    }
+
+    modifierCentre(infos: newCentreInfos){
+        let centre = new Centre(infos.nom, infos.adresse);
+        this.centres[this.selectionnee] = centre;
     }
 
     

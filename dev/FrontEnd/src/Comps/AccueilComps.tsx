@@ -1,13 +1,13 @@
 import { observer } from "mobx-react"
 import React from "react"
-import accueilStore from "../Middlewares/AccueilStore"
+import accueilStore, { eActivePage } from "../Middlewares/AccueilStore"
 
 
 export const AppAccueil = observer(() => {
     return (React.createElement('div',
           {class: 'AppRight'},
           React.createElement(Centres),
-          React.createElement(Salles)
+          (accueilStore.getCentres().length < 1) ? React.createElement(Salles) : ""
           ))
 }
 
@@ -16,6 +16,16 @@ export const AppAccueil = observer(() => {
 
 const Centres = observer(() => {
 
+    if (accueilStore.getCentres().length < 1)
+    return (
+        React.createElement(
+            'div',
+            {class: "PasDeCentres", onClick: () => {accueilStore.setActivePage(eActivePage.CreateCentre)}},
+            "Il n'y a actuellement aucun centre \n",
+            "cliquez içi pour en ajouter un"
+        )
+    )
+    else
     return(
         React.createElement(
             'div',
@@ -59,6 +69,14 @@ const Salles = observer(() => {
     function genererSalles(){
         let arraySalles = []
         let listeSalles = accueilStore.getSalles();
+
+        if (listeSalles.length < 1)
+        return React.createElement(
+            "div",
+            {class: "PasDeSalles", onClick: () => {accueilStore.setActivePage(eActivePage.CreateSalle)}},
+            "Il n'y a pas de salles dans votre centre.\n",
+            "Cliquez ici pour en ajouter une"
+        )
 
         for (let i = 0; i<listeSalles.length; i++)
         {  
