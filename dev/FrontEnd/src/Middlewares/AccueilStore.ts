@@ -30,7 +30,7 @@ export class newCentreInfos{
 
 class AccueilStore {
     private compagnie: Compagnie;
-    private ActivePage: number = eActivePage.Accueil
+    private ActivePage: eActivePage = eActivePage.Accueil
     private newCentreInfos: newCentreInfos = new newCentreInfos()
     private modCentreInfos: newCentreInfos = new newCentreInfos()
     
@@ -93,19 +93,23 @@ class AccueilStore {
     }
 
     getCentres(){
-        return this.compagnie.getCentres();
+        return this.compagnie.centres;
     }
 
     getSelection(){
-        return this.compagnie.getSelection();
+        return this.compagnie.selectionnee;
     }
 
     setSelection(selection: number){
-        this.compagnie.setSelection(selection);
+        this.compagnie.selectionnee = selection;
     }
 
     getSalles(){
-        return this.compagnie.getCurrentSalle();
+        return this.compagnie.getCurrentCenterSalles();
+    }
+
+    setSalleSelection(salle:number){
+        this.compagnie.setSalleSelection(salle);
     }
 
 }

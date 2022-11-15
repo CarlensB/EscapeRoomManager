@@ -20,7 +20,7 @@ const Centres = observer(() => {
     return (
         React.createElement(
             'div',
-            {class: "PasDeCentres", onClick: () => {accueilStore.setActivePage(eActivePage.CreateCentre)}},
+            {class: "PasDeCentres", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
             "Il n'y a actuellement aucun centre \n",
             "cliquez içi pour en ajouter un"
         )
@@ -73,7 +73,7 @@ const Salles = observer(() => {
         if (listeSalles.length < 1)
         return React.createElement(
             "div",
-            {class: "PasDeSalles", onClick: () => {accueilStore.setActivePage(eActivePage.CreateSalle)}},
+            {class: "PasDeSalles", onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
             "Il n'y a pas de salles dans votre centre.\n",
             "Cliquez ici pour en ajouter une"
         )

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
-import accueilStore from "../Middlewares/AccueilStore"
+import accueilStore, { eActivePage } from "../Middlewares/AccueilStore"
 
 
 export const AppCreerSucursalle = observer(() => {
@@ -29,6 +29,47 @@ const ModifierCentres = observer(() => {
   let centreChoix = listeCentre()
   let selection = accueilStore.getSelection()
   let centres = accueilStore.getCentres()
+
+  function genererSalles(){
+    let Salles = accueilStore.getSalles();
+    let arraySalles = []
+
+    if (Salles.length > 0){
+      for (let i =0; i<Salles.length; i++){
+        arraySalles.push(
+          React.createElement(
+            'div',
+            {class:"minisalleContainer" , onClick:() => {
+              accueilStore.setSalleSelection(i);
+              accueilStore.ActivePage = eActivePage.CreateSalle
+
+            }},
+            React.createElement(
+              'div',
+              {class: "miniNomSalle"},
+              Salles[i].nom)
+          )
+        )
+      }
+    }
+
+    arraySalles.push(React.createElement(
+      'div',
+      {class:"minisalleContainer ajout" , onClick:() => {
+        accueilStore.ActivePage = eActivePage.CreateSalle
+
+      }},
+      React.createElement(
+        'div',
+        {class: "miniNomSalle"},
+        "Ajouter Une Salle")
+    ))
+
+    return arraySalles
+
+
+
+  }
   
   return(
     React.createElement('div',
@@ -108,6 +149,8 @@ const ModifierCentres = observer(() => {
           {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateModCentreInfosAdresse(evt.currentTarget.value)}},
           null),
       ),
+
+      React.createElement('div', {class: 'containerMiniSalles'}, genererSalles()),
   
         React.createElement(
           'button',
@@ -134,14 +177,11 @@ const ModifierCentres = observer(() => {
     let liste = []
       for (let i = 0; i<centres.length; i++)
         {
-          if (i == selection)
+          
           liste.push(React.createElement('option',
-          {value:i, selected:'selected',},
+          (i == selection) ? {value:i, selected:'selected'} : {value:i},
           centres[i].nom))
-          else
-          liste.push(React.createElement('option',
-          {value:i},
-          centres[i].nom))
+          
         }  
      
     return liste
