@@ -78,6 +78,18 @@ class Salle{
 }
 
 class Centre{
+    constructor(
+        private _nom: string = "Centre Montreal",
+        private _adresse: string = "Ville de la Compagnie",
+        private _salles: Salle[] = [],
+        private _selectionSalle: number = 0
+    )
+    {
+        
+        
+    }
+
+
     public get selectionSalle(): number {
         return this._selectionSalle;
     }
@@ -101,15 +113,6 @@ class Centre{
         this._nom = value;
     }
 
-    constructor(
-        private _nom: string = "Centre Montreal",
-        private _adresse: string = "Ville de la Compagnie",
-        private _salles: Salle[] = [],
-        private _selectionSalle: number = 0
-    )
-    {
-        this.genererSalles()
-    }
 
   
 
@@ -131,7 +134,7 @@ class Centre{
 }
 
 export class Compagnie{
-    
+
     constructor(
         private _name: string = "Nom de Compagnie",
         private _centres: Centre[],
@@ -139,7 +142,7 @@ export class Compagnie{
     )
     {
         makeAutoObservable(this);
-        this.initialiserComp()
+        
     }
 
 
@@ -165,18 +168,17 @@ export class Compagnie{
     initialiserComp(){
         let a = new Centre("Centre laval", "1 place ville-marie");
         a.nom = "Centre 1"
-        a.genererSalles()
-        a.genererSalles()
-        this.centres.push(a)
+        
+        this._centres.push(a)
 
         a = new Centre("Centre montreal", "1 place ville-marie");
         a.nom = "Centre 2"
-        a.genererSalles()
-        this.centres.push(a)
+        
+        this._centres.push(a)
     }
 
     supprimerCentre(){
-        this.centres.splice(this.selectionnee, 1)
+        this._centres.splice(this.selectionnee, 1)
     }
 
 
@@ -189,17 +191,17 @@ export class Compagnie{
     }
 
     setSalleSelection(salle:number){
-        this.centres[this.selectionnee].selectionSalle = salle
+        this._centres[this.selectionnee].selectionSalle = salle
     }
 
     ajouterCentre(infos: newCentreInfos){
         let centre = new Centre(infos.nom, infos.adresse);
-        this.centres.push(centre);
+        this._centres.push(centre);
     }
 
     modifierCentre(infos: newCentreInfos){
         let centre = new Centre(infos.nom, infos.adresse);
-        this.centres[this.selectionnee] = centre;
+        this._centres[this.selectionnee] = centre;
     }
 
     

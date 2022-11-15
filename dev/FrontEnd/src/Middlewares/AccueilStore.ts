@@ -30,7 +30,7 @@ export class newCentreInfos{
 
 class AccueilStore {
     private compagnie: Compagnie;
-    private ActivePage: eActivePage = eActivePage.Accueil
+    private _ActivePage: eActivePage = eActivePage.Accueil;
     private newCentreInfos: newCentreInfos = new newCentreInfos()
     private modCentreInfos: newCentreInfos = new newCentreInfos()
     
@@ -40,22 +40,21 @@ class AccueilStore {
         this.compagnie = new Compagnie("Escaparium", []);
         // this.compagnie.initialiserComp();
         console.log("On est loggedIn")
-      }
-
-    getActivePage(){
-        return this.ActivePage;
     }
-
-    setActivePage(page:eActivePage){
-        this.ActivePage = page;
+    
+    public get ActivePage(): eActivePage {
+        return this._ActivePage;
+    }
+    public set ActivePage(value: eActivePage) {
+        this._ActivePage = value;
     }
 
     updateModCentreInfosNom(nom:string){
-        this.newCentreInfos.nom = nom;
+        this.modCentreInfos.nom = nom;
     }
 
     updateModCentreInfosAdresse(adresse:string){
-        this.newCentreInfos.adresse = adresse;
+        this.modCentreInfos.adresse = adresse;
     }
 
     modifierCentre(){

@@ -12,16 +12,16 @@ export const AppCreerSucursalle = observer(() => {
 
 )
 
-
 const Formulaire = observer(() => {
     return(
         React.createElement(
           'div',
           null,
-          (accueilStore.getCentres.length > 0) ? React.createElement(ModifierCentres) : "",React.createElement(AjouterCentres))
+          React.createElement(ModifierCentres),React.createElement(AjouterCentres))
     )
   }
 )
+
 
 const ModifierCentres = observer(() => {
 
@@ -70,7 +70,11 @@ const ModifierCentres = observer(() => {
 
 
   }
-  
+
+  if (accueilStore.getCentres().length < 1 || accueilStore.getCentres().length < 1){
+    return React.createElement("div", null, "")
+  }
+  else
   return(
     React.createElement('div',
   {class:'ContainerFormulaire'},
@@ -158,7 +162,7 @@ const ModifierCentres = observer(() => {
           'Modifier la succursale'),
         React.createElement(
           'button',
-          {class:"submit_button", onChange:evt => {accueilStore.supprimerCentre()}},
+          {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
           'Supprimer la succursale'),
           React.createElement(
             'div',
