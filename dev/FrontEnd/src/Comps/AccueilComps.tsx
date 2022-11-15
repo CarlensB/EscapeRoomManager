@@ -1,21 +1,32 @@
 import { observer } from "mobx-react"
 import React from "react"
-import accueilStore from "../Middlewares/AccueilStore"
+import accueilStore, { eActivePage } from "../Middlewares/AccueilStore"
 
 
 export const AppAccueil = observer(() => {
     return (React.createElement('div',
-          {class: 'AppRight'},
-          React.createElement(Centres),
-          React.createElement(Salles)
-          ))
+    {class: 'AppRight'},
+    React.createElement(Centres),
+    React.createElement(Salles)
+    ))
 }
 
 )
 
 
+
 const Centres = observer(() => {
 
+    if (accueilStore.getCentres().length < 1)
+    return (
+        React.createElement(
+            'div',
+            {class: "PasDeCentres", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
+            "Il n'y a actuellement aucun centre \n",
+            "cliquez içi pour en ajouter un"
+        )
+    )
+    else
     return(
         React.createElement(
             'div',
@@ -58,7 +69,25 @@ const Salles = observer(() => {
 
     function genererSalles(){
         let arraySalles = []
-        let listeSalles = accueilStore.getSalles();
+
+        if (accueilStore.getCentres().length < 1)
+        return React.createElement(
+            "div",
+            {class: "PasDeCentres", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
+            "Il n'y a pas de centres dans votre Compagnie.\n",
+            "Cliquez ici pour en ajouter un"
+        )
+        else{
+        let listeSalles = accueilStore.getSalles()
+        
+
+        if (listeSalles.length < 1)
+        return React.createElement(
+            "div",
+            {class: "PasDeSalles", onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
+            "Il n'y a pas de salles dans votre centre.\n",
+            "Cliquez ici pour en ajouter une"
+        )
 
         for (let i = 0; i<listeSalles.length; i++)
         {  
@@ -88,6 +117,7 @@ const Salles = observer(() => {
             
         }
         return arraySalles
+    }
     }
 
 

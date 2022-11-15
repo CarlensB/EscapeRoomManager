@@ -30,17 +30,41 @@ export class newCentreInfos{
 
 class AccueilStore {
     private compagnie: Compagnie;
-    public ActivePage: number = eActivePage.Accueil
-    public newCentreInfos: newCentreInfos;
+    private _ActivePage: eActivePage = eActivePage.Accueil;
+    private newCentreInfos: newCentreInfos = new newCentreInfos()
+    private modCentreInfos: newCentreInfos = new newCentreInfos()
     
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
         this.compagnie = new Compagnie("Escaparium", []);
-        this.newCentreInfos = new newCentreInfos()
-        this.compagnie.initialiserComp();
+        // this.compagnie.initialiserComp();
         console.log("On est loggedIn")
-      }
+    }
+    
+    public get ActivePage(): eActivePage {
+        return this._ActivePage;
+    }
+    public set ActivePage(value: eActivePage) {
+        this._ActivePage = value;
+    }
+
+    updateModCentreInfosNom(nom:string){
+        this.modCentreInfos.nom = nom;
+    }
+
+    updateModCentreInfosAdresse(adresse:string){
+        this.modCentreInfos.adresse = adresse;
+    }
+
+    modifierCentre(){
+        let valide = (this.modCentreInfos.nom.length > 0 && this.modCentreInfos.nom.length > 0)
+        if (valide)
+        {
+            this.compagnie.modifierCentre(this.modCentreInfos)
+        }
+        else console.log("Il n'y a pas assez d'infos :(")
+    }
 
     updateNewCentreInfosNom(nom:string){
         this.newCentreInfos.nom = nom;
@@ -59,24 +83,32 @@ class AccueilStore {
         else console.log("Il n'y a pas assez d'infos :(")
     }
 
+    supprimerCentre(){
+        this.compagnie.supprimerCentre();
+    }
+
     getCompany(){
         return this.compagnie;
     }
 
     getCentres(){
-        return this.compagnie.getCentres();
+        return this.compagnie.centres;
     }
 
     getSelection(){
-        return this.compagnie.getSelection();
+        return this.compagnie.selectionnee;
     }
 
     setSelection(selection: number){
-        this.compagnie.setSelection(selection);
+        this.compagnie.selectionnee = selection;
     }
 
     getSalles(){
-        return this.compagnie.getCurrentSalle();
+        return this.compagnie.getCurrentCenterSalles();
+    }
+
+    setSalleSelection(salle:number){
+        this.compagnie.setSalleSelection(salle);
     }
 
 }

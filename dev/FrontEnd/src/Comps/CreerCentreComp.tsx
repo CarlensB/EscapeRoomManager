@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
-import accueilStore from "../Middlewares/AccueilStore"
+import accueilStore, { eActivePage } from "../Middlewares/AccueilStore"
 
 
 export const AppCreerSucursalle = observer(() => {
@@ -12,7 +12,6 @@ export const AppCreerSucursalle = observer(() => {
 
 )
 
-
 const Formulaire = observer(() => {
     return(
         React.createElement(
@@ -23,13 +22,59 @@ const Formulaire = observer(() => {
   }
 )
 
+
 const ModifierCentres = observer(() => {
 
   let errMessage = ""
   let centreChoix = listeCentre()
   let selection = accueilStore.getSelection()
   let centres = accueilStore.getCentres()
-  
+
+  function genererSalles(){
+    let Salles = accueilStore.getSalles();
+    let arraySalles = []
+
+    if (Salles.length > 0){
+      for (let i =0; i<Salles.length; i++){
+        arraySalles.push(
+          React.createElement(
+            'div',
+            {class:"minisalleContainer" , onClick:() => {
+              accueilStore.setSalleSelection(i);
+              accueilStore.ActivePage = eActivePage.CreateSalle
+
+            }},
+            React.createElement(
+              'div',
+              {class: "miniNomSalle"},
+              Salles[i].nom)
+          )
+        )
+      }
+    }
+
+    arraySalles.push(React.createElement(
+      'div',
+      {class:"minisalleContainer ajout" , onClick:() => {
+        accueilStore.ActivePage = eActivePage.CreateSalle
+
+      }},
+      React.createElement(
+        'div',
+        {class: "miniNomSalle"},
+        "Ajouter Une Salle")
+    ))
+
+    return arraySalles
+
+
+
+  }
+
+  if (accueilStore.getCentres().length < 1 || accueilStore.getCentres().length < 1){
+    return React.createElement("div", null, "")
+  }
+  else
   return(
     React.createElement('div',
   {class:'ContainerFormulaire'},
@@ -90,7 +135,7 @@ const ModifierCentres = observer(() => {
   
         React.createElement(
           'input',
-          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
+          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateModCentreInfosNom(evt.currentTarget.value)}},
           null),
       ),
   
@@ -105,17 +150,19 @@ const ModifierCentres = observer(() => {
       
         React.createElement(
           'input',
-          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
+          {type: 'text', class:'adresseSalleMod', name: 'adresse', onChange:evt => {accueilStore.updateModCentreInfosAdresse(evt.currentTarget.value)}},
           null),
       ),
+
+      React.createElement('div', {class: 'containerMiniSalles'}, genererSalles()),
   
         React.createElement(
           'button',
-          {class:"submit_button"},
+          {class:"submit_button", onClick:()=>{accueilStore.modifierCentre()}},
           'Modifier la succursale'),
         React.createElement(
           'button',
-          {class:"submit_button"},
+          {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
           'Supprimer la succursale'),
           React.createElement(
             'div',
@@ -134,14 +181,11 @@ const ModifierCentres = observer(() => {
     let liste = []
       for (let i = 0; i<centres.length; i++)
         {
-          if (i == selection)
+          
           liste.push(React.createElement('option',
-          {value:i, selected:'selected',},
+          (i == selection) ? {value:i, selected:'selected'} : {value:i},
           centres[i].nom))
-          else
-          liste.push(React.createElement('option',
-          {value:i},
-          centres[i].nom))
+          
         }  
      
     return liste

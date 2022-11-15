@@ -44,7 +44,7 @@ const Menu = observer(() => {
         'Accueil'))
         
         ArrayMenu.push(React.createElement('div',
-        {class: active_page == eActivePage.CreateCentre ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
+        {class: active_page == eActivePage.CreateCentre ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage =eActivePage.CreateCentre}},
         'Gérer Succursales'))
        
         ArrayMenu.push(React.createElement('div',
