@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { newCentreInfos } from "../AccueilStore";
+import { newCentreInfos, SalleInfos } from "../AccueilStore";
 
 
 class Salle{
@@ -10,8 +10,8 @@ class Salle{
         private _duree: number = 0,
         private _intervalle: number = 0,
         private _nbEmp: number = 0,
-        private _heureOuverture: number = 9,
-        private _heureFermeture: number = 9,
+        private _heureOuverture: string = "8:00",
+        private _heureFermeture: string = "23:00",
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
     )
@@ -29,16 +29,16 @@ class Salle{
     public set sallePrive(value: boolean) {
         this._sallePrive = value;
     }
-    public get heureFermeture(): number {
+    public get heureFermeture(): string {
         return this._heureFermeture;
     }
-    public set heureFermeture(value: number) {
+    public set heureFermeture(value: string) {
         this._heureFermeture = value;
     }
-    public get heureOuverture(): number {
+    public get heureOuverture(): string {
         return this._heureOuverture;
     }
-    public set heureOuverture(value: number) {
+    public set heureOuverture(value: string) {
         this._heureOuverture = value;
     }
     public get nbEmp(): number {
@@ -86,7 +86,7 @@ class Centre{
     )
     {
         
-        
+        this.genererSalles()
     }
 
 
@@ -113,15 +113,44 @@ class Centre{
         this._nom = value;
     }
 
+    salleGenerator(infos:SalleInfos): Salle{
+        let salle = new Salle()
+        salle.nom = infos.nom
+        salle.description = infos.description
+        salle.duree = infos.duree
+        salle.heureFermeture = infos.hrFermeture
+        salle.heureOuverture = infos.hrOuverture
+        salle.intervalle = infos.intervalle
+        salle.nbEmp = infos.nbEmp
+        salle.prix = infos.prix
+        salle.description = infos.description
 
-  
+        return salle
+    }
+
+    ajouterSalle(infos:SalleInfos){
+        let salle = this.salleGenerator(infos)
+        this._salles.push(salle)
+    }
+
+    modifierSalle(infos:SalleInfos){
+        let salle = this.salleGenerator(infos)
+        this._salles[this._selectionSalle] = salle
+    }
+
+    supprimerSalle(){
+        this._salles.splice(this.selectionSalle, 1);
+        this.selectionSalle = 0
+    }
 
     genererSalles(){
         let a=new Salle()
         a.nom = "Salle 1"
+        a.description = "La description"
         this._salles.push(a)
         let b=new Salle()
         b.nom = "Salle 2"
+        b.description = "La description de la salle b"
         this._salles.push(b)
     }
 
@@ -177,16 +206,29 @@ export class Compagnie{
         this._centres.push(a)
     }
 
+    ajouterSalle(infos:SalleInfos){
+        this._centres[this.selectionnee].ajouterSalle(infos);
+    }
+
+    modifierSalle(infos:SalleInfos){
+        this._centres[this.selectionnee].modifierSalle(infos);
+    }
+
+    supprimerSalle(){
+        this._centres[this.selectionnee].supprimerSalle()
+    }
+
     supprimerCentre(){
-        this._centres.splice(this.selectionnee, 1)
+        this._centres.splice(this.selectionnee, 1);
+        this._selectionnee = 0
     }
 
 
-    getCurrentCenterSalles(){
+    getCurrentCenterSalles():Salle[]{
         return this.centres[this.selectionnee].salles;
     }
 
-    getCurrentSalle(){
+    getCurrentSalle(): Salle{
         return this.centres[this.selectionnee].getSalle()
     }
 

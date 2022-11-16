@@ -6,6 +6,7 @@ import './CSS/Accueil.css'
 import { AppAccueil} from './Comps/AccueilComps'
 import accueilStore from "./Middlewares/AccueilStore"
 import { AppCreerSucursalle } from './Comps/CreerCentreComp';
+import { AppCreerSalle } from './Comps/CreerSallesComp';
 
 
 const AccueilPageComp = observer(() => {
@@ -18,7 +19,9 @@ const AccueilPageComp = observer(() => {
           'div',
           {class: 'App'},
           React.createElement(Menu),
-          React.createElement((accueilStore.ActivePage == eActivePage.Accueil) ? AppAccueil : AppCreerSucursalle)
+          React.createElement((accueilStore.ActivePage == eActivePage.Accueil) ? AppAccueil :
+                            (accueilStore.ActivePage == eActivePage.CreateSalle) ? AppCreerSalle :
+                            AppCreerSucursalle)
           
       )
   ) 

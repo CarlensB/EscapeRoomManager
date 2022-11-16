@@ -41,7 +41,7 @@ const Centres = observer(() => {
         
         for (let i = 0; i<listeCentres.length; i++)
         {
-            if (i==accueilStore.getSelection())
+            if (i==accueilStore.getSelectionCentre())
                 arrayCentres.push(React.createElement(
                     'div',
                     {class: 'centre selected', onClick: () => {accueilStore.setSelection(i)}},

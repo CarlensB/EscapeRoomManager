@@ -27,7 +27,7 @@ const ModifierCentres = observer(() => {
 
   let errMessage = ""
   let centreChoix = listeCentre()
-  let selection = accueilStore.getSelection()
+  let selection = accueilStore.getSelectionCentre()
   let centres = accueilStore.getCentres()
 
   function genererSalles(){
@@ -42,11 +42,16 @@ const ModifierCentres = observer(() => {
             {class:"minisalleContainer" , onClick:() => {
               accueilStore.setSalleSelection(i);
               accueilStore.ActivePage = eActivePage.CreateSalle
+              console.log(accueilStore.ActivePage)
 
             }},
             React.createElement(
               'div',
-              {class: "miniNomSalle"},
+              {class: "miniNomSalle", onClick:() => {
+                accueilStore.setSalleSelection(i);
+                accueilStore.ActivePage = eActivePage.CreateSalle
+                console.log(accueilStore.ActivePage)
+              }},
               Salles[i].nom)
           )
         )
@@ -176,7 +181,7 @@ const ModifierCentres = observer(() => {
   
 
   function listeCentre(){
-    let selection = accueilStore.getSelection()
+    let selection = accueilStore.getSelectionCentre()
     let centres = accueilStore.getCentres()
     let liste = []
       for (let i = 0; i<centres.length; i++)
