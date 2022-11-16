@@ -1,15 +1,15 @@
 from enum import Enum, auto
 from abc import ABC, abstractmethod
 
-from C61.sprint0.doc.Algo_test.algo_test import Algo
-
-
 class AlgoContext():
     '''
     Une classe de context pour des tests et s'organiser avec le design pattern
     stratefy.
     '''
     pass
+
+# Source pour interface
+# https://realpython.com/python-interface/#formal-interfaces
 
 class AlgoStrategy(ABC):
     '''
@@ -85,6 +85,7 @@ class BackChecking(AlgoStrategy):
     Source :
     https://medium.com/algorithms-and-leetcode/backtracking-e001561b9f28
     https://www.tutorialspoint.com/python_data_structure/python_backtracking.htm#:~:text=Practical%20Data%20Science%20using%20Python&text=Backtracking%20is%20a%20form%20of,not%20give%20the%20required%20solution.
+    https://medium.com/algorithms-and-leetcode/backtracking-with-leetcode-problems-part-2-705c9cc70e52
     https://medium.com/algorithms-and-leetcode/in-depth-backtracking-with-leetcode-problems-part-3-b225f19e0d51
     '''
 
