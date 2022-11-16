@@ -30,14 +30,14 @@ const Formulaire = observer(() => {
 const GererSalle = observer(() => {
 
   let errMessage = ""  
-  // if (accueilStore.compagnie.newCentreInfos.nom.length < 1 && accueilStore.compagnie.newCentreInfos.adresse.length < 1){
-    // errMessage = "Il manque des informations";
-    // }
+//   if (accueilStore.compagnie.newCentreInfos.nom.length < 1 && accueilStore.compagnie.newCentreInfos.adresse.length < 1){
+//     errMessage = "Il manque des informations";
+//     }
   
     function genererOptionsHeures(ouverture){
         let durees = []
         for (let hr = (ouverture ? 7 : 12); hr < (ouverture ? 12 : 23); hr++){
-          for (let minute = 0; minute <= 60; minute+15){
+          for (let minute = 0; minute < 60; minute+=15){
               let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
               let elem = React.createElement(
                   'option',
@@ -53,7 +53,7 @@ const GererSalle = observer(() => {
     function genererOptionsDuree(){
         let durees = []
         for (let hr =0; hr < 3; hr++){
-          for (let minute = 0; minute < 60; minute+15){
+          for (let minute = 0; minute < 60; minute+=15){
               if (minute == 0 && hr== 0)
               continue
               let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
@@ -65,6 +65,8 @@ const GererSalle = observer(() => {
               durees.push(elem)
           }
         }
+
+        console.log(durees)
         return durees
     }
 
@@ -105,7 +107,9 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'input',
-          {type: 'number', name: 'prix', onChange:evt => {accueilStore.updateNewSalleInfosPrix(parseInt(evt.currentTarget.value))}},
+          {type: 'number', min:"0", name: 'prix', onChange:evt => {
+              accueilStore.updateNewSalleInfosPrix(parseInt(evt.currentTarget.value))
+            }},
           null),
 
       ),
@@ -123,7 +127,8 @@ const GererSalle = observer(() => {
         React.createElement(
           'select',
           {name: 'duree', class:'dropdown', onChange:evt => {console.log(evt.value)}},
-          genererOptionsDuree()),
+          genererOptionsDuree()
+          ),
 
       ),
 
@@ -140,7 +145,8 @@ const GererSalle = observer(() => {
         React.createElement(
           'select',
           {name: 'duree', class:'dropdown', onChange:evt => {console.log(evt.value)}},
-          genererOptionsDuree()),
+          genererOptionsDuree()
+          ),
 
       ),
 
@@ -157,7 +163,8 @@ const GererSalle = observer(() => {
         React.createElement(
           'select',
           {name: 'hrOuv', class:'dropdown', onChange:evt => {console.log(evt.value)}},
-          genererOptionsHeures(true)),
+          genererOptionsHeures(true)
+          ),
 
       ),
 
@@ -173,7 +180,8 @@ const GererSalle = observer(() => {
         React.createElement(
           'select',
           {name: 'hrFerm', class:'dropdown', onChange:evt => {console.log(evt.value)}},
-          genererOptionsHeures(false)),
+          genererOptionsHeures(false)
+          ),
 
       ),
 

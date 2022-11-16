@@ -20,7 +20,7 @@ const AccueilPageComp = observer(() => {
           {class: 'App'},
           React.createElement(Menu),
           React.createElement((accueilStore.ActivePage == eActivePage.Accueil) ? AppAccueil :
-                            (accueilStore.ActivePage == eActivePage.CreateSalle) ? AppCreerSalle :
+                                (accueilStore.ActivePage == eActivePage.CreateSalle) ? AppCreerSalle :
                             AppCreerSucursalle)
           
       )
@@ -49,10 +49,6 @@ const Menu = observer(() => {
         ArrayMenu.push(React.createElement('div',
         {class: active_page == eActivePage.CreateCentre ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage =eActivePage.CreateCentre}},
         'Gérer Succursales'))
-       
-        ArrayMenu.push(React.createElement('div',
-        {class: active_page == eActivePage.CreateSalle ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},
-        'Gérer Salles'))
 
         ArrayMenu.push(React.createElement('div',
         {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.Login}},
