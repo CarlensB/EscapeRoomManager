@@ -256,26 +256,4 @@ class DoubleLinkedList:
             last = last.prev_val
         search_node = first if last.value != data else last
         return search_node
-
-            
-# Test
-#===============================================================
-
-if __name__ == '__main__':
-    list = DoubleLinkedList(9,11)
-    list.add(13)
-    list.add(15)
-    list.add(17)
-    list.add(19, 15)
-    list.add(18, 17)
-    list.add_first(1)
-    list.add(21, 1)
-    list.add_last(30)
-    print(list)
-    list.remove(21)
-    list.remove(19)
-    print(list)
-    print(reversed(list))
-    print(reversed(list)[5])
-    print(list[5])
    
