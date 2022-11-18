@@ -1,5 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
+import { eActivePage } from "./AccueilStore";
 import { LoginPageActions } from "./Actions/LoginActions";
 configure({
     enforceActions: "never",
@@ -85,10 +86,30 @@ class LoginStore {
     }
 
     Login(){
-        let a = this.loginpage.LoginAction(this.loginInfos);
-        if (a)
-            this.ActivePage = ActivePage.Loggedin 
+        let formData = new FormData();
+        formData.append("courriel", this.loginInfos.username);
+        formData.append("mdp", this.loginInfos.password);
+        
+        
+        try {
+            fetch('http://127.0.0.1:5000/validation',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response[1]);
+        if (response[1] == "Connexion Validé")
+            this.ActivePage = ActivePage.Loggedin
+      })
+          } catch (e) {
+              console.log("erreur")
+              
+          }
+
     }
+    
 
     updateLoginInfos_username(infos:string){
         this.loginInfos.username = infos

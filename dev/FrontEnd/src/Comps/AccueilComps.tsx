@@ -22,8 +22,8 @@ const Centres = observer(() => {
         React.createElement(
             'div',
             {class: "PasDeCentres", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
-            "Il n'y a actuellement aucun centre \n",
-            "cliquez içi pour en ajouter un"
+            "Il n'y a actuellement aucun centre d'enregistré. \n",
+            "Cliquez ici pour en ajouter un."
         )
     )
     else
@@ -62,7 +62,7 @@ const Salles = observer(() => {
     return(
         React.createElement(
             'div',
-            {class:'Containersalles'},
+            {class: (accueilStore.getCentres().length > 0) ? 'Containersalles' : ''},
             genererSalles()
         )
     )
@@ -73,9 +73,8 @@ const Salles = observer(() => {
         if (accueilStore.getCentres().length < 1)
         return React.createElement(
             "div",
-            {class: "PasDeCentres", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
-            "Il n'y a pas de centres dans votre Compagnie.\n",
-            "Cliquez ici pour en ajouter un"
+            {},
+            null
         )
         else{
         let listeSalles = accueilStore.getSalles()

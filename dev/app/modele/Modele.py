@@ -162,6 +162,8 @@ class GestionSysteme:
         # info, contient courriel et mdp
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, [(info['courriel'],)])
+        if not result:
+            return False, 'courriel inexistant'
         information = result[0]
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
@@ -169,7 +171,7 @@ class GestionSysteme:
             self.__id = information[1]
             self.__user = information[3] + " " + information[2]
             self.__acces = GestionSysteme.NiveauAcces(information[6]).name
-            self.__client = self.__get_client(self.__id)
+            # self.__client = self.__get_client(self.__id)
             return True, 'Connexion Validé'
         else:
             return False, 'mot de passe invalide'
@@ -221,6 +223,7 @@ class GestionSysteme:
     def __get_client(self, index: int):
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, [(index,)])
+        print(result)
         return result[0][1]
 
     def __determiner_prix(self, r: 'Reservation'):
