@@ -66,7 +66,6 @@ const GererSalle = observer(() => {
           }
         }
 
-        console.log(durees)
         return durees
     }
 
@@ -126,7 +125,7 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {console.log(evt.value)}},
+          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)}},
           genererOptionsDuree()
           ),
 
@@ -144,7 +143,7 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {console.log(evt.value)}},
+          {name: 'intervalle', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosIntervalle(evt.currentTarget.value)}},
           genererOptionsDuree()
           ),
 
@@ -162,7 +161,7 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'hrOuv', class:'dropdown', onChange:evt => {console.log(evt.value)}},
+          {name: 'hrOuv', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrOuverture(evt.value)}},
           genererOptionsHeures(true)
           ),
 
@@ -179,7 +178,7 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'hrFerm', class:'dropdown', onChange:evt => {console.log(evt.value)}},
+          {name: 'hrFerm', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrFermeture(evt.currentTarget.value)}},
           genererOptionsHeures(false)
           ),
 
@@ -193,12 +192,12 @@ const GererSalle = observer(() => {
       React.createElement(
           'label',
           {for: 'nom'},
-          'Salle privee ou non: '),
+          'Salle publique: '),
 
         React.createElement(
           'input',
-          {type: 'checkbox', name: 'nom', onChange:evt => {
-              console.log(evt.currentTarget.value)
+          {type: 'checkbox', name: 'nom', onClick:evt => {
+              accueilStore.updateNewSalleInfosPublique(evt.currentTarget.checked)
             }},
           null),
       ),
@@ -215,7 +214,7 @@ const GererSalle = observer(() => {
         React.createElement(
           'textarea',
             {onChange:evt => {
-              console.log(evt.currentTarget.value)
+              accueilStore.updateNewSalleInfosDescription(evt.currentTarget.value)
             }},
           null),
       ),
@@ -235,7 +234,7 @@ const GererSalle = observer(() => {
           ),
           React.createElement(
             'button',
-            {class:"submit_button bouton_salle", onClick:()=>{            }},
+            {class:"submit_button bouton_salle", onClick:()=>{accueilStore.ajouterSalle()}},
             'Ajouter une succursale')
 
   )

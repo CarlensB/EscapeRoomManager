@@ -1,13 +1,16 @@
 import { makeAutoObservable } from "mobx";
-import { CreateAccountInfos, LoginInfos } from "../loginStore";
+import { useCallback } from "react";
+import { ActivePage, CreateAccountInfos, LoginInfos } from "../loginStore";
 
 
 
 export class LoginPageActions {
     
+    
     constructor(
         private LoginError: boolean = false,
         private CreateAccountError: boolean = false,
+        public loggedin: boolean = false
         )
         
         {
@@ -35,11 +38,11 @@ export class LoginPageActions {
         
     }
 
-    LoginAction(loginInfos: LoginInfos) {
+    LoginAction(loginInfos: LoginInfos): boolean {
         // if (this.LoginError == true)
         // this.LoginError = false;
         // else this.LoginError=true;
-        // this.LoginPageActive = ActivePage.Loggedin
+        
 
         let formData = new FormData();
         formData.append("courriel", loginInfos.username);
@@ -55,6 +58,8 @@ export class LoginPageActions {
       .then(response => response.json())
       .then(response => {
         console.log(response[1]);
+        if (response[1] == "Connexion Validé")
+        
         return true
       })
           } catch (e) {

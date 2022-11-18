@@ -17,7 +17,7 @@ const Formulaire = observer(() => {
         React.createElement(
           'div',
           null,
-          React.createElement(ModifierCentres),React.createElement(AjouterCentres))
+          React.createElement(AjouterCentres),React.createElement(ModifierCentres))
     )
   }
 )
@@ -47,7 +47,7 @@ const ModifierCentres = observer(() => {
             }},
             React.createElement(
               'div',
-              {class: "miniNomSalle", onClick:() => {
+              {class: 'miniNomSalle add', onClick:() => {
                 accueilStore.setSalleSelection(i);
                 accueilStore.ActivePage = eActivePage.CreateSalle
                 console.log(accueilStore.ActivePage)
@@ -84,15 +84,16 @@ const ModifierCentres = observer(() => {
     React.createElement('div',
   {class:'ContainerFormulaire'},
 
+  
+  React.createElement(
+    'div',
+    {class:'ModifierCentreFormulaire'},
+
     React.createElement(
       'div',
       {class:'title'},
       'Modifier ou supprimer une succursalle'
     ),
-
-    React.createElement(
-      'div',
-      {class:'ModifierCentreFormulaire'},
   
       React.createElement('select',
       {name:'centreChoix', onChange:evt =>{accueilStore.setSelection(parseInt(evt.currentTarget.value))}},
@@ -160,6 +161,10 @@ const ModifierCentres = observer(() => {
       ),
 
       React.createElement('div', {class: 'containerMiniSalles'}, genererSalles()),
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
   
         React.createElement(
           'button',
@@ -169,6 +174,7 @@ const ModifierCentres = observer(() => {
           'button',
           {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
           'Supprimer la succursale'),
+      ),
           React.createElement(
             'div',
             {class:"error_msg"},
@@ -209,15 +215,21 @@ const AjouterCentres = observer(() => {
   return(React.createElement('div',
   {class:'ContainerFormulaire'},
 
+  
+  React.createElement(
+    'div',
+    {class:'nouveauCentreFormulaire'},    
+
     React.createElement(
       'div',
       {class:'title'},
       'Ajouter une succursalle'
     ),
 
-    React.createElement(
-      'div',
-      {class:'nouveauCentreFormulaire'},    
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
 
       React.createElement(
           'label',
@@ -229,6 +241,14 @@ const AjouterCentres = observer(() => {
           {type: 'text', name: 'nom', onChange:evt => {accueilStore.updateNewCentreInfosNom(evt.currentTarget.value)}},
           null),
 
+      ),
+
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+
         React.createElement(
           'label',
           {for: 'adresse'},
@@ -239,6 +259,13 @@ const AjouterCentres = observer(() => {
           {type: 'text', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
           null),
 
+      ),
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+
         React.createElement(
           'div',
           {class:"error_msg"},
@@ -248,6 +275,8 @@ const AjouterCentres = observer(() => {
         'button',
         {class:"submit_button", onClick:()=>{accueilStore.ajouterCentre()}},
         'Ajouter une succursale')
+      )
+
   ),
 
   )

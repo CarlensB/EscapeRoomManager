@@ -72,6 +72,35 @@ class AccueilStore {
         this._compagnie = new Compagnie("Escaparium", []);
         // this.compagnie.initialiserComp();
         console.log("On est loggedIn")
+
+
+
+
+    //     try {
+    //         fetch('http://127.0.0.1:5000/session',
+    //         {
+    //             method: 'POST',
+    //         })
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     console.log(response);
+    //   })
+    //       } catch (e) {
+    //           console.log("Aucune variable de session")
+              
+    //       }
+
+
+
+
+
+
+
+
+
+
+
+
     }
     
     public get ActivePage(): eActivePage {

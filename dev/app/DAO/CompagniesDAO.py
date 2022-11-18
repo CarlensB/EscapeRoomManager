@@ -53,6 +53,6 @@ class CompagniesDAO:
         self.__bd.connexion.commit()
 
     def __select(self, sql: str, val: tuple = None) -> list:
-        self.__curseur.execute(sql, val)
+        self.__curseur.executemany(sql, val)
         result = self.__curseur.fetchall()
         return result
