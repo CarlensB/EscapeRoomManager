@@ -78,6 +78,7 @@ class Serveur():
             return json.dumps(False)
         
     # Pour se déconnecter
+    @__app.route('/deconnecter')
     def deconnecter():
         retour = Serveur.__controleur.deconnecter_id()
         return json.dumps(retour)

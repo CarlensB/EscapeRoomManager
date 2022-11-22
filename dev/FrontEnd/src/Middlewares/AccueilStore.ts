@@ -22,6 +22,7 @@ export class newCentreInfos{
         public pays: string = "",
         public code_postal: string = "",
         public id: number = 99999999,
+        public a_modifier: boolean = false,
     )
     {}
         reset() {
@@ -73,7 +74,7 @@ class AccueilStore {
         remotedev(this, { global: true, name: this.constructor.name });
         this._compagnie = new Compagnie("Escaparium", []);
         // this.compagnie.initialiserComp();
-        console.log("On est loggedIn")
+
 
 
 
@@ -97,7 +98,7 @@ class AccueilStore {
                 centreinfos.ville = response[i][4]
                 centreinfos.pays = response[i][5]
                 centreinfos.code_postal = response[i][6]
-
+                response[i][4] == "ville" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
                 this._compagnie.ajouterCentre(centreinfos)
             }
         }
@@ -107,17 +108,25 @@ class AccueilStore {
               
           }
 
-
-
-
-
-
-
-
-
-
-
-
+    }
+    
+    
+    public deconnecter(){
+        try {
+            fetch('http://127.0.0.1:5000/deconnecter',
+            {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response == true)
+                this.ActivePage = eActivePage.Login
+                
+            })
+        } catch (e) {
+            console.log("Aucune variable de session")
+            
+        }     
     }
     
     public get ActivePage(): eActivePage {
@@ -127,23 +136,8 @@ class AccueilStore {
         this._ActivePage = value;
     }
 
-    public deconnecter(){
-        try {
-            fetch('http://127.0.0.1:5000/deconnecter',
-            {
-                method: 'GET',
-            })
-      .then(response => response.json())
-      .then(response => {
-          console.log(response)
-        if (response == true)
-        this.ActivePage = eActivePage.Login
-    
-      })
-          } catch (e) {
-              console.log("Aucune variable de session")
-              
-          }     
+    getCurrentCentreValideOuPas(){
+        return this._compagnie.getCurrentCentrevalidity()
     }
 
     updateModCentreInfosNom(nom:string){
@@ -171,7 +165,35 @@ class AccueilStore {
         let valide3 = (this._modCentreInfos.code_postal.length > 0)
         if (valide1 && valide2 && valide3)
         {
-            this._compagnie.modifierCentre(this._modCentreInfos)
+            let formData = new FormData();
+            formData.append("nom", this._newCentreInfos.nom);
+            formData.append("compagnie", this._personal_id.toString());
+            formData.append("adresse", this._newCentreInfos.adresse);
+            formData.append("ville", this._newCentreInfos.ville);
+            formData.append("pays", this._newCentreInfos.pays);
+            formData.append("code_postal", this._newCentreInfos.code_postal);
+            formData.append("id", this._compagnie.getCurrentCentreID().toString());
+            try {
+                fetch('http://127.0.0.1:5000/modifier/centre',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+              if (response == "Modification réussi")
+              this._compagnie.modifierCentre(this._modCentreInfos)
+        
+          })
+              } catch (e) {
+                  console.log("CA MARCHE POOOH")
+                  
+              } 
+
+
+
+
+            
         }
         else console.log("Il n'y a pas assez d'infos :(")
     }
