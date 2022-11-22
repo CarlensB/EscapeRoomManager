@@ -18,11 +18,17 @@ export class newCentreInfos{
     constructor(
         public nom: string = "",
         public adresse: string = "",
+        public ville: string = "",
+        public pays: string = "",
+        public code_postal: string = "",
     )
     {}
         reset() {
             this.nom = "";
             this.adresse = "";
+            this.ville = "";
+            this.pays = "";
+            this.code_postal = "";
         }
 
 }
@@ -31,14 +37,11 @@ export class SalleInfos{
 
     constructor(
         public nom: string = "",
+        public description: string = "",
+        public nbJrMax:number = 1,
         public prix:number = 0,
         public duree:number = 0,
-        public intervalle:number = 0,
-        public nbEmp:number = 0,
-        public hrOuverture:string = "8:00",
-        public hrFermeture:string = "23:00",
         public publique:boolean = true,
-        public description: string = ""
         
         )
         {}
@@ -46,10 +49,7 @@ export class SalleInfos{
             this.nom = "";
             this.prix = 0;
             this.duree = 0;
-            this.intervalle = 0;
-            this.nbEmp = 0;
-            this.hrOuverture = "8:00";
-            this.hrFermeture = "23:00";
+            this.nbJrMax = 1;
             this.publique = true;
             this.description = ""
         }
@@ -118,9 +118,22 @@ class AccueilStore {
         this._modCentreInfos.adresse = adresse;
     }
 
+    updateModCentreInfosVille(ville:string){
+        this._modCentreInfos.ville = ville;
+    }
+
+    updateModCentreInfosPays(pays:string){
+        this._modCentreInfos.pays = pays;
+    }
+    updateModCentreInfosCodePostal(code_postal:string){
+        this._modCentreInfos.code_postal = code_postal;
+    }
+
     modifierCentre(){
-        let valide = (this._modCentreInfos.nom.length > 0 && this._modCentreInfos.adresse.length > 0)
-        if (valide)
+        let valide1 = (this._modCentreInfos.nom.length > 0 && this._modCentreInfos.adresse.length > 0)
+        let valide2 = (this._modCentreInfos.ville.length > 0 && this._modCentreInfos.pays.length > 0)
+        let valide3 = (this._modCentreInfos.code_postal.length > 0)
+        if (valide1 && valide2 && valide3)
         {
             this._compagnie.modifierCentre(this._modCentreInfos)
         }
@@ -135,9 +148,22 @@ class AccueilStore {
         this._newCentreInfos.adresse = adresse;
     }
 
+    updateNewCentreInfosVille(ville:string){
+        this._newCentreInfos.ville = ville;
+    }
+
+    updateNewCentreInfosPays(pays:string){
+        this._newCentreInfos.pays = pays;
+    }
+    updateNewCentreInfosCodePostal(code_postal:string){
+        this._newCentreInfos.code_postal = code_postal;
+    }
+
     ajouterCentre(){
-        let valide = (this._newCentreInfos.nom.length > 0 && this._newCentreInfos.adresse.length > 0)
-        if (valide)
+        let valide1 = (this._newCentreInfos.nom.length > 0 && this._newCentreInfos.adresse.length > 0)
+        let valide2 = (this._newCentreInfos.ville.length > 0 && this._newCentreInfos.pays.length > 0)
+        let valide3 = (this._newCentreInfos.code_postal.length > 0)
+        if (valide1 && valide2 && valide3)
         {
             this._compagnie.ajouterCentre(this._newCentreInfos)
         }
@@ -186,21 +212,14 @@ class AccueilStore {
     updateNewSalleInfosDuree(duree:number){
         this._newSalleInfos.duree = duree
     }
-    updateNewSalleInfosIntervalle(intervalle:number){
-        this._newSalleInfos.intervalle = intervalle
-    }
-    updateNewSalleInfosNbEmp(nbEmp:number){
-        this._newSalleInfos.nbEmp = nbEmp
+
+    updateNewSalleInfosNbJoueur(nbJr:number){
+        this._newSalleInfos.nbJrMax = nbJr
     }
     updateNewSalleInfosPublique(publique:boolean){
         this._newSalleInfos.publique = publique
     }
-    updateNewSalleInfosHrFermeture(hrFermeture:string){
-        this._newSalleInfos.hrFermeture = hrFermeture
-    }
-    updateNewSalleInfosHrOuverture(hrOuverture:string){
-        this._newSalleInfos.hrOuverture = hrOuverture
-    }
+        
     updateNewSalleInfosDescription(description:string){
         this._newSalleInfos.description = description
     }
@@ -215,21 +234,14 @@ class AccueilStore {
     updatemodSalleInfosDuree(duree:number){
         this._modSalleInfos.duree = duree
     }
-    updatemodSalleInfosIntervalle(intervalle:number){
-        this._modSalleInfos.intervalle = intervalle
-    }
-    updatemodSalleInfosNbEmp(nbEmp:number){
-        this._modSalleInfos.nbEmp = nbEmp
+
+    updateModSalleInfosNbJoueur(nbjr:number){
+        this._modSalleInfos.nbJrMax = nbjr
     }
     updatemodSalleInfosPublique(publique:boolean){
         this._modSalleInfos.publique = publique
     }
-    updatemodSalleInfosHrFermeture(hrFermeture:string){
-        this._modSalleInfos.hrFermeture = hrFermeture
-    }
-    updatemodSalleInfosHrOuverture(hrOuverture:string){
-        this._modSalleInfos.hrOuverture = hrOuverture
-    }
+
     updatemodSalleInfosDescription(description:string){
         this._modSalleInfos.description = description
     }
