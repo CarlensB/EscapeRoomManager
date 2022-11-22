@@ -76,19 +76,23 @@ class AccueilStore {
 
 
 
-    //     try {
-    //         fetch('http://127.0.0.1:5000/session',
-    //         {
-    //             method: 'POST',
-    //         })
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     console.log(response);
-    //   })
-    //       } catch (e) {
-    //           console.log("Aucune variable de session")
+        try {
+            fetch('http://127.0.0.1:5000/id_connection',
+            {
+                method: 'GET',
+            })
+      .then(response => response.json())
+      .then(response => {
+        if (response == false)
+        this.ActivePage = eActivePage.Login
+        else{
+            console.log(response)
+        }
+      })
+          } catch (e) {
+              console.log("Aucune variable de session")
               
-    //       }
+          }
 
 
 
