@@ -64,7 +64,7 @@ class Serveur():
     def session():
         return session
     
-    # Pour avoir accès au variable de session
+    # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
     @__app.route('/id_connection')
     def id_connection():
         id = Serveur.__controleur.retourner_id()
@@ -76,3 +76,8 @@ class Serveur():
             else: return json.dumps(id)
         else:
             return json.dumps(False)
+        
+    # Pour se déconnecter
+    def deconnecter():
+        retour = Serveur.__controleur.deconnecter_id()
+        return json.dumps(retour)

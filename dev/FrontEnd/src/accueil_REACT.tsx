@@ -51,7 +51,7 @@ const Menu = observer(() => {
         'Gérer Succursales'))
 
         ArrayMenu.push(React.createElement('div',
-        {class: 'menuItem', onClick: () => {accueilStore.ActivePage = eActivePage.Login}},
+        {class: 'menuItem', onClick: () => {accueilStore.deconnecter()}},
         'Déconnecter'))
         
 

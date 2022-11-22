@@ -71,6 +71,7 @@ class Centre{
         private _ville: string = "Ville de la Compagnie",
         private _pays: string = "pays de la Compagnie",
         private _code_postal: string = "pays de la Compagnie",
+        private _id: number = 99999999,
         private _salles: Salle[] = [],
         private _selectionSalle: number = 0
         )
@@ -79,6 +80,13 @@ class Centre{
             
         }
         
+    public get id(): number {
+        return this._id;
+    }
+    public set id(value: number) {
+        this._id = value;
+    }
+
     public get code_postal(): string {
         return this._code_postal;
     }
@@ -243,13 +251,20 @@ export class Compagnie{
     }
 
     ajouterCentre(infos: newCentreInfos){
-        let centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays);
+        let centre = null
+        if (infos.id != 99999999)
+        centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal, infos.id);
+        else centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal);
         this._centres.push(centre);
     }
 
     modifierCentre(infos: newCentreInfos){
         let centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal);
         this._centres[this.selectionnee] = centre;
+    }
+
+    getCurrentCentreID(){
+        return this._centres[this.selectionnee].id
     }
 
     

@@ -21,6 +21,7 @@ export class newCentreInfos{
         public ville: string = "",
         public pays: string = "",
         public code_postal: string = "",
+        public id: number = 99999999,
     )
     {}
         reset() {
@@ -64,6 +65,7 @@ class AccueilStore {
     private _modCentreInfos: newCentreInfos = new newCentreInfos()
     private _newSalleInfos: SalleInfos = new SalleInfos()
     private _modSalleInfos: SalleInfos = new SalleInfos()
+    private _personal_id: number = 0
 
     
     constructor() {
@@ -86,7 +88,18 @@ class AccueilStore {
         if (response == false)
         this.ActivePage = eActivePage.Login
         else{
-            console.log(response)
+            for (let i = 0; i< response.length; i++){
+                this._personal_id = response[i][2]
+                let centreinfos = new newCentreInfos()
+                centreinfos.nom = response[i][1]
+                centreinfos.id = response[i][0]
+                centreinfos.adresse = response[i][3]
+                centreinfos.ville = response[i][4]
+                centreinfos.pays = response[i][5]
+                centreinfos.code_postal = response[i][6]
+
+                this._compagnie.ajouterCentre(centreinfos)
+            }
         }
       })
           } catch (e) {
@@ -112,6 +125,25 @@ class AccueilStore {
     }
     public set ActivePage(value: eActivePage) {
         this._ActivePage = value;
+    }
+
+    public deconnecter(){
+        try {
+            fetch('http://127.0.0.1:5000/deconnecter',
+            {
+                method: 'GET',
+            })
+      .then(response => response.json())
+      .then(response => {
+          console.log(response)
+        if (response == true)
+        this.ActivePage = eActivePage.Login
+    
+      })
+          } catch (e) {
+              console.log("Aucune variable de session")
+              
+          }     
     }
 
     updateModCentreInfosNom(nom:string){
@@ -169,13 +201,56 @@ class AccueilStore {
         let valide3 = (this._newCentreInfos.code_postal.length > 0)
         if (valide1 && valide2 && valide3)
         {
-            this._compagnie.ajouterCentre(this._newCentreInfos)
+            let formData = new FormData();
+            formData.append("nom", this._newCentreInfos.nom);
+            formData.append("compagnie", this._personal_id.toString());
+            formData.append("adresse", this._newCentreInfos.adresse);
+            formData.append("ville", this._newCentreInfos.ville);
+            formData.append("pays", this._newCentreInfos.pays);
+            formData.append("code_postal", this._newCentreInfos.code_postal);
+            try {
+                fetch('http://127.0.0.1:5000/ajouter/centre',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+              if (response == "Insertion réussi")
+             this._compagnie.ajouterCentre(this._newCentreInfos)
+        
+          })
+              } catch (e) {
+                  console.log("CA MARCHE POOOH")
+                  
+              } 
+
+
+           
         }
         else console.log("Il n'y a pas assez d'infos :(")
     }
 
     supprimerCentre(){
-        this._compagnie.supprimerCentre();
+        let id = this._compagnie.getCurrentCentreID()
+
+        let formData = new FormData();
+        formData.append("id", id.toString());
+        try {
+            fetch('http://127.0.0.1:5000/supprimer/centre',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+          if (response == "Suppression réussi")
+          this._compagnie.supprimerCentre();
+    
+      })
+          } catch (e) {
+              console.log("CA MARCHE POOOH")        
+          } 
     }
 
     getCompany(){

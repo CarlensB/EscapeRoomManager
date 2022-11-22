@@ -262,10 +262,13 @@ const ModifierCentres = observer(() => {
           'button',
           {class:"submit_button", onClick:()=>{accueilStore.modifierCentre()}},
           'Modifier la succursale'),
-        React.createElement(
-          'button',
-          {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
-          'Supprimer la succursale'),
+          accueilStore.getCentres().length > 1 ?
+              React.createElement(
+                'button',
+                {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
+                'Supprimer la succursale') 
+          : ""
+
       ),
           React.createElement(
             'div',
