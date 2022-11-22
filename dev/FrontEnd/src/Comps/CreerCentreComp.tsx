@@ -92,7 +92,7 @@ const ModifierCentres = observer(() => {
     React.createElement(
       'div',
       {class:'title'},
-      'Modifier ou supprimer une succursalle'
+      'Modifier une succursalle'
     ),
   
       React.createElement('select',
@@ -129,6 +129,53 @@ const ModifierCentres = observer(() => {
           {class:'label'},
           centres[selection].adresse),
       ),
+      
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {class:'label'},
+          'Ancienne Ville:'),
+      
+        React.createElement(
+          'label',
+          {class:'label'},
+          centres[selection].ville),
+      ),
+  
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {class:'label'},
+          'Ancien Pays:'),
+      
+        React.createElement(
+          'label',
+          {class:'label'},
+          centres[selection].pays),
+      ),
+  
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {class:'label'},
+          'Ancien code Postal:'),
+      
+        React.createElement(
+          'label',
+          {class:'label'},
+          centres[selection].code_postal),
+      ),
   
       React.createElement(
         'div',
@@ -160,6 +207,51 @@ const ModifierCentres = observer(() => {
           null),
       ),
 
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {for: 'Ville'},
+          'Nouvelle Ville: '),
+  
+        React.createElement(
+          'input',
+          {type: 'text', class:'nomSalleMod', onChange:evt => {accueilStore.updateModCentreInfosVille(evt.currentTarget.value)}},
+          null),
+      ),
+  
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {for: 'Pays'},
+          'Nouveau Pays:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', class:'adresseSalleMod', name: 'Pays', onChange:evt => {accueilStore.updateModCentreInfosPays(evt.currentTarget.value)}},
+          null),
+      ),
+      
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+        React.createElement(
+          'label',
+          {for: 'CP'},
+          'Nouveau Code Postal:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', class:'adresseSalleMod', name: 'CP', onChange:evt => {accueilStore.updateModCentreInfosCodePostal(evt.currentTarget.value)}},
+          null),
+      ),
+      
       React.createElement('div', {class: 'containerMiniSalles'}, genererSalles()),
 
       React.createElement(
@@ -170,10 +262,13 @@ const ModifierCentres = observer(() => {
           'button',
           {class:"submit_button", onClick:()=>{accueilStore.modifierCentre()}},
           'Modifier la succursale'),
-        React.createElement(
-          'button',
-          {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
-          'Supprimer la succursale'),
+          accueilStore.getCentres().length > 1 ?
+              React.createElement(
+                'button',
+                {class:"submit_button", onClick:() => {accueilStore.supprimerCentre()}},
+                'Supprimer la succursale') 
+          : ""
+
       ),
           React.createElement(
             'div',
@@ -257,6 +352,54 @@ const AjouterCentres = observer(() => {
         React.createElement(
           'input',
           {type: 'text', name: 'adresse', onChange:evt => {accueilStore.updateNewCentreInfosAdresse(evt.currentTarget.value)}},
+          null),
+
+      ),
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+
+        React.createElement(
+          'label',
+          {for: 'ville'},
+          'Ville:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', name: 'ville', onChange:evt => {accueilStore.updateNewCentreInfosVille(evt.currentTarget.value)}},
+          null),
+
+      ),
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+
+        React.createElement(
+          'label',
+          {for: 'pays'},
+          'Pays:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', name: 'pays', onChange:evt => {accueilStore.updateNewCentreInfosPays(evt.currentTarget.value)}},
+          null),
+
+      ),
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+  
+
+        React.createElement(
+          'label',
+          {for: 'cp'},
+          'Code Postal:'),
+      
+        React.createElement(
+          'input',
+          {type: 'text', name: 'cp', onChange:evt => {accueilStore.updateNewCentreInfosCodePostal(evt.currentTarget.value)}},
           null),
 
       ),

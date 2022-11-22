@@ -1,5 +1,6 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 import json
+import re
 
 from modele.Modele import GestionSysteme
 from flask_utils import HOTE, PORT
@@ -62,3 +63,22 @@ class Serveur():
     @__app.route('/session')
     def session():
         return session
+    
+    # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
+    @__app.route('/id_connection')
+    def id_connection():
+        id = Serveur.__controleur.retourner_id()
+        if id is not None:
+            result = Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":id})
+            print(result)
+            if len(result) > 0:
+                return json.dumps(result)
+            else: return json.dumps(id)
+        else:
+            return json.dumps(False)
+        
+    # Pour se déconnecter
+    @__app.route('/deconnecter')
+    def deconnecter():
+        retour = Serveur.__controleur.deconnecter_id()
+        return json.dumps(retour)

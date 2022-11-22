@@ -157,6 +157,13 @@ class GestionSysteme:
     @property
     def dao(self):
         return self.__dao
+    
+    def retourner_id(self):
+        return self.__id
+    
+    def deconnecter_id(self):
+        self.__id = None
+        return True
 
     def valider_connexion(self, info: dict):
         # info, contient courriel et mdp

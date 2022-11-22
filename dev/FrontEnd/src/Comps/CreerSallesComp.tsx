@@ -34,21 +34,7 @@ const GererSalle = observer(() => {
 //     errMessage = "Il manque des informations";
 //     }
   
-    function genererOptionsHeures(ouverture){
-        let durees = []
-        for (let hr = (ouverture ? 7 : 12); hr < (ouverture ? 12 : 23); hr++){
-          for (let minute = 0; minute < 60; minute+=15){
-              let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
-              let elem = React.createElement(
-                  'option',
-                  {value: heure},
-                  heure
-              )
-              durees.push(elem)
-          }
-        }
-        return durees
-    }
+    
 
     function genererOptionsDuree(){
         let durees = []
@@ -59,7 +45,7 @@ const GererSalle = observer(() => {
               let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
               let elem = React.createElement(
                   'option',
-                  {value: heure},
+                  {value: (hr * 60 + minute)},
                   heure
               )
               durees.push(elem)
@@ -102,11 +88,11 @@ const GererSalle = observer(() => {
         React.createElement(
           'label',
           {for: 'prix'},
-          'Prix:'),
+          'Prix ($):'),
       
         React.createElement(
           'input',
-          {type: 'number', min:"0", name: 'prix', onChange:evt => {
+          {type: 'number', min:"1", name: 'prix', onChange:evt => {
               accueilStore.updateNewSalleInfosPrix(parseInt(evt.currentTarget.value))
             }},
           null),
@@ -131,58 +117,25 @@ const GererSalle = observer(() => {
 
       ),
 
-
       React.createElement(
         'div',
         {class:'labelContainer'},
 
         React.createElement(
           'label',
-          {for: 'intervalle'},
-          "Intervalles entre les réservations:"),
+          {for: 'nb_jr'},
+          'Nombre de jouers max:'),
       
         React.createElement(
-          'select',
-          {name: 'intervalle', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosIntervalle(evt.currentTarget.value)}},
-          genererOptionsDuree()
-          ),
+          'input',
+          {type: 'number', min:"1", name: 'nb_jr', onChange:evt => {
+              accueilStore.updateNewSalleInfosNbJoueur(parseInt(evt.currentTarget.value))
+            }},
+          null),
 
       ),
 
-
-      React.createElement(
-        'div',
-        {class:'labelContainer'},
-
-        React.createElement(
-          'label',
-          {for: 'hrOuv'},
-          "Heure d'ouverture:"),
       
-        React.createElement(
-          'select',
-          {name: 'hrOuv', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrOuverture(evt.value)}},
-          genererOptionsHeures(true)
-          ),
-
-      ),
-
-      React.createElement(
-        'div',
-        {class:'labelContainer'},
-
-        React.createElement(
-          'label',
-          {for: 'hrFerm'},
-          "Heure de fermeture:"),
-      
-        React.createElement(
-          'select',
-          {name: 'hrFerm', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrFermeture(evt.currentTarget.value)}},
-          genererOptionsHeures(false)
-          ),
-
-      ),
 
 
       React.createElement(
@@ -217,27 +170,22 @@ const GererSalle = observer(() => {
               accueilStore.updateNewSalleInfosDescription(evt.currentTarget.value)
             }},
           null),
-      ),
-
-
-
-
-
-
-
+        ),
 
         React.createElement(
           'div',
           {class:"error_msg"},
           errMessage),
 
-          ),
           React.createElement(
             'button',
             {class:"submit_button bouton_salle", onClick:()=>{accueilStore.ajouterSalle()}},
-            'Ajouter une succursale')
-
+            'Ajouter une succursale'),
+          
+          ),
   )
+      )
 
-) 
-})
+     
+  }
+)

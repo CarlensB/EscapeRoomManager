@@ -6,3 +6,6 @@ connexion :
 Étape 2 connexion avec su
 Étape 3 ufw allow from IP to any port 3306 ou ufw allow 3306
 Étape 4 lorsqu'on quitte si on a fait ufw allow 3306 il faut deny -> ufw deny 3306
+
+mysql: mysql -u root -p
+use ERM_DB

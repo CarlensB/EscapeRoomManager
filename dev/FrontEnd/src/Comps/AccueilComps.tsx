@@ -79,8 +79,13 @@ const Salles = observer(() => {
         else{
         let listeSalles = accueilStore.getSalles()
         
-
-        if (listeSalles.length < 1)
+        if (accueilStore.getCurrentCentreValideOuPas())
+        return React.createElement(
+            "div",
+            {class: "PasDeSalles", onClick: () => {accueilStore.ActivePage = eActivePage.CreateCentre}},
+            "Veuillez valider les données de votre Center"
+        )
+        else if (listeSalles.length < 1)
         return React.createElement(
             "div",
             {class: "PasDeSalles", onClick: () => {accueilStore.ActivePage = eActivePage.CreateSalle}},

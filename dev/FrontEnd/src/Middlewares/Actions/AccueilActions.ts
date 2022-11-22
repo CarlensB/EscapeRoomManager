@@ -8,12 +8,11 @@ class Salle{
         private _nom: string = "",
         private _prix: number = 0,
         private _duree: number = 0,
-        private _intervalle: number = 0,
-        private _nbEmp: number = 0,
-        private _heureOuverture: string = "8:00",
-        private _heureFermeture: string = "23:00",
+        private _nbJrMax: number = 0,
+        private _centre: string = "8:00",
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
+        private _listeHoraire = [] // TODO getter setter
     )
     {}
 
@@ -29,29 +28,17 @@ class Salle{
     public set sallePrive(value: boolean) {
         this._sallePrive = value;
     }
-    public get heureFermeture(): string {
-        return this._heureFermeture;
+    public get centre(): string {
+        return this._centre;
     }
-    public set heureFermeture(value: string) {
-        this._heureFermeture = value;
+    public set centre(value: string) {
+        this._centre = value;
     }
-    public get heureOuverture(): string {
-        return this._heureOuverture;
+    public get nbJrMax(): number {
+        return this._nbJrMax;
     }
-    public set heureOuverture(value: string) {
-        this._heureOuverture = value;
-    }
-    public get nbEmp(): number {
-        return this._nbEmp;
-    }
-    public set nbEmp(value: number) {
-        this._nbEmp = value;
-    }
-    public get intervalle(): number {
-        return this._intervalle;
-    }
-    public set intervalle(value: number) {
-        this._intervalle = value;
+    public set nbJrMax(value: number) {
+        this._nbJrMax = value;
     }
     public get duree(): number {
         return this._duree;
@@ -80,15 +67,51 @@ class Salle{
 class Centre{
     constructor(
         private _nom: string = "Centre Montreal",
-        private _adresse: string = "Ville de la Compagnie",
+        private _adresse: string = "adresse de la Compagnie",
+        private _ville: string = "Ville de la Compagnie",
+        private _pays: string = "pays de la Compagnie",
+        private _code_postal: string = "pays de la Compagnie",
+        private _id: number = 99999999,
+        private _a_modifier: boolean = false,
         private _salles: Salle[] = [],
         private _selectionSalle: number = 0
-    )
-    {
+        )
+        {
+            
+            
+        }
         
-        
+    public get a_modifier(): boolean {
+        return this._a_modifier;
+    }
+    public set a_modifier(value: boolean) {
+        this._a_modifier = value;
+    }
+    public get id(): number {
+        return this._id;
+    }
+    public set id(value: number) {
+        this._id = value;
     }
 
+    public get code_postal(): string {
+        return this._code_postal;
+    }
+    public set code_postal(value: string) {
+        this._code_postal = value;
+    }
+    public get pays(): string {
+        return this._pays;
+    }
+    public set pays(value: string) {
+        this._pays = value;
+    }
+    public get ville(): string {
+        return this._ville;
+    }
+    public set ville(value: string) {
+        this._ville = value;
+    }
 
     public get selectionSalle(): number {
         return this._selectionSalle;
@@ -113,28 +136,26 @@ class Centre{
         this._nom = value;
     }
 
-    salleGenerator(infos:SalleInfos): Salle{
+    salleGenerator(infos:SalleInfos, centre:string): Salle{
         let salle = new Salle()
         salle.nom = infos.nom
         salle.description = infos.description
         salle.duree = infos.duree
-        salle.heureFermeture = infos.hrFermeture
-        salle.heureOuverture = infos.hrOuverture
-        salle.intervalle = infos.intervalle
-        salle.nbEmp = infos.nbEmp
+        salle.nbJrMax = infos.nbJrMax
         salle.prix = infos.prix
         salle.description = infos.description
+        salle.centre = centre
 
         return salle
     }
 
     ajouterSalle(infos:SalleInfos){
-        let salle = this.salleGenerator(infos)
+        let salle = this.salleGenerator(infos, this.nom)
         this._salles.push(salle)
     }
 
     modifierSalle(infos:SalleInfos){
-        let salle = this.salleGenerator(infos)
+        let salle = this.salleGenerator(infos, this.nom)
         this._salles[this._selectionSalle] = salle
     }
 
@@ -237,13 +258,25 @@ export class Compagnie{
     }
 
     ajouterCentre(infos: newCentreInfos){
-        let centre = new Centre(infos.nom, infos.adresse);
+        let centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal);
+        if (infos.id != 99999999)
+        centre.id = infos.id
+        centre.a_modifier = infos.a_modifier
         this._centres.push(centre);
     }
 
     modifierCentre(infos: newCentreInfos){
-        let centre = new Centre(infos.nom, infos.adresse);
+        let centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal);
+        centre.id = this._centres[this.selectionnee].id
         this._centres[this.selectionnee] = centre;
+    }
+
+    getCurrentCentreID(){
+        return this._centres[this.selectionnee].id
+    }
+
+    getCurrentCentrevalidity(){
+        return this._centres[this.selectionnee].a_modifier
     }
 
     
