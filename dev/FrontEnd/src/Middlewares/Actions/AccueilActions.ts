@@ -15,7 +15,9 @@ class Salle{
         private _id: number = 999999,
         private _listeHoraire = [] // TODO getter setter
         )
-        {}
+        {
+            makeAutoObservable(this);
+        }
         
     public get id(): number {
         return this._id;
@@ -84,7 +86,7 @@ class Centre{
         private _selectionSalle: number = 0
         )
         {
-            
+            makeAutoObservable(this);
             
         }
         
@@ -262,6 +264,10 @@ export class Compagnie{
 
     setSalleSelection(salle:number){
         this._centres[this.selectionnee].selectionSalle = salle
+    }
+
+    getSalleSelection(){
+        return this._centres[this.selectionnee].selectionSalle
     }
 
     ajouterCentre(infos: newCentreInfos){
