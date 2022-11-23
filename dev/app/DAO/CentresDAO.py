@@ -22,6 +22,9 @@ class CentresDAO:
         sql = "INSERT INTO centres (nom, compagnie, adresse, ville, pays, code_postal) VALUES (%s, %s, %s, %s, %s, %s)"
         val = args
         self.__execute_query(sql, val)
+        sql = "SELECT id FROM centres WHERE nom = %s"
+        return self.__select(sql, (val[0][0],))
+ 
 
     def selectionner(self, centre: list[tuple[int]]) -> list:
         sql = "SELECT * FROM centres WHERE id = %s"

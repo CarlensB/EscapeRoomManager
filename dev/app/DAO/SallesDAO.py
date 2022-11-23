@@ -23,6 +23,9 @@ class SallesDAO:
         '''
         val = args
         self.__execute_query(sql, val)
+        sql = "SELECT id FROM salles WHERE nom = %s"
+        return self.__select(sql, (val[0][0],))
+ 
 
     def selectionner(self, salle: list[tuple[int]]) -> list:
         sql = '''SELECT * FROM salles WHERE id = %s'''

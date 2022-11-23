@@ -42,7 +42,6 @@ const ModifierCentres = observer(() => {
             {class:"minisalleContainer" , onClick:() => {
               accueilStore.setSalleSelection(i);
               accueilStore.ActivePage = eActivePage.CreateSalle
-              console.log(accueilStore.ActivePage)
 
             }},
             React.createElement(
@@ -50,7 +49,6 @@ const ModifierCentres = observer(() => {
               {class: 'miniNomSalle add', onClick:() => {
                 accueilStore.setSalleSelection(i);
                 accueilStore.ActivePage = eActivePage.CreateSalle
-                console.log(accueilStore.ActivePage)
               }},
               Salles[i].nom)
           )
@@ -76,7 +74,7 @@ const ModifierCentres = observer(() => {
 
   }
 
-  if (accueilStore.getCentres().length < 1 || accueilStore.getCentres().length < 1){
+  if (accueilStore.getCentres().length < 1){
     return React.createElement("div", null, "")
   }
   else

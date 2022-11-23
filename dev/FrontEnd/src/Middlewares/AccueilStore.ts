@@ -44,6 +44,7 @@ export class SalleInfos{
         public prix:number = 0,
         public duree:number = 0,
         public publique:boolean = true,
+        public id:number = 33
         
         )
         {}
@@ -76,9 +77,55 @@ class AccueilStore {
         // this.compagnie.initialiserComp();
 
 
+        this.initialiserCentres()
+        
 
 
+        
 
+    }
+
+
+    initialiserSalles(){
+        let centres = this.getCentres()
+        for (let i = 0; i< centres.length; i++)
+        try {
+            let formData = new FormData();
+            formData.append("id", centres[i].id.toString());
+            fetch('http://127.0.0.1:5000/selectionner_all/salle',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+        
+        if (response.length > 0){
+            for (let j = 0; j< response.length; j++){
+                let salleInfos = new SalleInfos()
+                salleInfos.id = response[j][0]
+                salleInfos.nom = response[j][1]
+                salleInfos.description = response[j][3]
+                
+                salleInfos.nbJrMax = response[j][5]
+                salleInfos.prix = response[j][6]
+                response[j][7] == 1 ? salleInfos.publique = true : false
+                centres[i].ajouterSalle(salleInfos)
+            }
+        }
+        
+
+      })
+          } catch (e) {
+              console.log("Aucune Salle")
+              
+          }
+
+          
+          
+    }
+
+    private initialiserCentres(){
         try {
             fetch('http://127.0.0.1:5000/id_connection',
             {
@@ -101,6 +148,7 @@ class AccueilStore {
                 response[i][4] == "ville" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
                 this._compagnie.ajouterCentre(centreinfos)
             }
+            this.initialiserSalles()
         }
       })
           } catch (e) {
@@ -108,6 +156,7 @@ class AccueilStore {
               
           }
 
+          
     }
     
     
@@ -134,6 +183,10 @@ class AccueilStore {
     }
     public set ActivePage(value: eActivePage) {
         this._ActivePage = value;
+        this._modCentreInfos.reset()
+        this._modSalleInfos.reset()
+        this._newSalleInfos.reset()
+        this._newCentreInfos.reset()
     }
 
     getCurrentCentreValideOuPas(){
@@ -166,12 +219,12 @@ class AccueilStore {
         if (valide1 && valide2 && valide3)
         {
             let formData = new FormData();
-            formData.append("nom", this._newCentreInfos.nom);
+            formData.append("nom", this._modCentreInfos.nom);
             formData.append("compagnie", this._personal_id.toString());
-            formData.append("adresse", this._newCentreInfos.adresse);
-            formData.append("ville", this._newCentreInfos.ville);
-            formData.append("pays", this._newCentreInfos.pays);
-            formData.append("code_postal", this._newCentreInfos.code_postal);
+            formData.append("adresse", this._modCentreInfos.adresse);
+            formData.append("ville", this._modCentreInfos.ville);
+            formData.append("pays", this._modCentreInfos.pays);
+            formData.append("code_postal", this._modCentreInfos.code_postal);
             formData.append("id", this._compagnie.getCurrentCentreID().toString());
             try {
                 fetch('http://127.0.0.1:5000/modifier/centre',
@@ -181,8 +234,10 @@ class AccueilStore {
                 })
           .then(response => response.json())
           .then(response => {
+              
               if (response == "Modification réussi")
               this._compagnie.modifierCentre(this._modCentreInfos)
+
         
           })
               } catch (e) {
@@ -238,8 +293,8 @@ class AccueilStore {
                 })
           .then(response => response.json())
           .then(response => {
-              if (response == "Insertion réussi")
-             this._compagnie.ajouterCentre(this._newCentreInfos)
+            this._newCentreInfos.id = response[0][0]
+            this._compagnie.ajouterCentre(this._newCentreInfos)
         
           })
               } catch (e) {
@@ -287,6 +342,10 @@ class AccueilStore {
         return this._compagnie.selectionnee;
     }
 
+    getSelectionSalle(){
+        return this._compagnie.getSalleSelection()
+    }
+
     setSelection(selection: number){
         this._compagnie.selectionnee = selection;
     }
@@ -299,7 +358,7 @@ class AccueilStore {
         this._compagnie.setSalleSelection(salle);
     }
 
-    getSalleSelection(){
+    getCurrentSalle(){
         return this._compagnie.getCurrentSalle();
     }
     
@@ -336,7 +395,7 @@ class AccueilStore {
         this._modSalleInfos.duree = duree
     }
 
-    updateModSalleInfosNbJoueur(nbjr:number){
+    updatemodSalleInfosNbJoueur(nbjr:number){
         this._modSalleInfos.nbJrMax = nbjr
     }
     updatemodSalleInfosPublique(publique:boolean){
@@ -348,10 +407,37 @@ class AccueilStore {
     }
 
     ajouterSalle(){
-        let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null)
+        let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null &&
+            this._newSalleInfos.nbJrMax != null )
         if (valide)
         {
+            let formData = new FormData();
+            formData.append("nom", this._newSalleInfos.nom);
+            formData.append("adresse", this._newSalleInfos.description);
+            formData.append("centre", this._compagnie.getCurrentCentreID().toString());
+            formData.append("nb_max_joueur", this._newSalleInfos.nbJrMax.toString());
+            formData.append("prix", this._newSalleInfos.prix.toString());
+            formData.append("prive", this._newSalleInfos.publique ? (1).toString() : (0).toString());
+
+            try {
+                fetch('http://127.0.0.1:5000/ajouter/salle',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+              
+
+            this._newSalleInfos.id = response[0][0]         
             this._compagnie.ajouterSalle(this._newSalleInfos)
+
+        
+          })
+              } catch (e) {
+                  console.log("CA MARCHE POOOH")
+                  
+              }  
         }
         else console.log("Il n'y a pas assez d'infos :(")
     }
@@ -360,12 +446,64 @@ class AccueilStore {
         let valide = (this._modSalleInfos.nom.length > 0 && this._modSalleInfos.prix != null)
         if (valide)
         {
+            this._modSalleInfos.id = this.getCurrentSalle().id
+            let formData = new FormData();
+            formData.append("nom", this._modSalleInfos.nom);
+            formData.append("description", this._modSalleInfos.description);
+            formData.append("centre", this.getCentres()[this.getSelectionCentre()].id.toString());
+            formData.append("nbmaxJr", this._modSalleInfos.nbJrMax.toString());
+            formData.append("prix", this._modSalleInfos.prix.toString());
+            formData.append("privee", this._modSalleInfos.publique ? (1).toString() : (0).toString());
+            formData.append("id", this._modSalleInfos.id.toString());
+            try {
+                fetch('http://127.0.0.1:5000/modifier/salle',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+              console.log(response)
+            if (response == "Modification réussi")
             this._compagnie.modifierSalle(this._modSalleInfos)
+        
+          })
+              } catch (e) {
+                  console.log("CA MARCHE POOOH")
+                  
+              } 
+
+
+           
         }
         else console.log("Il n'y a pas assez d'infos :(")
     }
+        
 
     supprimerSalle(){
+
+
+
+        let formData = new FormData();
+        formData.append("id", this.getCurrentSalle().id.toString());
+        try {
+            fetch('http://127.0.0.1:5000/supprimer/salle',
+            {
+                method: 'POST',
+                body: formData
+            })
+      .then(response => response.json())
+      .then(response => {
+        if (response == "Suppression réussi")
+        this._compagnie.supprimerSalle()
+    
+      })
+          } catch (e) {
+              console.log("CA MARCHE POOOH")
+              
+          } 
+
+
         this._compagnie.supprimerSalle()
     }
 
