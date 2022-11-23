@@ -130,7 +130,7 @@ class GestionSysteme:
                 'supprimer': ActionDAO.Requete.DELETE,
                 'selectionner_all': ActionDAO.Requete.SELECT_ALL,
                 'modifier': ActionDAO.Requete.UPDATE,
-                'lier': ActionDAO.Requete.LIER
+                'lier': ActionDAO.Requete.LIER,
             }
 
         self.page = {

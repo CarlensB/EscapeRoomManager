@@ -3,19 +3,26 @@ import { newCentreInfos, SalleInfos } from "../AccueilStore";
 
 
 class Salle{
-
+    
     constructor(
         private _nom: string = "",
         private _prix: number = 0,
         private _duree: number = 0,
         private _nbJrMax: number = 0,
-        private _centre: string = "8:00",
+        private _centre: string = "NomCentre",
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
+        private _id: number = 999999,
         private _listeHoraire = [] // TODO getter setter
-    )
-    {}
-
+        )
+        {}
+        
+    public get id(): number {
+        return this._id;
+    }
+    public set id(value: number) {
+        this._id = value;
+    }
     public get description(): string {
         return this._description;
     }
