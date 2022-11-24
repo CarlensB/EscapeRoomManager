@@ -99,14 +99,12 @@ class AccueilStore {
             })
       .then(response => response.json())
       .then(response => {
-        
         if (response.length > 0){
             for (let j = 0; j< response.length; j++){
                 let salleInfos = new SalleInfos()
                 salleInfos.id = response[j][0]
                 salleInfos.nom = response[j][1]
                 salleInfos.description = response[j][3]
-                
                 salleInfos.nbJrMax = response[j][5]
                 salleInfos.prix = response[j][6]
                 response[j][7] == 1 ? salleInfos.publique = true : false
@@ -276,6 +274,14 @@ class AccueilStore {
         let valide1 = (this._newCentreInfos.nom.length > 0 && this._newCentreInfos.adresse.length > 0)
         let valide2 = (this._newCentreInfos.ville.length > 0 && this._newCentreInfos.pays.length > 0)
         let valide3 = (this._newCentreInfos.code_postal.length > 0)
+        let centres = this._compagnie.centres
+
+        for (let i = 0; i< centres.length; i++){
+            if (centres[i].nom == this._newSalleInfos.nom)
+            valide1 = false
+        }
+
+
         if (valide1 && valide2 && valide3)
         {
             let formData = new FormData();
@@ -409,6 +415,11 @@ class AccueilStore {
     ajouterSalle(){
         let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null &&
             this._newSalleInfos.nbJrMax != null )
+            let salles = this._compagnie.getCurrentCenterSalles()
+            for (let i = 0; i< salles.length; i++){
+                if (salles[i].nom == this._newSalleInfos.nom)
+                valide = false
+            }
         if (valide)
         {
             let formData = new FormData();
@@ -428,7 +439,6 @@ class AccueilStore {
           .then(response => response.json())
           .then(response => {
               
-
             this._newSalleInfos.id = response[0][0]         
             this._compagnie.ajouterSalle(this._newSalleInfos)
 
@@ -485,6 +495,7 @@ class AccueilStore {
 
 
         let formData = new FormData();
+        let id = this.getCurrentSalle().id.toString()
         formData.append("id", this.getCurrentSalle().id.toString());
         try {
             fetch('http://127.0.0.1:5000/supprimer/salle',
@@ -504,7 +515,7 @@ class AccueilStore {
           } 
 
 
-        this._compagnie.supprimerSalle()
+        
     }
 
 
