@@ -35,7 +35,7 @@ body{
 
 .Containersalles{
     background-color: blue;
-    display: inline-block;
+    display: inline-flex;
     width: 70%;
     height: 100%;
     padding: 1% 5% 1% 5%;
@@ -251,7 +251,7 @@ button:focus {
 }
 
 .containerMiniSalles{
-    display: inline-block;
+    display: inline-flex;
     width: 70%;
     padding: 1% 5% 1% 5%;
 }
