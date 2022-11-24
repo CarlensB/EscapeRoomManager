@@ -67,13 +67,13 @@ class Serveur():
     # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
     @__app.route('/id_connection')
     def id_connection():
-        id = Serveur.__controleur.retourner_id()
-        if id is not None:
-            result = Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":id})
+        user = Serveur.__controleur.utilisateur
+        if user.id is not None:
+            result = (Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":user.id}), repr(user))
             print(result)
             if len(result) > 0:
                 return json.dumps(result)
-            else: return json.dumps(id)
+            else: return json.dumps(user)
         else:
             return json.dumps(False)
         

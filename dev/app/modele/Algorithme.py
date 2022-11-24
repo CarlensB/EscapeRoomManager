@@ -21,9 +21,10 @@ class AlgoContext():
         reset_time: float
         greeting_time: float
         goodbye_time: float
-        buffer: float
+        buffer: float -> 
         The buffer variable is build from reset_time, greeting_time and goodbye_time if it's
         not received by the function.
+        
         h_end is receive here as the last start of the activity.
         '''
         
@@ -55,13 +56,6 @@ class AlgoContext():
             buffer = kwargs['reset_time'] + kwargs['greeting_time'] + kwargs['goodbye_time']
             self.__strategy_bc.execute_algorithme(h_start, h_end, kwargs['nb_room'], duration, interval, buffer)
             return self.__strategy_bc.schedule
-            
-        elif keys == {'nb_room', 'nb_emp', 'reset_time'}:
-            pass
-        elif keys == {'reset_time', 'greeting_time'}:
-            pass
-        elif keys == {'nb_room', 'nb_emp', 'reset_time', 'greeting_time'}:
-            pass
         else:
             raise ValueError('Les paramètres passées à la fonction ne sont pris en charge')
 
@@ -238,4 +232,4 @@ class MinConflict:
 
 if __name__ == '__main__':
     s = AlgoContext()
-    print(s.create_schedule(8.*60, 21.*60, 90, 30, nb_room=3, greeting_time=15, goodbye_time=15))
+    print(s.create_schedule(8.*60, 21.*60, 90, 30))
