@@ -1,6 +1,7 @@
 from argparse import Action
 from dataclasses import dataclass
 from enum import Enum
+from sqlite3 import Date
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
@@ -9,6 +10,7 @@ import bcrypt
 import re
 import codecs
 from .Algorithme import AlgoContext
+from .Liste_chainee import DoubleLinkedList
 
 
 # source pour l'encodage et décodage du mot de passe :
@@ -102,16 +104,42 @@ class Enregistrement:
 
 
 class GestionSysteme:
+    
+    __ALGO_ERROR ="""
+    Les paramètres passées à la fonction ne sont pris en charge.
+    
+    La fonction prends les keywords suivant :
+    h_start: float -> temps du premier départ
+    h_end: float -> temps du dernier départ
+    duration: float -> la durée de l'activité
+    interval: float -> le temps entre deux départ
+    nb_room: int -> le nombre de salle pour lesquelles on veut un horaire
+    nb_emp: int -> le nombre d'employé par activité
+    reset_time: float -> le temps pour réinitialliser l'activité
+    greeting_time: float -> le temps d'accueil
+    goodbye_time: float -> le temps de débriefing
+    buffer: float -> Le temps à planifier entre les départs
+    """
+    
     class NiveauAcces(Enum):
         Proprietaire = 1
         Gerant = 2
         Employe = 3
 
     def __init__(self):
-        self.__client = None
         self.__user = None
-        self.__id = None
-        self.__acces = None
+        # Initialisation des objects
+        self.__compagnie = None
+        self.__centres = DoubleLinkedList()
+        self.__salles = DoubleLinkedList()
+        self.__reservations = DoubleLinkedList()
+        
+        self.__employes = []
+        
+        self.__type_clients = []
+        self.__rabais = []
+        
+        self.__algo = AlgoContext()
         self.__dao = ActionDAO()
         self.__action_table = {
             'compagnie': ActionDAO.Table.COMPAGNIE,
@@ -147,19 +175,40 @@ class GestionSysteme:
         return self.__user
 
     @property
-    def client(self):
-        return self.__client
-
-    @property
-    def acces(self):
-        return self.__acces
-
-    @property
     def dao(self):
         return self.__dao
     
+    @property
+    def reservations(self):
+        return self.__reservations
+    
+    @property
+    def compagnie(self):
+        return self.__compagnie
+
+    @property
+    def centres(self):
+        return self.__centres
+    
+    @property
+    def salles(self):
+        return self.__salles
+    
+    @property
+    def employes(self):
+        return self.__employes
+    
+    @property
+    def type_clients(self):
+        return self.__type_clients
+
+    @property
+    def rabais(self):
+        return self.__rabais
+    
+    @property
     def retourner_id(self):
-        return self.__id
+        return self.__id     
     
     def deconnecter_id(self):
         self.__id = None
@@ -175,10 +224,14 @@ class GestionSysteme:
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
         if bcrypt.checkpw(mdp, mdp_crypte):
-            self.__id = information[1]
-            self.__user = information[3] + " " + information[2]
-            self.__acces = GestionSysteme.NiveauAcces(information[6]).name
-            # self.__client = self.__get_client(self.__id)
+            self.__user = Employe(information[0],
+                                 information[2],
+                                 information[3],
+                                 information[4],
+                                 information[5],
+                                 information[6],
+                                 information[7],
+                                 information[8])
             return True, 'Connexion Validé'
         else:
             return False, 'mot de passe invalide'
@@ -190,9 +243,6 @@ class GestionSysteme:
             
         e = Enregistrement(self.__action_table[table], d)
         return e.msg
-
-    def deconnexion(self):
-        pass
 
     def resilier_abonnement(self):
         a = ActionDAO()
@@ -212,9 +262,24 @@ class GestionSysteme:
 
         return result
 
-    def creation_horaire(self, info: dict) -> list['GestionSysteme.Salle']:
-        algo = AlgoContext()
-        algo.demarrer_algorithme(info['algo_choix'], info['contraintes'])
+    def creation_horaire(self, **info: any) -> list['GestionSysteme.Salle']:
+        '''
+        La fonction prends les keywords suivant :
+        h_start: float -> temps du premier départ en minute
+        h_end: float -> temps du dernier départ en minute
+        duration: float -> la durée de l'activité
+        interval: float -> le temps entre deux départ
+        nb_room: int -> le nombre de salle pour lesquelles on veut un horaire
+        nb_emp: int -> le nombre d'employé par activité
+        reset_time: float -> le temps pour réinitialliser l'activité
+        greeting_time: float -> le temps d'accueil
+        goodbye_time: float -> le temps de débriefing
+        buffer: float -> Le temps à planifier entre les départs
+        '''
+        try:
+            return self.__algo.create_schedule(**info)
+        except (ValueError, KeyError) as e:
+            return ValueError(self.__ALGO_ERROR)
 
     # ==============================================================================
     #           Fonctions protégés
@@ -225,7 +290,7 @@ class GestionSysteme:
             if centre[0] == c[1]:
                 return c[0]
         a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
-        self.__verifier_centre(a, centre)
+        self.__verifier_centre(a, centre)     
 
     def __get_client(self, index: int):
         a = ActionDAO()
@@ -239,68 +304,78 @@ class GestionSysteme:
         cout_base = self.__participant * self.__salle.prix
         r.prix_total = cout_base + cout_base * tps + cout_base * tvq
 
-    # ==============================================================================
-    #           DataClass interne
+# ==============================================================================
+#           DataClass interne
 
-    @dataclass()
-    class Reservation:
-        id: int
-        courriel: str = None
-        centre: str = None
-        salle: str = None
-        nom_client: str = 'Client'
-        num_telephone: str = '514-000-0000'
-        participant: int = 0
-        statut: bool = False
-        prix_total: float = 0.0
+@dataclass()
+class Compagnie:
+    id: int
+    nom: str
+    info_paiement: str
+    courriel: str
 
-    @dataclass()
-    class Horaire:
-        id: int
-        heure_debut: str
-        heure_fin: str
+@dataclass()
+class Reservation:
+    id: int
+    courriel: str = None
+    centre: str = None
+    salle: str = None
+    heure: str = None
+    nom_client: str = 'Client'
+    num_telephone: str = '514-000-0000'
+    participant: int = 0
+    statut: bool = False
+    prix_total: float = 0.0
+    date: Date = None
 
-    @dataclass()
-    class Salle:
-        id: int
-        nom: str
-        description: str
-        centre: str
-        nb_joueur_max: int
-        prix_unitaire: float
-        duree: float
-        privee: bool
-        liste_horaire: list['GestionSysteme.Horaire']
+@dataclass()
+class Horaire:
+    id: int
+    heure_debut: str
+    heure_fin: str
 
-    @dataclass()
-    class Centre:
-        id: int
-        nom: str
-        adresse: str
-        ville: str
-        pays: str
-        code_postal: str
+@dataclass()
+class Salle:
+    id: int
+    nom: str
+    description: str
+    centre: str
+    nb_joueur_max: int
+    prix_unitaire: float
+    duree: float
+    privee: bool
+    liste_horaire: list[Horaire]
 
-    @dataclass()
-    class Employe:
-        id: int
-        nom: str
-        prenom: str
-        salaire: float
-        num_telephone: str
-        niveau_acces: int
-        courriel: str
-        num_ass: int
+@dataclass()
+class Centre:
+    id: int
+    nom: str
+    adresse: str
+    ville: str
+    pays: str
+    code_postal: str
 
-    @dataclass
-    class Rabais:
-        id: int
-        nom: str
-        pourcentage: float  # Exemple 0.15 pour 15%
-        actif: bool
+@dataclass()
+class Employe:
+    id: int
+    nom: str
+    prenom: str
+    salaire: float
+    num_telephone: str
+    niveau_acces: int
+    courriel: str
+    num_ass: int
 
-    @dataclass()
-    class TypeClient:
-        id: int
-        categorie: str
-        prix: float
+@dataclass
+class Rabais:
+    id: int
+    nom: str
+    pourcentage: float  # Exemple 0.15 pour 15%
+    actif: bool
+    date_fin: Date
+
+@dataclass()
+class TypeClient:
+    id: int
+    categorie: str
+    prix: float 
