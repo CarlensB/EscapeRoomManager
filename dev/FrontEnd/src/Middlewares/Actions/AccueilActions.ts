@@ -153,13 +153,15 @@ class Centre{
         salle.nbJrMax = infos.nbJrMax
         salle.prix = infos.prix
         salle.description = infos.description
-        salle.centre = centre
+        salle.id = infos.id
+        salle.centre = this._id.toString()
 
         return salle
     }
 
     ajouterSalle(infos:SalleInfos){
         let salle = this.salleGenerator(infos, this.nom)
+        
         this._salles.push(salle)
     }
 
