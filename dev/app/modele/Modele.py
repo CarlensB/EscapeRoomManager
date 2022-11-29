@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from sqlite3 import Date
+from this import d
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
@@ -95,9 +96,11 @@ class Compagnie:
         self.__nom = nom
         self.__info_paiement = info_paiement
         self.__courriel = courriel
-        self.__centres = self.__get_centres(dao)
-        self.__rabais = self.__get_rabais(dao)
-        self.__type_clients = self.__get_type_clients(dao)
+        self.__dao = dao
+        self.__centres = self.__get_centres()
+        self.__rabais = self.__get_rabais()
+        self.__type_clients = self.__get_type_clients()
+        self.__employes = self.__get_employe()
         
     def __eq__(self, compagnie: 'Compagnie') -> bool:
         return self.__idx == compagnie.idx
@@ -126,18 +129,21 @@ class Compagnie:
         return self.__centre
     
     def __get_centres(self, dao: ActionDAO) -> list:
-        result = dao.requete_dao(dao.Requete.SELECT_ALL, dao.Table.CENTRE, [(self.index,)])
+        result = self.__dao.requete_dao(self.__dao.Requete.SELECT_ALL, self.__dao.Table.CENTRE, [(self.index,)])
         for info in result:
             centre = Centre(info)
         #print(result)
     
-    def __get_rabais(self, dao: ActionDAO) -> list:
+    def __get_rabais(self) -> list:
+        # self.__dao
         pass
     
-    def __get_type_clients(self, dao: ActionDAO) -> list:
-        pass
-
-
+    def __get_type_clients(self) -> list:
+        self.__dao
+    
+    def __get_employe(self) -> list:
+        self.__dao
+    
 class Centre:
     
     def __init__(self, idx: int, nom: str, adresse: str, ville: str, pays: str, code_postal: str):
@@ -587,19 +593,6 @@ class GestionSysteme:
 
     def __init__(self):
         self.__utilisateurs = {}
-        # ===========================
-        self.__user = None
-        # Initialisation des objects
-        self.__compagnie = None
-        self.__centres = DoubleLinkedList()
-        self.__salles = DoubleLinkedList()
-        self.__reservations = DoubleLinkedList()
-        
-        self.__employes = []
-        
-        self.__type_clients = []
-        self.__rabais = []
-        # ===================================
         
         self.__algo = AlgoContext()
         self.__dao = ActionDAO()
@@ -622,51 +615,14 @@ class GestionSysteme:
                 'modifier': ActionDAO.Requete.UPDATE,
                 'lier': ActionDAO.Requete.LIER,
             }
-
-        self.page = {
-            'register': 'register',
-            'login': 'login'
-            # ...
-        }
-        self.fonction = {
-            'var': 'var'
-        }
-
+        
     @property
     def utilisateurs(self):
         return self.__utilisateurs
 
     @property
     def dao(self):
-        return self.__dao
-    
-    @property
-    def reservations(self):
-        return self.__reservations
-    
-    @property
-    def compagnie(self):
-        return self.__compagnie
-
-    @property
-    def centres(self):
-        return self.__centres
-    
-    @property
-    def salles(self):
-        return self.__salles
-    
-    @property
-    def employes(self):
-        return self.__employes
-    
-    @property
-    def type_clients(self):
-        return self.__type_clients
-
-    @property
-    def rabais(self):
-        return self.__rabais
+        return self.__dao  
     
     @property
     def retourner_id(self):
@@ -711,7 +667,7 @@ class GestionSysteme:
         e = Enregistrement(self.__action_table[table], d)
         return e.msg       
         
-    def resilier_abonnement(self):
+    def resilier_abonnement(self, token):
         a = ActionDAO()
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
@@ -723,9 +679,9 @@ class GestionSysteme:
             liste.append(info[key])
         liste = [tuple(liste)]
 
-        t = self.__action_table[table]
-        r = self.__action[action]
-        result = self.__dao.requete_dao(r, t, liste)
+        table = self.__action_table[table]
+        requete = self.__action[action]
+        result = self.__dao.requete_dao(requete, table, liste)
 
         return result
 
