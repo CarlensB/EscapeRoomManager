@@ -225,6 +225,7 @@ class GestionSysteme:
         mdp = codecs.encode(info['mdp'])
         if bcrypt.checkpw(mdp, mdp_crypte):
             self.__user = Employe(information[0],
+                                 information[1], 
                                  information[2],
                                  information[3],
                                  information[4],
@@ -358,6 +359,7 @@ class Centre:
 @dataclass()
 class Employe:
     id: int
+    id_compagnie: int
     nom: str
     prenom: str
     salaire: float

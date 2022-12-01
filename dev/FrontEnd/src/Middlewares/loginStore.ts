@@ -1,6 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { eActivePage } from "./AccueilStore";
+import accueilStore, { eActivePage } from "./AccueilStore";
 import { LoginPageActions } from "./Actions/LoginActions";
 configure({
     enforceActions: "never",
@@ -101,6 +101,7 @@ class LoginStore {
       .then(response => {
         console.log(response[1]);
         if (response[1] == "Connexion Validé")
+            accueilStore.token = "blablabla"
             this.ActivePage = ActivePage.Loggedin
       })
           } catch (e) {
