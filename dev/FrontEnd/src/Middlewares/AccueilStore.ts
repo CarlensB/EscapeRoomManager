@@ -67,7 +67,11 @@ class AccueilStore {
     private _modCentreInfos: newCentreInfos = new newCentreInfos()
     private _newSalleInfos: SalleInfos = new SalleInfos()
     private _modSalleInfos: SalleInfos = new SalleInfos()
-    private _personal_id: number = 0
+    private _id_compagnie: number = 0
+    private _id_emp: number = 0
+    private _courriel: string = ""
+    private _nom_complet: string = ""
+    private _niveau_acces: number = 1;
 
     
     constructor() {
@@ -77,7 +81,7 @@ class AccueilStore {
         // this.compagnie.initialiserComp();
 
 
-        this.initialiserCentres()
+        this.initialiserinfos()
         
 
 
@@ -123,7 +127,7 @@ class AccueilStore {
           
     }
 
-    private initialiserCentres(){
+    private initialiserinfos(){
         try {
             fetch('http://127.0.0.1:5000/id_connection',
             {
@@ -134,19 +138,14 @@ class AccueilStore {
         if (response == false)
         this.ActivePage = eActivePage.Login
         else{
-            for (let i = 0; i< response.length; i++){
-                this._personal_id = response[i][2]
-                let centreinfos = new newCentreInfos()
-                centreinfos.nom = response[i][1]
-                centreinfos.id = response[i][0]
-                centreinfos.adresse = response[i][3]
-                centreinfos.ville = response[i][4]
-                centreinfos.pays = response[i][5]
-                centreinfos.code_postal = response[i][6]
-                response[i][4] == "ville" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
-                this._compagnie.ajouterCentre(centreinfos)
-            }
-            this.initialiserSalles()
+            this._id_emp = response[1]["id"]
+            this._id_compagnie = response[1]["id_compagnie"]
+            this._niveau_acces = parseInt(response[1]["niveau_acces"])
+            this._courriel = response[1]["courriel"]
+            this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
+            console.log(response[0])
+            this.initialiserCentres(response[0])
+
         }
       })
           } catch (e) {
@@ -155,6 +154,22 @@ class AccueilStore {
           }
 
           
+    }
+
+    private initialiserCentres(centres){
+        for (let i = 0; i< centres.length; i++){
+            this._id_compagnie = centres[i][2]
+            let centreinfos = new newCentreInfos()
+            centreinfos.nom = centres[i][1]
+            centreinfos.id = centres[i][0]
+            centreinfos.adresse = centres[i][3]
+            centreinfos.ville = centres[i][4]
+            centreinfos.pays = centres[i][5]
+            centreinfos.code_postal = centres[i][6]
+            centres[i][4] == "ville" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
+            this._compagnie.ajouterCentre(centreinfos)
+        }
+        this.initialiserSalles()
     }
     
     
@@ -218,7 +233,7 @@ class AccueilStore {
         {
             let formData = new FormData();
             formData.append("nom", this._modCentreInfos.nom);
-            formData.append("compagnie", this._personal_id.toString());
+            formData.append("compagnie", this._id_compagnie.toString());
             formData.append("adresse", this._modCentreInfos.adresse);
             formData.append("ville", this._modCentreInfos.ville);
             formData.append("pays", this._modCentreInfos.pays);
@@ -286,7 +301,7 @@ class AccueilStore {
         {
             let formData = new FormData();
             formData.append("nom", this._newCentreInfos.nom);
-            formData.append("compagnie", this._personal_id.toString());
+            formData.append("compagnie", this._id_compagnie.toString());
             formData.append("adresse", this._newCentreInfos.adresse);
             formData.append("ville", this._newCentreInfos.ville);
             formData.append("pays", this._newCentreInfos.pays);
