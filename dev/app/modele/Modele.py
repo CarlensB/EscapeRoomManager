@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
 from sqlite3 import Date
-from this import d
-from tokenize import Double
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
@@ -29,20 +27,18 @@ class Compagnie:
 @dataclass()
 class Reservation:
     id: int
-    courriel: str = None
-    centre: str = None
-    salle: str = None
-    heure: str = None
-    nom_client: str = 'Client'
-    num_telephone: str = '514-000-0000'
-    participant: int = 0
-    statut: bool = False
-    prix_total: float = 0.0
-    date: Date = None
+    courriel: str
+    centre: str
+    salle: str
+    date: date.datetime
+    nom_client: str
+    participant: int
+    num_telephone: str
+    statut: int
+    prix_total: float
 
 @dataclass()
 class Horaire:
-    id: int
     heure_debut: str
     heure_fin: str
 
@@ -54,14 +50,14 @@ class Salle:
     centre: str
     nb_joueur_max: int
     prix_unitaire: float
-    duree: float
     privee: bool
-    liste_horaire: list[Horaire]
+    liste_horaire = []
 
 @dataclass()
 class Centre:
     id: int
     nom: str
+    id_compagnie: int
     adresse: str
     ville: str
     pays: str
@@ -85,21 +81,22 @@ class Rabais:
     nom: str
     pourcentage: float  # Exemple 0.15 pour 15%
     actif: bool
-    date_fin: Date
+    id_compagnie: int
+    date_fin: str
 
 @dataclass()
 class TypeClient:
     id: int
     categorie: str
-    prix: float 
+    prix: float
     
 class Usager:
     def __init__(self, utilisateur: Employe, dao: ActionDAO) -> None:
-        self.__token = None
         self.__dao = dao
         self.__id_compagnie = utilisateur.id_compagnie
         self.__session_info ={
-            'Employe': utilisateur,
+            'Utilisateur': utilisateur,
+            'Employes': [],
             'Compagnie': None,
             'Centres': [],
             'Salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
@@ -113,20 +110,91 @@ class Usager:
     def session_info(self):
         return self.__session_info
     
-    @property
-    def token(self):
-        return self.__token
+    def obtenir_info_initiale(self):
+        msg_erreur = []
+        # Employe
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.EMPLOYE, [(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["Employes"].append(Employe(*e[:-1]))
+        except:
+            msg_erreur.append("Aucun employe à afficher")
+        
+        # Compagnie
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(self.__id_compagnie,)])[0]
+            self.__session_info["Compagnie"] = Compagnie(*info[:-1])
+        except:
+            msg_erreur.append("Usager invalide, il n'est associé à aucune compagnie")
+        
+        # Centre
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["Centres"].append(Centre(*e))
+        except:
+            msg_erreur.append("Aucun centre répertorié")
+            
+        # Salle
+        try:
+            for centre in self.__session_info["Centres"]:
+                info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.SALLE,[(centre.id,)])
+                for e in info:
+                    self.__session_info["Salles"].add(Salle(*e))
+        except:
+            msg_erreur.append("Aucune salle n'est incluse dans un centre")
+            
+        # Horaire
+        try:
+            for salle in self.__session_info['Salles']:
+                info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
+                for e in info:
+                    debut, fin = e[1:]
+                    h = Horaire(debut, fin)
+                    salle.liste_horaire.append(h)
+        except:
+            msg_erreur.append("Aucune horaire répertorié")
+            
+        # Reservation
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["Reservations"].add(Reservation(*e[:-3]))
+        except:
+            msg_erreur.append("Aucune réservation répertorié")
+            
+        # Rabais
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RABAIS,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["Rabais"].append(Rabais(*e))
+        except:
+            msg_erreur.append("Aucun rabais répertorié")
+        # TypeClient
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.TYPECLIENT,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["TypeClient"].append(TypeClient(*e[:-1]))
+        except:
+            msg_erreur.append("Aucun typeclient répertorié")
+        # Active
+        self.__session_info["Active"] = True
+                            
+        return msg_erreur
+            
         
     def mise_a_jour_session_info(self, table: ActionDAO.Table):
-        table = str(table).split(".")[1]
+        str_table = str(table).split(".")[1]
         recherche = self.__id_compagnie
-        if table is 'SALLE':
+        if str_table == 'SALLE':
+            self.session_info["Salles"].clear()
             for centre in self.session_info["Centres"]:
-                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, centre.id)
+                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, (centre.id,))
                 for salle in result:
                     self.session_info["Salles"].add(salle)
+            print(self.session_info["Salles"])
                 
-        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, recherche)
+        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, (recherche,))
 
 class Enregistrement:
     '''
@@ -321,12 +389,8 @@ class GestionSysteme:
     
     def interaction_dao(self, token: str, action: str, table: str, info: dict):
         if token in set(self.utilisateurs.keys()):
+                
             liste = []
-            
-            # if table is 'reservation':
-            #     annee, mois, jour, heure, min = info["date"]
-            #     info["date"] = date.datetime(annee, mois, jour, heure, min)
-
             for key in info.keys():
                 liste.append(info[key])
             liste = [tuple(liste)]

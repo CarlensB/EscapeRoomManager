@@ -59,9 +59,9 @@ class DoubleLinkedList:
         if self.n != None:
             result = self.n
             self.n = self.n.next_val
-            return result
+            return result.value
         else:
-            raise StopIteration               
+            raise StopIteration    
 
     # source __iter__ et __next__
     # Source : https://www.programiz.com/python-programming/iterator

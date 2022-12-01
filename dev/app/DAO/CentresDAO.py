@@ -39,7 +39,6 @@ class CentresDAO:
     def selectionner_all(self, compagnie: list[tuple[int]]) -> list:
         sql = "SELECT * FROM centres WHERE compagnie = %s"
         val = compagnie[0]
-        print(val)
         return self.__select(sql, val)
 
     def modifier(self, args: list[tuple[str, int, str, str, str, str, int]]) -> None:
