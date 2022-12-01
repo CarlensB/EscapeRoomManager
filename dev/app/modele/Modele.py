@@ -2,10 +2,12 @@ from dataclasses import dataclass
 from enum import Enum
 from sqlite3 import Date
 from this import d
+from tokenize import Double
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
 import hashlib
+import datetime as date
 # installation : python pip.exe install bcrypt
 # folder : C:\Python310\Scripts
 import re
@@ -16,470 +18,115 @@ from .Liste_chainee import DoubleLinkedList
 
 # source pour l'encodage et décodage du mot de passe :
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
+  
+@dataclass()
+class Compagnie:
+    id: int
+    nom: str
+    info_paiement: str
+    courriel: str
 
+@dataclass()
+class Reservation:
+    id: int
+    courriel: str = None
+    centre: str = None
+    salle: str = None
+    heure: str = None
+    nom_client: str = 'Client'
+    num_telephone: str = '514-000-0000'
+    participant: int = 0
+    statut: bool = False
+    prix_total: float = 0.0
+    date: Date = None
+
+@dataclass()
+class Horaire:
+    id: int
+    heure_debut: str
+    heure_fin: str
+
+@dataclass()
+class Salle:
+    id: int
+    nom: str
+    description: str
+    centre: str
+    nb_joueur_max: int
+    prix_unitaire: float
+    duree: float
+    privee: bool
+    liste_horaire: list[Horaire]
+
+@dataclass()
+class Centre:
+    id: int
+    nom: str
+    adresse: str
+    ville: str
+    pays: str
+    code_postal: str
+
+@dataclass()
 class Employe:
-    def __init__(self, idx: int, id_compagnie, nom: str, prenom: str,
-                    salaire: float, tel: str, niv_acces: int,
-                    courriel: str, num_ass: int, dao: ActionDAO) -> None:
+    id: int
+    id_compagnie: int
+    nom: str
+    prenom: str
+    salaire: float
+    num_telephone: str
+    niveau_acces: int
+    courriel: str
+    num_ass: int
+
+@dataclass
+class Rabais:
+    id: int
+    nom: str
+    pourcentage: float  # Exemple 0.15 pour 15%
+    actif: bool
+    date_fin: Date
+
+@dataclass()
+class TypeClient:
+    id: int
+    categorie: str
+    prix: float 
+    
+class Usager:
+    def __init__(self, utilisateur: Employe, dao: ActionDAO) -> None:
         self.__token = None
-        self.__idx = idx
-        self.__nom = nom
-        self.__prenom = prenom
-        self.__salaire = salaire
-        self.__telephone = tel
-        self.__niveau_acces = niv_acces
-        self.__courriel = courriel
-        self.__num_ass = num_ass
         self.__dao = dao
-        self.__compagnie = self.__get_compagnie(id_compagnie)
+        self.__id_compagnie = utilisateur.id_compagnie
+        self.__session_info ={
+            'Employe': utilisateur,
+            'Compagnie': None,
+            'Centres': [],
+            'Salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
+            'Reservations': DoubleLinkedList(),
+            'Rabais': [],
+            'TypeClient': [],
+            'Active': False
+        }
         
-    def __eq__(self, emp: 'Employe') -> bool:
-        return self.__idx == emp.idx
-
-    def __repr__(self) -> str:
-        return " ".join(self.__prenom, self.__nom)
-
     @property
-    def idx(self):
-        return self.__idx
-
-    @property
-    def nom(self):
-        return self.__nom
-
-    @property
-    def prenom(self):
-        return self.__prenom
-
-    @property
-    def salaire(self):
-        return self.__salaire
-
-    @property
-    def telephone(self):
-        return self.__telephone
-
-    @property
-    def niv_access(self):
-        return self.__niveau_acces
-
-    @property
-    def courriel(self):
-        return self.__courriel
-
-    @property
-    def num_assurance_scoial(self):
-        return self.__num_ass
-
-    @property
-    def compagnie(self):
-        return self.__compagnie
-
+    def session_info(self):
+        return self.__session_info
+    
     @property
     def token(self):
         return self.__token
-
-    @token.setter
-    def token(self, value):
-        self.__token = value
-
-    def __get_compagnie(self, id_compagnie: int):
-        result = self.__dao.requete_dao(self.__dao.Requete.SELECT, self.__dao.Table.COMPAGNIE, [(id_compagnie,)])[0]
-        compagnie = Compagnie(result[0], result[1], result[2], result[3], self.__dao)
-        return compagnie
-
-
-class Compagnie:
-    
-    def __init__(self, idx: int, nom: str, info_paiement: str, courriel: str, dao):
-        self.__idx = idx
-        self.__nom = nom
-        self.__info_paiement = info_paiement
-        self.__courriel = courriel
-        self.__dao = dao
-        self.__centres = self.__get_centres()
-        self.__rabais = self.__get_rabais()
-        self.__type_clients = self.__get_type_clients()
-        self.__employes = self.__get_employe()
         
-    def __eq__(self, compagnie: 'Compagnie') -> bool:
-        return self.__idx == compagnie.idx
-    
-    def __repr__(self) -> str:
-        return self.__nom
-    
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def nom(self):
-        return self.__nom
-    
-    @property
-    def info_paiement(self):
-        return self.__info_paiement
-    
-    @property
-    def courriel(self):
-        return self.__courriel
-    
-    @property
-    def centres(self):
-        return self.__centre
-    
-    def __get_centres(self, dao: ActionDAO) -> list:
-        result = self.__dao.requete_dao(self.__dao.Requete.SELECT_ALL, self.__dao.Table.CENTRE, [(self.index,)])
-        for info in result:
-            centre = Centre(info)
-        #print(result)
-    
-    def __get_rabais(self) -> list:
-        # self.__dao
-        pass
-    
-    def __get_type_clients(self) -> list:
-        self.__dao
-    
-    def __get_employe(self) -> list:
-        self.__dao
-    
-class Centre:
-    
-    def __init__(self, idx: int, nom: str, adresse: str, ville: str, pays: str, code_postal: str):
-        self.__idx = idx
-        self.__nom = nom
-        self.__adresse = adresse
-        self.__ville = ville
-        self.__pays = pays
-        self.__code_postal = code_postal
-        self.__salles = self.__get_salle()
-        self.__reservations = self.__get_reservation()
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def nom(self):
-        return self.__nom
-    
-    @property
-    def adresse(self):
-        return self.__adresse
-    
-    @property
-    def ville(self):
-        return self.__ville
-    
-    @property
-    def pays(self):
-        return self.__pays
-    
-    @property
-    def code_postal(self):
-        return self.__code_postal
-    
-    @property
-    def salles(self):
-        return self.__salles
-    
-    @property
-    def reservations(self):
-        return self.__reservations
-    
-    def __eq__(self, centre: 'Centre') -> bool:
-        return self.idx == centre.idx
-    
-    def __repr__(self) -> str:
-        return self.nom
-    
-    def __get_salle(self, dao: ActionDAO) -> list:
-        pass
-    
-    def __get_reservation(self, dao: ActionDAO) -> list:
-        pass
-
-class Reservation:
-    
-    def __init__(self, idx: int, courriel: str, salle: 'Salle', heure: 'Horaire',
-                 nom_client: str, telephone: str, participant: int, statut: bool,
-                 prix_total: float, date: Date) -> None:
-        
-        self.__idx = idx
-        self.__courriel = courriel
-        self.__salle = salle
-        self.__heure = heure
-        self.__nom_client = nom_client
-        self.__telephone = telephone
-        self.__participant = participant
-        self.__statut = statut
-        self.__prix_total = prix_total
-        self.__date = date
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def courriel(self):
-        return self.__courriel
-    
-    @property
-    def salle(self):
-        return self.__salle
-    
-    @property
-    def heure(self):
-        return self.__heure
-    
-    @property
-    def client(self):
-        return self.__nom_client
-    
-    @property
-    def telephone(self):
-        return self.__telephone
-    
-    @property
-    def participant(self):
-        return self.__participant
-    
-    @property
-    def statut(self):
-        return self.__statut
-    
-    @property
-    def prix_total(self):
-        return self.__prix_total
-    
-    @property
-    def date(self):
-        return self.__date
-    
-    
-    def modification_reservation(self, dao: ActionDAO, **kwargs):
-        '''
-        Variable modifiable :
-        statut -> bool
-        participant -> int
-        date -> Date
-        heure -> Horaire
-        salle -> Salle
-        '''
-        
-        key = set(kwargs.keys())
-
-        if key == set():
-            return "Aucune modification faite, aucune variable passé en paramètre"
-        
-        elif key == {"statut"}:
-            self.__statut = kwargs["statut"]
-            
-        elif key == {"participant"}:
-            self.__participant = kwargs["participant"]
-            
-        elif key == {"date"}:
-            self.__date = kwargs["date"]
-            
-        elif key == {"heure"}:
-            self.__heure = kwargs["heure"]
-            
-        elif key == {"salle"}:
-            self.__salle = kwargs["salle"]
-            
-        elif key == {"date", "heure"}:
-            self.__statut = kwargs["statut"]
-            self.__participant = kwargs["participant"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            
-        elif key == {"participant", "date", "heure"}:
-            self.__participant = kwargs["participant"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            
-        elif key == {"statut", "date", "heure"}:
-            self.__statut = kwargs["statut"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            
-        elif key == {"statut", "participant", "date", "heure"}:
-            self.__statut = kwargs["statut"]
-            self.__participant = kwargs["participant"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            
-        elif key == {"participant", "date", "heure", "salle"}:
-            self.__participant = kwargs["participant"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            self.__salle = kwargs["salle"]
-            
-        elif key == {"statut", "participant", "date", "heure", "salle"}:
-            self.__statut = kwargs["statut"]
-            self.__participant = kwargs["participant"]
-            self.__date = kwargs["date"]
-            self.__heure = kwargs["heure"]
-            self.__salle = kwargs["salle"]
-            
-        else:
-            return False, "Erreur dans les paramètres de modification"
-        
-        try:
-            dao.requete_dao(dao.Requete.UPDATE, dao.Table.RESERVATION, self.client, self.telephone, self.statut,
-                        self.salle, self.participant, self.courriel, self.heure, self.prix_total, self.date, self.index)
-        except:
-            return False, "Erreur dans la modification des paramètres"
-        
-        return True, "Reservation modifier"
-    
-    def __eq__(self, reservation: 'Reservation') -> bool:
-        return self.index == reservation.index
-    
-    def __repr__(self) -> str:
-        return " ".join(self.client, self.date, self.heure) 
-    
-class Horaire:
-    
-    def __init__(self, idx: int, h_debut: str, h_fin: str) -> None:
-        self.__idx = idx
-        self.__heure_debut = h_debut
-        self.__heure_fin = h_fin
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def heure_depart(self):
-        return self.__heure_debut
-    
-    @property
-    def heure_fin(self):
-        return self.__heure_fin
-    
-    def __eq__(self, horaire: 'Horaire') -> bool:
-        return self.index == horaire.idx
-    
-    def __repr__(self) -> str:
-        return " ".join(self.heure_depart, self.heure_fin)
-    
-class Salle:
-
-    def __init__(self, idx: int, nom: str, description: str, nb_joueur_max: int,
-                 prix_unitaire: float, duree: float, dao: ActionDAO, privee: bool = True) -> None:
-        self.__idx = idx
-        self.__nom = nom
-        self.__description = description
-        self.__nb_joueur_max = nb_joueur_max
-        self.__prix_unitaire = prix_unitaire
-        self.__duree = duree
-        self.__privee = privee
-        self.__horaires = self.__get_horaire(dao)
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def nom(self):
-        return self.__nom
-    
-    @property
-    def description(self):
-        return self.__description
-    
-    @property
-    def nb_joueur_max(self):
-        return self.__nb_joueur_max
-    
-    @property
-    def prix_unitaire(self):
-        return self.__prix_unitaire
-        
-    @property
-    def duree(self):
-        return self.__duree
-    
-    @property
-    def privee(self):
-        return self.__privee
-    
-    @property
-    def liste_horaire(self):
-        return self.__horaires
-    
-    def __eq__(self, salle: 'Salle') -> bool:
-        return self.index == salle.index
-    
-    def __repr__(self) -> str:
-        return " ".join(self.nom, self.description)
-    
-    def __get_horaire(self, dao):
-        pass
-
-class Rabais:
-    
-    def __init__(self, idx: int, nom: str, pourcentage: float, actif: bool, echeance: Date) -> None:
-        self.__idx = idx
-        self.__nom = nom
-        self.__pourcentage = pourcentage
-        self.__actif = actif
-        self.__echeance = echeance
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def nom(self):
-        return self.__nom
-    
-    @property
-    def pourcentage(self):
-        return self.__pourcentage
-    
-    @property
-    def actif(self):
-        return self.__actif
-    
-    @property
-    def echeance(self):
-        return self.__echeance
-        
-    def __eq__(self, rabais: 'Rabais') -> bool:
-        return self.index == rabais.index
-    
-    def __repr__(self) -> str:
-        return " ".join(self.nom, self.actif, self.echeance)
-
-class TypeClient:
-    
-    def __init__(self, idx: int, categorie: str, prix: float) -> None:
-        self.__idx = idx
-        self.__categorie = categorie
-        self.__prix = prix
-        
-    @property
-    def index(self):
-        return self.__idx
-    
-    @property
-    def categorie(self):
-        return self.__categorie
-    
-    @property
-    def prix(self):
-        return self.__prix
-        
-    def __eq__(self, type_client: "TypeClient") -> bool:
-        return self.index == type_client.index
-    
-    def __repr__(self) -> str:
-        return " ".join(self.categorie, self.prix)
-
-
+    def mise_a_jour_session_info(self, table: ActionDAO.Table):
+        table = str(table).split(".")[1]
+        recherche = self.__id_compagnie
+        if table is 'SALLE':
+            for centre in self.session_info["Centres"]:
+                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, centre.id)
+                for salle in result:
+                    self.session_info["Salles"].add(salle)
+                
+        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, recherche)
 
 class Enregistrement:
     '''
@@ -593,6 +240,7 @@ class GestionSysteme:
 
     def __init__(self):
         self.__utilisateurs = {}
+        self.__id = None
         
         self.__algo = AlgoContext()
         self.__dao = ActionDAO()
@@ -650,12 +298,11 @@ class GestionSysteme:
                                     information[5],
                                     information[6],
                                     information[7],
-                                    information[8],
-                                    self.dao)
+                                    information[8])
             hash = utilisateur.nom + utilisateur.prenom
-            utilisateur.token = hashlib.sha1(hash.encode())
-            self.__utilisateurs[utilisateur.token] = utilisateur
-            return True, utilisateur.token.hexdigest(), 'Connexion Validé',
+            self.__id = hashlib.sha1(hash.encode()).hexdigest()
+            self.__utilisateurs[self.__id] = Usager(utilisateur, self.dao)
+            return True, 'Connexion Validé', self.__id
         else:
             return False, 'mot de passe invalide'
 
@@ -672,18 +319,26 @@ class GestionSysteme:
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
     
-    def interaction_dao(self, action: str, table: str, info: dict):
-        liste = []
+    def interaction_dao(self, token: str, action: str, table: str, info: dict):
+        if token in set(self.utilisateurs.keys()):
+            liste = []
+            
+            # if table is 'reservation':
+            #     annee, mois, jour, heure, min = info["date"]
+            #     info["date"] = date.datetime(annee, mois, jour, heure, min)
 
-        for key in info.keys():
-            liste.append(info[key])
-        liste = [tuple(liste)]
+            for key in info.keys():
+                liste.append(info[key])
+            liste = [tuple(liste)]
 
-        table = self.__action_table[table]
-        requete = self.__action[action]
-        result = self.__dao.requete_dao(requete, table, liste)
+            table = self.__action_table[table]
+            requete = self.__action[action]
+            result = self.__dao.requete_dao(requete, table, liste)
+            
+            usager = self.utilisateurs[token]
+            usager.mise_a_jour_session_info(table)
 
-        return result
+            return result
 
     def creation_horaire(self, **info: any) -> list['GestionSysteme.Salle']:
         '''

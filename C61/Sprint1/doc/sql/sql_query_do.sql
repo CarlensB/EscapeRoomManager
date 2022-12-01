@@ -95,6 +95,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		centre          INT        	NOT NULL,
 		nb_max_joueur   INT         NOT NULL,
 		prix_unitaire   FLOAT     	NOT NULL,
+		privee			INT			NOT NULL,
 		
 		PRIMARY KEY pk_salle(id),
 		FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE
@@ -149,7 +150,8 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		
 		PRIMARY KEY pk_resa(id),
 		FOREIGN KEY fk_r_salle(salle) REFERENCES salles(id) ON DELETE CASCADE,
-		CONSTRAINT const_statut CHECK(statut_reservation = 0 OR statut_reservation = 1)
+		CONSTRAINT const_statut CHECK(statut_reservation = 0 OR statut_reservation = 1),
+		UNIQUE(date, salle)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
