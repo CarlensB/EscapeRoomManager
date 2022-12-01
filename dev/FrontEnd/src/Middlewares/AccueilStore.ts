@@ -71,17 +71,25 @@ class AccueilStore {
     private _id_emp: number = 0
     private _courriel: string = ""
     private _nom_complet: string = ""
-    private _niveau_acces: number = 1;
+    private _niveau_acces: number = 1
+    private _token: string = "non"
+
+
+    public set token(value: string) {
+        this._token = value;
+    }
+
+    public get token(): string {
+        return this._token;
+    }
 
     
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
+        console.log(this.token)
         this._compagnie = new Compagnie("Escaparium", []);
-        // this.compagnie.initialiserComp();
-
-
-        this.initialiserinfos()
+        
         
 
 
@@ -127,7 +135,9 @@ class AccueilStore {
           
     }
 
-    private initialiserinfos(){
+    public initialiserinfos(){
+
+
         try {
             fetch('http://127.0.0.1:5000/id_connection',
             {
