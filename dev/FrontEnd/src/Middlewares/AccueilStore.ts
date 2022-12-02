@@ -168,7 +168,7 @@ class AccueilStore {
           
     }
 
-    private ajouter_horaire(hr_debut:string, hr_fin:string, intervalle:string){
+    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){
             let hr = hr_debut.split(":")
             let hr_debut_min = parseInt(hr[0])*60 + parseInt(hr[1])
             hr = hr_fin.split(":")
@@ -176,8 +176,17 @@ class AccueilStore {
             let temps_total = hr_fin_min - hr_debut_min
             hr = intervalle.split(":")
             let intervalle_min = parseInt(hr[0])*60 + parseInt(hr[1])
-            let nombre_dhoraires = Math.floor(temps_total / intervalle_min)
-            console.log("il y aura " + nombre_dhoraires.toString() + " slots d'horaires")
+            // let nombre_dhoraires = Math.floor(temps_total / intervalle_min)
+            // console.log("il y aura " + nombre_dhoraires.toString() + " slots d'horaires")
+
+            let array_horaires = []
+
+            for (let horaire_i = hr_debut_min; horaire_i<= (hr_fin_min - intervalle_min); horaire_i += intervalle_min){
+                let horaire = Math.floor(horaire_i / 60).toString() + ":" + (horaire_i%60).toString()
+                array_horaires.push(horaire)
+            }
+            console.log(array_horaires)
+            
 
     }
 
@@ -493,7 +502,7 @@ class AccueilStore {
             console.log(this._newSalleInfos.hrOuv)
             console.log(this._newSalleInfos.hrFer)
 
-            this.ajouter_horaire(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
+            this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
 
         
           })
