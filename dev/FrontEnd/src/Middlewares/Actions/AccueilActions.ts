@@ -149,7 +149,8 @@ class Centre{
         let salle = new Salle()
         salle.nom = infos.nom
         salle.description = infos.description
-        salle.duree = infos.duree
+        salle.duree = 0
+        // A FAIRE
         salle.nbJrMax = infos.nbJrMax
         salle.prix = infos.prix
         salle.description = infos.description

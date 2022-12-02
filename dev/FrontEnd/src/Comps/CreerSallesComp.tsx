@@ -22,6 +22,22 @@ const Formulaire = observer(() => {
   }
 )
 
+function genererOptionsHeures(ouverture){
+  let durees = []
+  for (let hr = (ouverture ? 7 : 12); hr < (ouverture ? 12 : 23); hr++){
+    for (let minute = 0; minute < 60; minute+=15){
+        let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
+        let elem = React.createElement(
+            'option',
+            {value: heure},
+            heure
+        )
+        durees.push(elem)
+    }
+  }
+  return durees
+}
+
 
 const ModifierSalle = observer(() => {
   
@@ -57,7 +73,7 @@ const ModifierSalle = observer(() => {
               let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
               let elem = React.createElement(
                   'option',
-                  {value: (hr * 60 + minute)},
+                  {value: heure},
                   heure
               )
               durees.push(elem)
@@ -214,6 +230,7 @@ const ModifierSalle = observer(() => {
       ),
 
 
+
       React.createElement(
         'div',
         {class:'labelContainer'},
@@ -225,7 +242,8 @@ const ModifierSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updatemodSalleInfosDuree(evt.currentTarget.value)}},
+          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)
+          }},
           genererOptionsDuree()
           ),
 
@@ -328,7 +346,7 @@ const GererSalle = observer(() => {
               let heure = hr.toString() + ':' + (minute < 10 ? '0' : '') + minute
               let elem = React.createElement(
                   'option',
-                  {value: (hr * 60 + minute)},
+                  {value: heure},
                   heure
               )
               durees.push(elem)
@@ -394,8 +412,45 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)}},
+          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)
+            console.log(evt.currentTarget.value)}},
           genererOptionsDuree()
+          ),
+
+      ),
+
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+
+        React.createElement(
+          'label',
+          {for: 'hrOuv'},
+          "Heure d'ouverture:"),
+      
+        React.createElement(
+          'select',
+          {name: 'hrOuv', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrOuverture(evt.currentTarget.value)}},
+          genererOptionsHeures(true)
+          ),
+
+      ),
+
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+
+        React.createElement(
+          'label',
+          {for: 'hrOuv'},
+          "Heure de Fermeture:"),
+      
+        React.createElement(
+          'select',
+          {name: 'hrOuv', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosHrFermeture(evt.currentTarget.value)}},
+          genererOptionsHeures(false)
           ),
 
       ),
