@@ -127,13 +127,13 @@ const Salles = observer(() => {
 
 
     function reservations(salle) {
-        console.log(salle)
+        
         let arrayReservations = []
         let horaires = salle.listeHoraire
 
         if (horaires.length != 0) {
             for (let i = 0; i<horaires.length; i++){
-                let message = horaires[0] + " à " + horaires[1]
+                let message = horaires[i].hrDebut + " à " + horaires[i].hrFin
                 arrayReservations.push(
                     React.createElement(
                         'div',
