@@ -42,16 +42,20 @@ export class SalleInfos{
         public description: string = "",
         public nbJrMax:number = 1,
         public prix:number = 0,
-        public duree:number = 0,
+        public hrOuv:string = "7:00",
+        public hrFer:string = "12:00",
+        public intervalle:string = "0:15",
         public publique:boolean = true,
         public id:number = 33
         
         )
         {}
         reset() {
+            this.hrOuv = "7:00",
+            this.hrFer = "12:00",
             this.nom = "";
             this.prix = 0;
-            this.duree = 0;
+            this.intervalle = "0:15",
             this.nbJrMax = 1;
             this.publique = true;
             this.description = ""
@@ -87,7 +91,6 @@ class AccueilStore {
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
-        console.log(this.token)
         this._compagnie = new Compagnie("Escaparium", []);
         
         
@@ -120,7 +123,7 @@ class AccueilStore {
                 salleInfos.nbJrMax = response[j][5]
                 salleInfos.prix = response[j][6]
                 response[j][7] == 1 ? salleInfos.publique = true : false
-                centres[i].ajouterSalle(salleInfos)
+                centres[i].ajouterSalle(salleInfos, [])
             }
         }
         
@@ -153,7 +156,6 @@ class AccueilStore {
             this._niveau_acces = parseInt(response[1]["niveau_acces"])
             this._courriel = response[1]["courriel"]
             this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
-            console.log(response[0])
             this.initialiserCentres(response[0])
 
         }
@@ -164,6 +166,31 @@ class AccueilStore {
           }
 
           
+    }
+
+    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){
+            let hr = hr_debut.split(":")
+            let hr_debut_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            hr = hr_fin.split(":")
+            let hr_fin_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            let temps_total = hr_fin_min - hr_debut_min
+            hr = intervalle.split(":")
+            let intervalle_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            // let nombre_dhoraires = Math.floor(temps_total / intervalle_min)
+            // console.log("il y aura " + nombre_dhoraires.toString() + " slots d'horaires")
+
+            let array_horaires = []
+
+            for (let horaire_debut = hr_debut_min; horaire_debut<= (hr_fin_min - intervalle_min); horaire_debut += intervalle_min){
+                let horaire = []
+                horaire[0] = Math.floor(horaire_debut / 60).toString() + ":" + (horaire_debut%60).toString()
+                let horaire_fin = horaire_debut + intervalle_min
+                horaire[1] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
+                array_horaires.push(horaire)
+            }
+            return array_horaires
+            
+
     }
 
     private initialiserCentres(centres){
@@ -400,8 +427,16 @@ class AccueilStore {
     updateNewSalleInfosPrix(prix:number){
         this._newSalleInfos.prix = prix
     }
-    updateNewSalleInfosDuree(duree:number){
-        this._newSalleInfos.duree = duree
+    updateNewSalleInfosDuree(duree:string){
+        this._newSalleInfos.intervalle = duree
+    }
+
+    updateNewSalleInfosHrOuverture(hr:string){
+        this._newSalleInfos.hrOuv = hr
+    }
+
+    updateNewSalleInfosHrFermeture(hr:string){
+        this._newSalleInfos.hrFer = hr
     }
 
     updateNewSalleInfosNbJoueur(nbJr:number){
@@ -422,8 +457,8 @@ class AccueilStore {
     updatemodSalleInfosPrix(prix:number){
         this._modSalleInfos.prix = prix
     }
-    updatemodSalleInfosDuree(duree:number){
-        this._modSalleInfos.duree = duree
+    updatemodSalleInfosDuree(duree:string){
+        this._modSalleInfos.intervalle = duree
     }
 
     updatemodSalleInfosNbJoueur(nbjr:number){
@@ -440,11 +475,11 @@ class AccueilStore {
     ajouterSalle(){
         let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null &&
             this._newSalleInfos.nbJrMax != null )
-            let salles = this._compagnie.getCurrentCenterSalles()
-            for (let i = 0; i< salles.length; i++){
-                if (salles[i].nom == this._newSalleInfos.nom)
-                valide = false
-            }
+        let salles = this._compagnie.getCurrentCenterSalles()
+        for (let i = 0; i< salles.length; i++){
+            if (salles[i].nom == this._newSalleInfos.nom)
+            valide = false
+        }
         if (valide)
         {
             let formData = new FormData();
@@ -465,7 +500,9 @@ class AccueilStore {
           .then(response => {
               
             this._newSalleInfos.id = response[0][0]         
-            this._compagnie.ajouterSalle(this._newSalleInfos)
+            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
+            this._compagnie.ajouterSalle(this._newSalleInfos, list_horaire)
+
 
         
           })
