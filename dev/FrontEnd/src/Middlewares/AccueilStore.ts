@@ -181,8 +181,11 @@ class AccueilStore {
 
             let array_horaires = []
 
-            for (let horaire_i = hr_debut_min; horaire_i<= (hr_fin_min - intervalle_min); horaire_i += intervalle_min){
-                let horaire = Math.floor(horaire_i / 60).toString() + ":" + (horaire_i%60).toString()
+            for (let horaire_debut = hr_debut_min; horaire_debut<= (hr_fin_min - intervalle_min); horaire_debut += intervalle_min){
+                let horaire = []
+                horaire[0] = Math.floor(horaire_debut / 60).toString() + ":" + (horaire_debut%60).toString()
+                let horaire_fin = horaire_debut + intervalle_min
+                horaire[1] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
                 array_horaires.push(horaire)
             }
             console.log(array_horaires)
