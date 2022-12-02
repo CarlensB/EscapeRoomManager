@@ -412,8 +412,7 @@ const GererSalle = observer(() => {
       
         React.createElement(
           'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)
-            console.log(evt.currentTarget.value)}},
+          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)}},
           genererOptionsDuree()
           ),
 

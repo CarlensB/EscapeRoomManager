@@ -114,7 +114,7 @@ const Salles = observer(() => {
                 React.createElement(
                     'div',
                     {class: 'ContainerReservation'},
-                    reservations()
+                    reservations(listeSalles[i])
                 ),
 
             ))
@@ -126,18 +126,34 @@ const Salles = observer(() => {
 
 
 
-    function reservations() {
+    function reservations(salle) {
+        console.log(salle)
         let arrayReservations = []
-    
-        for (let i = 0; i<6; i++){
-            arrayReservations.push(
-                React.createElement(
-                    'div',
-                    {class:'reservation'},
-                    'untel a réservé'
+        let horaires = salle.listeHoraire
+
+        if (horaires.length != 0) {
+            for (let i = 0; i<horaires.length; i++){
+                let message = horaires[0] + " à " + horaires[1]
+                arrayReservations.push(
+                    React.createElement(
+                        'div',
+                        {class:'reservation'},
+                        message)
+                    )
+                }
+            }
+
+        else{
+            for (let i = 0; i<6; i++){
+                arrayReservations.push(
+                    React.createElement(
+                        'div',
+                        {class:'reservation'},
+                        'untel a réservé'
+                    )
                 )
-            )
-        }
+            }
+    }
         return arrayReservations
     }
 

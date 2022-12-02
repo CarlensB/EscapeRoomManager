@@ -123,7 +123,7 @@ class AccueilStore {
                 salleInfos.nbJrMax = response[j][5]
                 salleInfos.prix = response[j][6]
                 response[j][7] == 1 ? salleInfos.publique = true : false
-                centres[i].ajouterSalle(salleInfos)
+                centres[i].ajouterSalle(salleInfos, [])
             }
         }
         
@@ -188,7 +188,7 @@ class AccueilStore {
                 horaire[1] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
                 array_horaires.push(horaire)
             }
-            console.log(array_horaires)
+            return array_horaires
             
 
     }
@@ -500,12 +500,9 @@ class AccueilStore {
           .then(response => {
               
             this._newSalleInfos.id = response[0][0]         
-            this._compagnie.ajouterSalle(this._newSalleInfos)
+            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
+            this._compagnie.ajouterSalle(this._newSalleInfos, list_horaire)
 
-            console.log(this._newSalleInfos.hrOuv)
-            console.log(this._newSalleInfos.hrFer)
-
-            this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
 
         
           })
