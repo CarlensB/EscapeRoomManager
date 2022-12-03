@@ -22,6 +22,8 @@ class HorairesDAO:
         '''
         val = args
         self.__execute_query(sql, val)
+        sql = "SELECT id FROM horaires WHERE heure_debut = %s AND heure_fin = %s"
+        return self.__select(sql, val[0])
 
     def selectionner(self, horaire: list[tuple[int]]) -> None:
         sql = '''

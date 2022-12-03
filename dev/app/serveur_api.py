@@ -73,8 +73,9 @@ class Serveur():
     @__app.route('/id_connection')
     def id_connection():
         user = Serveur.__controleur.utilisateur
-        if user.id is not None:
-            result = (Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":user.id}), user.__dict__)
+        print(user)
+        if user is not None:
+            result = (Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":user.id_compagnie}), user.__dict__)
             print(result)
             if len(result) > 0:
                 return json.dumps(result)
