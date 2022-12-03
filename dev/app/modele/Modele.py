@@ -95,15 +95,14 @@ class Usager:
         self.__dao = dao
         self.__id_compagnie = utilisateur.id_compagnie
         self.__session_info ={
-            'Utilisateur': utilisateur,
-            'Employes': [],
-            'Compagnie': None,
-            'Centres': [],
-            'Salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
-            'Reservations': DoubleLinkedList(),
-            'Rabais': [],
-            'TypeClient': [],
-            'Active': False
+            'usager': utilisateur,
+            'employes': [],
+            'compagnie': None,
+            'centres': [],
+            'salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
+            'reservations': DoubleLinkedList(),
+            'rabais': [],
+            'typeClient': []
         }
         
     @property
@@ -177,24 +176,21 @@ class Usager:
                 self.__session_info["TypeClient"].append(TypeClient(*e[:-1]))
         except:
             msg_erreur.append("Aucun typeclient répertorié")
-        # Active
-        self.__session_info["Active"] = True
                             
         return msg_erreur
             
-        
     def mise_a_jour_session_info(self, table: ActionDAO.Table):
         str_table = str(table).split(".")[1]
         recherche = self.__id_compagnie
         if str_table == 'SALLE':
             self.session_info["Salles"].clear()
             for centre in self.session_info["Centres"]:
-                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, (centre.id,))
+                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(centre.id,)])
                 for salle in result:
                     self.session_info["Salles"].add(salle)
             print(self.session_info["Salles"])
                 
-        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, (recherche,))
+        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(recherche,)])
 
 class Enregistrement:
     '''
@@ -307,7 +303,7 @@ class GestionSysteme:
         Employe = 3
 
     def __init__(self):
-        self.__utilisateurs = {}
+        self.__utilisateurs = {"Null": None}
         self.__id = None
         
         self.__algo = AlgoContext()
@@ -324,12 +320,12 @@ class GestionSysteme:
         }
 
         self.__action = {
-                'selectionner': ActionDAO.Requete.SELECT,
-                'ajouter': ActionDAO.Requete.INSERT,
-                'supprimer': ActionDAO.Requete.DELETE,
-                'selectionner_all': ActionDAO.Requete.SELECT_ALL,
-                'modifier': ActionDAO.Requete.UPDATE,
-                'lier': ActionDAO.Requete.LIER,
+                'selectionner': self.selectionner,
+                'ajouter': self.ajouter,
+                'supprimer': self.supprimer,
+                'selectionner_all': self.selectionner_tout,
+                'modifier': self.modifier,
+                'lier': self.lier
             }
         
     @property
@@ -344,8 +340,9 @@ class GestionSysteme:
     def retourner_id(self):
         return self.__id     
     
-    def deconnecter_id(self):
+    def deconnecter_id(self, token):
         self.__id = None
+        self.__utilisateurs.pop(token)
         return True
 
     def valider_connexion(self, info: dict):
@@ -370,7 +367,7 @@ class GestionSysteme:
             hash = utilisateur.nom + utilisateur.prenom
             self.__id = hashlib.sha1(hash.encode()).hexdigest()
             self.__utilisateurs[self.__id] = Usager(utilisateur, self.dao)
-            return True, 'Connexion Validé', self.__id
+            return True, 'Connexion Validé', self.__id, information[1], information[6]
         else:
             return False, 'mot de passe invalide'
 
@@ -402,7 +399,31 @@ class GestionSysteme:
             usager = self.utilisateurs[token]
             usager.mise_a_jour_session_info(table)
 
+            #
+            usager = self.__utilisateurs[token]
+            key = table + 's' if table != 'usager' else 'usager'
+
             return result
+
+    def selectionner(self, usager, key, info):
+        for elem in usager.session_info[key]:
+            if elem.id == info[0][0]:
+                return elem.__dict__()
+
+    def selectionner_tout(self, usager, key, info):
+        return usager.session_info[key]
+
+    def ajouter(self):
+        pass
+
+    def supprimer(self):
+        pass
+
+    def modifier(self):
+        pass
+
+    def lier(self):
+        pass
 
     def creation_horaire(self, **info: any) -> list['GestionSysteme.Salle']:
         '''
@@ -418,6 +439,14 @@ class GestionSysteme:
         goodbye_time: float -> le temps de débriefing
         buffer: float -> Le temps à planifier entre les départs
         '''
+        info = info['info']
+
+        for key in info.keys():
+            if key != 'nb_room':
+                info[key] = float(info[key])
+            else:
+                info[key] = int(info[key])
+
         try:
             return self.__algo.create_schedule(**info)
         except (ValueError, KeyError) as e:
