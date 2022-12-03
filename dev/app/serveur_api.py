@@ -20,11 +20,6 @@ class Serveur():
     def definir_controleur(controleur) -> None:
         Serveur.__controleur = controleur
 
-    #  test
-
-    @__app.route('/')
-    def index():
-        return render_template('login.html')
 
     # Pour la connexion et l'enregistrement de nouvelle compagnie ou employe
 
@@ -33,10 +28,10 @@ class Serveur():
         if request.method == 'POST':
             info = request.form
             result = Serveur.__controleur.valider_connexion(info)
-            session["token"] = result[2]
-            session["id_compagnie"] = result[3]
-            session["niv_acces"] = result[4]
-            print(session["token"])
+            if result[0]:
+                session["token"] = result[2]
+                session["id_compagnie"] = result[3]
+                session["niv_acces"] = result[4]
             return json.dumps(result)
 
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])

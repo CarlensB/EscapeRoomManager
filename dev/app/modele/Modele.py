@@ -104,25 +104,26 @@ class Usager:
             'rabais': [],
             'typeClient': []
         }
+        self.__obtenir_info_initiale()
         
     @property
     def session_info(self):
         return self.__session_info
     
-    def obtenir_info_initiale(self):
+    def __obtenir_info_initiale(self):
         msg_erreur = []
         # Employe
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.EMPLOYE, [(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["Employes"].append(Employe(*e[:-1]))
+                self.__session_info["employes"].append(Employe(*e[:-1]))
         except:
             msg_erreur.append("Aucun employe à afficher")
         
         # Compagnie
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(self.__id_compagnie,)])[0]
-            self.__session_info["Compagnie"] = Compagnie(*info[:-1])
+            self.__session_info["compagnie"] = Compagnie(*info[:-1])
         except:
             msg_erreur.append("Usager invalide, il n'est associé à aucune compagnie")
         
@@ -130,22 +131,22 @@ class Usager:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE,[(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["Centres"].append(Centre(*e))
+                self.__session_info["centres"].append(Centre(*e))
         except:
             msg_erreur.append("Aucun centre répertorié")
             
         # Salle
         try:
-            for centre in self.__session_info["Centres"]:
+            for centre in self.__session_info["centres"]:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.SALLE,[(centre.id,)])
                 for e in info:
-                    self.__session_info["Salles"].add(Salle(*e))
+                    self.__session_info["salles"].add(Salle(*e))
         except:
             msg_erreur.append("Aucune salle n'est incluse dans un centre")
             
         # Horaire
         try:
-            for salle in self.__session_info['Salles']:
+            for salle in self.__session_info['salles']:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
                 for e in info:
                     debut, fin = e[1:]
@@ -158,7 +159,7 @@ class Usager:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["Reservations"].add(Reservation(*e[:-3]))
+                self.__session_info["reservations"].add(Reservation(*e[:-3]))
         except:
             msg_erreur.append("Aucune réservation répertorié")
             
@@ -166,14 +167,14 @@ class Usager:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RABAIS,[(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["Rabais"].append(Rabais(*e))
+                self.__session_info["rabais"].append(Rabais(*e))
         except:
             msg_erreur.append("Aucun rabais répertorié")
         # TypeClient
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.TYPECLIENT,[(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["TypeClient"].append(TypeClient(*e[:-1]))
+                self.__session_info["typeClient"].append(TypeClient(*e[:-1]))
         except:
             msg_erreur.append("Aucun typeclient répertorié")
                             
@@ -183,12 +184,12 @@ class Usager:
         str_table = str(table).split(".")[1]
         recherche = self.__id_compagnie
         if str_table == 'SALLE':
-            self.session_info["Salles"].clear()
-            for centre in self.session_info["Centres"]:
+            self.session_info["salles"].clear()
+            for centre in self.session_info["centres"]:
                 result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(centre.id,)])
                 for salle in result:
-                    self.session_info["Salles"].add(salle)
-            print(self.session_info["Salles"])
+                    self.session_info["salles"].add(salle)
+            print(self.session_info["salles"])
                 
         result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(recherche,)])
 
@@ -218,7 +219,7 @@ class Enregistrement:
     def __enregistrement(self):
         cour_valide, cour_msg = self.__validation_courriel(self.__info['courriel'])
         mdp_valide, mdp_msg = self.__validation_mdp(self.__info['mdp'])
-        print(self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg]))
+        self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg])
 
     def __crypter_mdp(self):
         mdp = codecs.encode(self.__info['mdp'])
@@ -386,46 +387,62 @@ class GestionSysteme:
     
     def interaction_dao(self, token: str, action: str, table: str, info: dict):
         if token in set(self.utilisateurs.keys()):
-                
-            liste = []
-            for key in info.keys():
-                liste.append(info[key])
-            liste = [tuple(liste)]
-
-            table = self.__action_table[table]
-            requete = self.__action[action]
-            result = self.__dao.requete_dao(requete, table, liste)
-            
             usager = self.utilisateurs[token]
-            usager.mise_a_jour_session_info(table)
+            result = ""
 
-            #
-            usager = self.__utilisateurs[token]
-            key = table + 's' if table != 'usager' else 'usager'
+            table_et_action = (table, action)
+
+            if table_et_action != ("employe", "ajouter") and table_et_action != ("compagnie", "ajouter"):
+                liste = []
+                for key in info.keys():
+                    liste.append(info[key])
+                liste = [tuple(liste)]
+
+                requete = self.__action[action]
+                result = requete(usager, table, liste)
+
+            else:
+                result = self.enregistrer(table, info)
 
             return result
 
-    def selectionner(self, usager, key, info):
+    def selectionner(self, usager: Usager, table: str, info: list) -> dict:
+        key = table + 's' if table != 'usager' else 'usager'
         for elem in usager.session_info[key]:
             if elem.id == info[0][0]:
-                return elem.__dict__()
+                return elem.__dict__
 
-    def selectionner_tout(self, usager, key, info):
+    def selectionner_tout(self, usager: Usager, table: str, info: list) -> list:
+        key = table + 's' if table != 'usager' else 'usager'
         return usager.session_info[key]
 
-    def ajouter(self):
-        pass
+    def ajouter(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.INSERT, table, info)            
+        usager.mise_a_jour_session_info(table)
+        return result
 
-    def supprimer(self):
-        pass
 
-    def modifier(self):
-        pass
+    def supprimer(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.DELETE, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
 
-    def lier(self):
-        pass
+    def modifier(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.UPDATE, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
 
-    def creation_horaire(self, **info: any) -> list['GestionSysteme.Salle']:
+
+    def lier(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result =self.__dao.requete_dao(ActionDAO.Requete.LIER, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
+
+    def creation_horaire(self, **info: any) -> list:
         '''
         La fonction prends les keywords suivant :
         h_start: float -> temps du premier départ en minute
