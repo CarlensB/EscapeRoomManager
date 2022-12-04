@@ -110,6 +110,10 @@ class Usager:
     def session_info(self):
         return self.__session_info
     
+    @property
+    def id_compagnie(self):
+        return self.__id_compagnie
+    
     def __obtenir_info_initiale(self):
         msg_erreur = []
         # Employe
@@ -381,8 +385,9 @@ class GestionSysteme:
         return e.msg       
         
     def resilier_abonnement(self, token):
-        a = ActionDAO()
-        result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
+        result = "Vous ne disposez pas des droits d'accès pour cette action"
+        if self.__utilisateurs[token].session_info["usager"].niv_acces <= 1:
+            result = self.__dao.requete_dao(self.__dao.Requete.DELETE, self.__dao.Table.Compagnie, self.__utilisateurs[token].id_compagnie)
         return result
     
     def interaction_dao(self, token: str, action: str, table: str, info: dict):
