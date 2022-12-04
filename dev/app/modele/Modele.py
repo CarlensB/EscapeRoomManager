@@ -1,10 +1,11 @@
-from argparse import Action
 from dataclasses import dataclass
 from enum import Enum
 from sqlite3 import Date
 from typing import Union
 from .actionDAO import ActionDAO
 import bcrypt
+import hashlib
+import datetime as date
 # installation : python pip.exe install bcrypt
 # folder : C:\Python310\Scripts
 import re
@@ -15,6 +16,182 @@ from .Liste_chainee import DoubleLinkedList
 
 # source pour l'encodage et décodage du mot de passe :
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
+  
+@dataclass()
+class Compagnie:
+    id: int
+    nom: str
+    info_paiement: str
+    courriel: str
+
+@dataclass()
+class Reservation:
+    id: int
+    courriel: str
+    centre: str
+    salle: str
+    date: date.datetime
+    nom_client: str
+    participant: int
+    num_telephone: str
+    statut: int
+    prix_total: float
+
+@dataclass()
+class Horaire:
+    heure_debut: str
+    heure_fin: str
+
+@dataclass()
+class Salle:
+    id: int
+    nom: str
+    description: str
+    centre: str
+    nb_joueur_max: int
+    prix_unitaire: float
+    privee: bool
+    liste_horaire = []
+
+@dataclass()
+class Centre:
+    id: int
+    nom: str
+    id_compagnie: int
+    adresse: str
+    ville: str
+    pays: str
+    code_postal: str
+
+@dataclass()
+class Employe:
+    id: int
+    id_compagnie: int
+    nom: str
+    prenom: str
+    salaire: float
+    num_telephone: str
+    niveau_acces: int
+    courriel: str
+    num_ass: int
+
+@dataclass
+class Rabais:
+    id: int
+    nom: str
+    pourcentage: float  # Exemple 0.15 pour 15%
+    actif: bool
+    id_compagnie: int
+    date_fin: str
+
+@dataclass()
+class TypeClient:
+    id: int
+    categorie: str
+    prix: float
+    
+class Usager:
+    def __init__(self, utilisateur: Employe, dao: ActionDAO) -> None:
+        self.__dao = dao
+        self.__id_compagnie = utilisateur.id_compagnie
+        self.__session_info ={
+            'usager': utilisateur,
+            'employes': [],
+            'compagnie': None,
+            'centres': [],
+            'salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
+            'reservations': DoubleLinkedList(),
+            'rabais': [],
+            'typeClient': []
+        }
+        self.__obtenir_info_initiale()
+        
+    @property
+    def session_info(self):
+        return self.__session_info
+    
+    def __obtenir_info_initiale(self):
+        msg_erreur = []
+        # Employe
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.EMPLOYE, [(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["employes"].append(Employe(*e[:-1]))
+        except:
+            msg_erreur.append("Aucun employe à afficher")
+        
+        # Compagnie
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(self.__id_compagnie,)])[0]
+            self.__session_info["compagnie"] = Compagnie(*info[:-1])
+        except:
+            msg_erreur.append("Usager invalide, il n'est associé à aucune compagnie")
+        
+        # Centre
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["centres"].append(Centre(*e))
+        except:
+            msg_erreur.append("Aucun centre répertorié")
+            
+        # Salle
+        try:
+            for centre in self.__session_info["centres"]:
+                info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.SALLE,[(centre.id,)])
+                for e in info:
+                    self.__session_info["salles"].add(Salle(*e))
+        except:
+            msg_erreur.append("Aucune salle n'est incluse dans un centre")
+            
+        # Horaire
+        try:
+            for salle in self.__session_info['salles']:
+                info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
+                for e in info:
+                    debut, fin = e[1:]
+                    h = Horaire(debut, fin)
+                    salle.liste_horaire.append(h)
+        except:
+            msg_erreur.append("Aucune horaire répertorié")
+            
+        # Reservation
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["reservations"].add(Reservation(*e[:-3]))
+        except:
+            msg_erreur.append("Aucune réservation répertorié")
+            
+        # Rabais
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RABAIS,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["rabais"].append(Rabais(*e))
+        except:
+            msg_erreur.append("Aucun rabais répertorié")
+        # TypeClient
+        try:
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.TYPECLIENT,[(self.__id_compagnie,)])
+            for e in info:
+                self.__session_info["typeClient"].append(TypeClient(*e[:-1]))
+        except:
+            msg_erreur.append("Aucun typeclient répertorié")
+                            
+        return msg_erreur
+            
+    def mise_a_jour_session_info(self, table: ActionDAO.Table):
+        str_table = str(table).split(".")[1]
+        recherche = self.__id_compagnie
+        if str_table == 'SALLE':
+            self.session_info["salles"].clear()
+            for centre in self.session_info["centres"]:
+                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(centre.id,)])
+                for salle in result:
+                    self.session_info["salles"].add(salle)
+            print(self.session_info["salles"])
+                
+        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(recherche,)])
 
 class Enregistrement:
     '''
@@ -42,7 +219,7 @@ class Enregistrement:
     def __enregistrement(self):
         cour_valide, cour_msg = self.__validation_courriel(self.__info['courriel'])
         mdp_valide, mdp_msg = self.__validation_mdp(self.__info['mdp'])
-        print(self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg]))
+        self.__enregistrer([cour_valide, mdp_valide], [cour_msg, mdp_msg])
 
     def __crypter_mdp(self):
         mdp = codecs.encode(self.__info['mdp'])
@@ -127,17 +304,8 @@ class GestionSysteme:
         Employe = 3
 
     def __init__(self):
-        self.__user = None
-        # Initialisation des objects
-        self.__compagnie = None
-        self.__centres = DoubleLinkedList()
-        self.__salles = DoubleLinkedList()
-        self.__reservations = DoubleLinkedList()
-        
-        self.__employes = []
-        
-        self.__type_clients = []
-        self.__rabais = []
+        self.__utilisateurs = {"Null": None}
+        self.__id = None
         
         self.__algo = AlgoContext()
         self.__dao = ActionDAO()
@@ -153,65 +321,29 @@ class GestionSysteme:
         }
 
         self.__action = {
-                'selectionner': ActionDAO.Requete.SELECT,
-                'ajouter': ActionDAO.Requete.INSERT,
-                'supprimer': ActionDAO.Requete.DELETE,
-                'selectionner_all': ActionDAO.Requete.SELECT_ALL,
-                'modifier': ActionDAO.Requete.UPDATE,
-                'lier': ActionDAO.Requete.LIER,
+                'selectionner': self.selectionner,
+                'ajouter': self.ajouter,
+                'supprimer': self.supprimer,
+                'selectionner_all': self.selectionner_tout,
+                'modifier': self.modifier,
+                'lier': self.lier
             }
-
-        self.page = {
-            'register': 'register',
-            'login': 'login'
-            # ...
-        }
-        self.fonction = {
-            'var': 'var'
-        }
-
+        
     @property
-    def utilisateur(self):
-        return self.__user
+    def utilisateurs(self):
+        return self.__utilisateurs
 
     @property
     def dao(self):
-        return self.__dao
-    
-    @property
-    def reservations(self):
-        return self.__reservations
-    
-    @property
-    def compagnie(self):
-        return self.__compagnie
-
-    @property
-    def centres(self):
-        return self.__centres
-    
-    @property
-    def salles(self):
-        return self.__salles
-    
-    @property
-    def employes(self):
-        return self.__employes
-    
-    @property
-    def type_clients(self):
-        return self.__type_clients
-
-    @property
-    def rabais(self):
-        return self.__rabais
+        return self.__dao  
     
     @property
     def retourner_id(self):
         return self.__id     
     
-    def deconnecter_id(self):
+    def deconnecter_id(self, token):
         self.__id = None
+        self.__utilisateurs.pop(token)
         return True
 
     def valider_connexion(self, info: dict):
@@ -224,16 +356,19 @@ class GestionSysteme:
         mdp_crypte = codecs.encode(information[-1])
         mdp = codecs.encode(info['mdp'])
         if bcrypt.checkpw(mdp, mdp_crypte):
-            self.__user = Employe(information[0],
-                                 information[1], 
-                                 information[2],
-                                 information[3],
-                                 information[4],
-                                 information[5],
-                                 information[6],
-                                 information[7],
-                                 information[8])
-            return True, 'Connexion Validé'
+            utilisateur = Employe(information[0],
+                                    information[1],
+                                    information[2],
+                                    information[3],
+                                    information[4],
+                                    information[5],
+                                    information[6],
+                                    information[7],
+                                    information[8])
+            hash = utilisateur.nom + utilisateur.prenom
+            self.__id = hashlib.sha1(hash.encode()).hexdigest()
+            self.__utilisateurs[self.__id] = Usager(utilisateur, self.dao)
+            return True, 'Connexion Validé', self.__id, information[1], information[6]
         else:
             return False, 'mot de passe invalide'
 
@@ -243,27 +378,71 @@ class GestionSysteme:
             d[key] = info[key]
             
         e = Enregistrement(self.__action_table[table], d)
-        return e.msg
-
-    def resilier_abonnement(self):
+        return e.msg       
+        
+    def resilier_abonnement(self, token):
         a = ActionDAO()
         result = a.requete_dao(a.Requete.DELETE, a.Table.Compagnie, self.__id)
         return result
     
-    def interaction_dao(self, action: str, table: str, info: dict):
-        liste = []
+    def interaction_dao(self, token: str, action: str, table: str, info: dict):
+        if token in set(self.utilisateurs.keys()):
+            usager = self.utilisateurs[token]
+            result = ""
 
-        for key in info.keys():
-            liste.append(info[key])
-        liste = [tuple(liste)]
+            table_et_action = (table, action)
 
-        t = self.__action_table[table]
-        r = self.__action[action]
-        result = self.__dao.requete_dao(r, t, liste)
+            if table_et_action != ("employe", "ajouter") and table_et_action != ("compagnie", "ajouter"):
+                liste = []
+                for key in info.keys():
+                    liste.append(info[key])
+                liste = [tuple(liste)]
 
+                requete = self.__action[action]
+                result = requete(usager, table, liste)
+
+            else:
+                result = self.enregistrer(table, info)
+
+            return result
+
+    def selectionner(self, usager: Usager, table: str, info: list) -> dict:
+        key = table + 's' if table != 'usager' else 'usager'
+        for elem in usager.session_info[key]:
+            if elem.id == info[0][0]:
+                return elem.__dict__
+
+    def selectionner_tout(self, usager: Usager, table: str, info: list) -> list:
+        key = table + 's' if table != 'usager' else 'usager'
+        return usager.session_info[key]
+
+    def ajouter(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.INSERT, table, info)            
+        usager.mise_a_jour_session_info(table)
         return result
 
-    def creation_horaire(self, **info: any) -> list['GestionSysteme.Salle']:
+
+    def supprimer(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.DELETE, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
+
+    def modifier(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result = self.__dao.requete_dao(ActionDAO.Requete.UPDATE, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
+
+
+    def lier(self, usager: Usager, table: str, info: list) -> str:
+        table = self.__action_table[table]
+        result =self.__dao.requete_dao(ActionDAO.Requete.LIER, table, info)
+        usager.mise_a_jour_session_info(table)
+        return result
+
+    def creation_horaire(self, **info: any) -> list:
         '''
         La fonction prends les keywords suivant :
         h_start: float -> temps du premier départ en minute
@@ -277,6 +456,14 @@ class GestionSysteme:
         goodbye_time: float -> le temps de débriefing
         buffer: float -> Le temps à planifier entre les départs
         '''
+        info = info['info']
+
+        for key in info.keys():
+            if key != 'nb_room':
+                info[key] = float(info[key])
+            else:
+                info[key] = int(info[key])
+
         try:
             return self.__algo.create_schedule(**info)
         except (ValueError, KeyError) as e:
@@ -304,80 +491,3 @@ class GestionSysteme:
         tvq = 0.09975
         cout_base = self.__participant * self.__salle.prix
         r.prix_total = cout_base + cout_base * tps + cout_base * tvq
-
-# ==============================================================================
-#           DataClass interne
-
-@dataclass()
-class Compagnie:
-    id: int
-    nom: str
-    info_paiement: str
-    courriel: str
-
-@dataclass()
-class Reservation:
-    id: int
-    courriel: str = None
-    centre: str = None
-    salle: str = None
-    heure: str = None
-    nom_client: str = 'Client'
-    num_telephone: str = '514-000-0000'
-    participant: int = 0
-    statut: bool = False
-    prix_total: float = 0.0
-    date: Date = None
-
-@dataclass()
-class Horaire:
-    id: int
-    heure_debut: str
-    heure_fin: str
-
-@dataclass()
-class Salle:
-    id: int
-    nom: str
-    description: str
-    centre: str
-    nb_joueur_max: int
-    prix_unitaire: float
-    duree: float
-    privee: bool
-    liste_horaire: list[Horaire]
-
-@dataclass()
-class Centre:
-    id: int
-    nom: str
-    adresse: str
-    ville: str
-    pays: str
-    code_postal: str
-
-@dataclass()
-class Employe:
-    id: int
-    id_compagnie: int
-    nom: str
-    prenom: str
-    salaire: float
-    num_telephone: str
-    niveau_acces: int
-    courriel: str
-    num_ass: int
-
-@dataclass
-class Rabais:
-    id: int
-    nom: str
-    pourcentage: float  # Exemple 0.15 pour 15%
-    actif: bool
-    date_fin: Date
-
-@dataclass()
-class TypeClient:
-    id: int
-    categorie: str
-    prix: float 

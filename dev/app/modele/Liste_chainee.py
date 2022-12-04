@@ -59,9 +59,9 @@ class DoubleLinkedList:
         if self.n != None:
             result = self.n
             self.n = self.n.next_val
-            return result
+            return result.value
         else:
-            raise StopIteration               
+            raise StopIteration    
 
     # source __iter__ et __next__
     # Source : https://www.programiz.com/python-programming/iterator
@@ -217,6 +217,11 @@ class DoubleLinkedList:
         
         # if search_node is not None and search_node == data:
         #     print('test')
+        
+    def clear(self) -> None:
+        while self.__last_node is not None:
+            self.remove_last()
+        self.__front_node = None   
 
     def remove_firt(self) -> None:
         node = self.__front_node
@@ -228,7 +233,8 @@ class DoubleLinkedList:
     def remove_last(self) -> None:
         node = self.__last_node
         self.__last_node = self.__last_node.prev_val
-        self.__last_node.next_val = None
+        if self.__last_node is not None:
+            self.__last_node.next_val = None
         del(node)
         self.__lenght -= 1
 
@@ -245,7 +251,7 @@ class DoubleLinkedList:
         for v in value:
             if self.__data_type != v.__class__ : raise ValueError(self.__ERROR_MSG + f" The data: {self.__data_type}, wrong value type: {v.__class__}")
 
-    def __search_node(self, data: any) -> _Node:
+    def __search_node(self, data: any) -> 'DoubleLinkedList._Node':
         # Essayer d'aller 2 fois plus vite!
         # Pour comprendre que j'avais besoin d'un and ici
         # Source : https://stackoverflow.com/questions/54163163/python-while-with-two-conditions-and-or-or

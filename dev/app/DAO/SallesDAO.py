@@ -9,7 +9,8 @@ class SallesDAO:
             'supprimer': self.supprimer,
             'selectionner_all': self.selectionner_all,
             'modifier': self.modifier,
-            'lier': self.lier
+            'lier': self.lier,
+            'special': self.view_selection
         }
 
     @property
@@ -37,9 +38,9 @@ class SallesDAO:
         val = salle
         self.__execute_query(sql, val)
 
-    def selectionner_all(self, compagnie: list[tuple[int]]) -> list:
+    def selectionner_all(self, centre: list[tuple[int]]) -> list:
         sql = "SELECT * FROM salles WHERE centre = %s"
-        val = compagnie[0]
+        val = centre[0]
         return self.__select(sql, val)
 
     def modifier(self, args: list[tuple[str, str, int, int, float, int]]) -> None:
@@ -54,6 +55,11 @@ class SallesDAO:
         sql = "INSERT INTO hor_salle(id_horaire, id_salle) VALUES( %s, %s)"
         val = liste_id
         self.__execute_query(sql, val)
+        
+    def view_selection(self, compagnie: list[tuple[int]]):
+        sql = "SELECT * FROM view_salles_compagnie where id_compagnie = %s"
+        val = compagnie[0]
+        return self.__select(sql, val)
         
 
     def __execute_query(self, sql : str, val : tuple = None) -> None:

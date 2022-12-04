@@ -20,6 +20,7 @@ class ActionDAO:
         SELECT_ALL = 4
         UPDATE = 5
         LIER = 6
+        SPECIAL = 7
 
 
     class Table(Enum):
@@ -54,7 +55,8 @@ class ActionDAO:
                 self.Requete.DELETE: 'supprimer',
                 self.Requete.SELECT_ALL: 'selectionner_all',
                 self.Requete.UPDATE: 'modifier',
-                self.Requete.LIER: 'lier'
+                self.Requete.LIER: 'lier',
+                self.Requete.SPECIAL: 'special'
 
             }
 

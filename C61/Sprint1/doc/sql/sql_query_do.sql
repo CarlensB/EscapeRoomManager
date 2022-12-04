@@ -5,8 +5,8 @@ COLLATE utf8_general_ci;
 USE ERM_DB;
 
 -- Création de l'utilisateur
-CREATE USER 'erm_user'@'localhost' IDENTIFIED by 'EscapeRoomManager';
-GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
+-- CREATE USER 'erm_user'@'localhost' IDENTIFIED by 'EscapeRoomManager';
+-- GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 
 	-- Supression des tables
 	DROP TABLE IF EXISTS emp_cent;
@@ -24,6 +24,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	DROP VIEW IF EXISTS view_salles_compagnie;
 	DROP VIEW IF EXISTS view_employes_lieu;
 	DROP VIEW IF EXISTS view_salle_horaire;
+	DROP VIEW IF EXISTS view_reservation_compagnie;
     
     -- suppression des triggers
     DROP TRIGGER IF EXISTS centre_root;
@@ -95,6 +96,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		centre          INT        	NOT NULL,
 		nb_max_joueur   INT         NOT NULL,
 		prix_unitaire   FLOAT     	NOT NULL,
+		privee			INT			NOT NULL,
 		
 		PRIMARY KEY pk_salle(id),
 		FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE
@@ -143,13 +145,13 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		salle				INT			NOT NULL,
 		nb_personnes        INT         NOT NULL,
 		courriel            TEXT        NOT NULL,
-		heure               TEXT        NOT NULL,
 		prix_total          FLOAT	    NOT NULL,
-		date                TEXT		NOT NULL,
+		date                DATETIME	NOT NULL,
 		
 		PRIMARY KEY pk_resa(id),
 		FOREIGN KEY fk_r_salle(salle) REFERENCES salles(id) ON DELETE CASCADE,
-		CONSTRAINT const_statut CHECK(statut_reservation = 0 OR statut_reservation = 1)
+		CONSTRAINT const_statut CHECK(statut_reservation = 0 OR statut_reservation = 1),
+		UNIQUE(date, salle)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -176,10 +178,19 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
 
 	CREATE VIEW view_reservation_compagnie AS
-	SELECT reservations.id AS 'id_reservation', reservations.nom_client AS 'client',
-	reservations.nb_personnes AS 'participants', reservations.prix_total AS 'prix',
-	reservations.num_telephone AS 'telephone', salles.id AS 'id_salle', salles.nom AS 'salle',
-	centres.nom AS 'centre', centres.id AS 'id_centre', centres.compagnie AS 'id_compagnie'
+	SELECT reservations.id AS 'id_reservation',
+	reservations.courriel AS 'courriel',
+	centres.nom AS 'Centre',
+	salles.nom AS 'Salle',
+	reservations.date AS 'Date',
+	reservations.nom_client AS 'Client',
+	reservations.nb_personnes AS 'Participants',
+	reservations.num_telephone AS 'Telephone',
+	reservations.statut_reservation AS 'Statut',
+	reservations.prix_total AS 'Prix',
+	salles.id AS 'id_salle',
+	centres.id AS 'id_centre',
+	centres.compagnie AS 'id_compagnie'
 	FROM reservations
 	INNER JOIN salles ON salles.id = reservations.salle
 	INNER JOIN centres ON centres.id = salles.centre;

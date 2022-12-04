@@ -25,7 +25,7 @@ class CompagniesDAO:
 
     def selectionner(self, compagnie: list[tuple[int]]) -> list[tuple]:
         sql = "SELECT * from compagnies WHERE id = %s"
-        val = compagnie
+        val = compagnie[0]
         return self.__select(sql, val)
 
     def selectionner_all(self, args: list[tuple[int]]) -> list[tuple]:
@@ -53,6 +53,6 @@ class CompagniesDAO:
         self.__bd.connexion.commit()
 
     def __select(self, sql: str, val: tuple = None) -> list:
-        self.__curseur.executemany(sql, val)
+        self.__curseur.execute(sql, val)
         result = self.__curseur.fetchall()
         return result

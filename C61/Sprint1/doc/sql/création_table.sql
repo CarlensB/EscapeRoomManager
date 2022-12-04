@@ -143,7 +143,6 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		salle				INT			NOT NULL,
 		nb_personnes        INT         NOT NULL,
 		courriel            TEXT        NOT NULL,
-		heure               TEXT        NOT NULL,
 		prix_total          FLOAT	    NOT NULL,
 		date                TIMESTAMP   NOT NULL,
 		

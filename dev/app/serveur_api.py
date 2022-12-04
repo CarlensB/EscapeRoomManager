@@ -10,6 +10,7 @@ class Serveur():
     __app = Flask(__name__)
     __app.secret_key = 'ERM'
     __controleur = None
+    __GET_MSG = "GET request are ignored"
 
     @staticmethod
     def demarrer_serveur() -> None:
@@ -19,17 +20,6 @@ class Serveur():
     def definir_controleur(controleur) -> None:
         Serveur.__controleur = controleur
 
-    #  test
-
-    @__app.route('/hello')
-    def hello_world():
-        # http://127.0.0.1:5000/hello
-        dict = {'Mot': "Hello World"}
-        return json.dumps(dict)
-
-    @__app.route('/')
-    def index():
-        return render_template('login.html')
 
     # Pour la connexion et l'enregistrement de nouvelle compagnie ou employe
 
@@ -38,6 +28,10 @@ class Serveur():
         if request.method == 'POST':
             info = request.form
             result = Serveur.__controleur.valider_connexion(info)
+            if result[0]:
+                session["token"] = result[2]
+                session["id_compagnie"] = result[3]
+                session["niv_acces"] = result[4]
             return json.dumps(result)
 
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
@@ -47,22 +41,33 @@ class Serveur():
             result = Serveur.__controleur.enregistrer(name, info)
             return json.dumps(result)
         else:
-            return json.dumps("GET request are ignored")
+            return json.dumps(Serveur.__GET_MSG)
+
+    @__app.route('/creation/horaire', methods=['GET', 'POST'])
+    def creation_horaire():
+        if request.method == 'POST':
+            info = request.form.to_dict()
+            result = Serveur.__controleur.creation_horaire(info=info)
+            return json.dumps(result)
+        else:
+            return json.dumps(Serveur.__GET_MSG)
 
     # insert et select pour la bd
     @__app.route('/<action>/<table>', methods=['GET', 'POST'])
     def execute(action, table):
         if request.method == 'POST':
             info = request.form
-            result = Serveur.__controleur.interaction_dao(action, table, info)
+            token = session["token"] #info[0]
+            result = Serveur.__controleur.interaction_dao(token, action, table, info)
             return json.dumps(result)
         else:
-            return json.dumps("GET request are ignored")
+            return json.dumps(Serveur.__GET_MSG)
 
     # Pour avoir accès au variable de session
-    @__app.route('/session')
+    @__app.route('/session', methods=['GET', 'POST'])
     def session():
-        return session
+        if request.method == 'POST':
+            return session
     
     # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
     @__app.route('/id_connection')
@@ -79,7 +84,12 @@ class Serveur():
             return json.dumps(False)
         
     # Pour se déconnecter
-    @__app.route('/deconnecter')
+    @__app.route('/deconnecter', methods=['GET', 'POST'])
     def deconnecter():
-        retour = Serveur.__controleur.deconnecter_id()
-        return json.dumps(retour)
+        print(Serveur.__controleur.utilisateurs.keys())
+        if request.method == 'POST' or request.method == 'GET':
+            retour = Serveur.__controleur.deconnecter_id(session["token"])
+            session.pop("token", None)
+            session.pop("id_compagnie", None)
+            session.pop("niv_acces", None)
+            return json.dumps(retour)

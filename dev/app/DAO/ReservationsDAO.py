@@ -15,11 +15,11 @@ class ReservationsDAO:
     def fonction(self):
         return self.__fonction
 
-    def ajouter(self, args: list[tuple[str, str, int, int, int, str, str, float, str]]) -> None:
+    def ajouter(self, args: list[tuple[str, str, int, int, int, str, float, str]]) -> None:
         sql ='''
         INSERT INTO reservations (nom_client, num_telephone, statut_reservation, salle,
-        nb_personnes, courriel, heure, prix_total, date)
-        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        nb_personnes, courriel, prix_total, date)
+        VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
         '''
         val = args
         self.__execute_query(sql, val)
