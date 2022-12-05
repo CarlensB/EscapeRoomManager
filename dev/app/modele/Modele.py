@@ -1,3 +1,4 @@
+from argparse import Action
 from dataclasses import dataclass
 from enum import Enum
 from sqlite3 import Date
@@ -410,7 +411,16 @@ class GestionSysteme:
                 result = self.enregistrer(table, info)
 
             return result
+        
+        elif token is None and table == "reservation":
+            liste = []
+            for key in info.keys():
+                liste.append(info[key])
+            liste = [tuple(liste)]
 
+            result = self.__dao.requete_dao(ActionDAO.Requete.INSERT, ActionDAO.Table.RESERVATION, liste)
+            return result
+                
     def selectionner(self, usager: Usager, table: str, info: list) -> dict:
         key = table + 's' if table != 'usager' else 'usager'
         for elem in usager.session_info[key]:
@@ -446,6 +456,32 @@ class GestionSysteme:
         result =self.__dao.requete_dao(ActionDAO.Requete.LIER, table, info)
         usager.mise_a_jour_session_info(table)
         return result
+    
+    def api(self, id_compagnie: int) -> list:
+        info_compagnie = {}
+        
+        compagnie = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(int(id_compagnie),)])
+        index, nom = compagnie[0][:2]
+        info_compagnie[nom] = nom
+        info_compagnie[index] = index
+        
+        centres = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE, [(int(id_compagnie),)])
+        info_compagnie["centres"] = centres
+        
+        salles = self.__dao.requete_dao(ActionDAO.Requete.SPECIAL, ActionDAO.Table.SALLE, [(int(id_compagnie),)])
+        info_compagnie["salles"] = salles
+        
+        horaires = []
+        for salle in salles:
+            index = salle[0]
+            horaires.append(self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(index,)]))
+        
+        info_compagnie["horaires"] = horaires
+        
+        reservations = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION, [(int(id_compagnie),)])
+        info_compagnie["reservations"] = reservations        
+        
+        return info_compagnie    
 
     def creation_horaire(self, **info: any) -> list:
         '''
@@ -473,6 +509,10 @@ class GestionSysteme:
             return self.__algo.create_schedule(**info)
         except (ValueError, KeyError) as e:
             return ValueError(self.__ALGO_ERROR)
+        
+    # fonction pour le site de showcase
+    def renvoi_compagnie(self):
+        return self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.COMPAGNIE, [(1,)])
 
     # ==============================================================================
     #           Fonctions protégés
