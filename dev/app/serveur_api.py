@@ -68,6 +68,7 @@ class Serveur():
     # insert et select pour la bd
     @__app.route('/<action>/<table>', methods=['GET', 'POST'])
     def execute(action, table):
+
         if request.method == 'POST':
             info = request.form.to_dict()
             token = session["token"] #info[0]

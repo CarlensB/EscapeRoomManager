@@ -473,7 +473,7 @@ class GestionSysteme:
         
         horaires = []
         for salle in salles:
-            index = salle[0]
+            index = salle[1]
             horaires.append(self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(index,)]))
         
         info_compagnie["horaires"] = horaires

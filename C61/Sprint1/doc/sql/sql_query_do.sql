@@ -157,9 +157,17 @@ USE ERM_DB;
 
 	-- Création de views
 	CREATE VIEW view_salles_compagnie AS
-	SELECT salles.nom AS 'salle',  salles.id AS 'id_salle',
-	compagnies.nom AS 'compagnie', compagnies.id AS 'id_compagnie',
-	centres.nom AS 'centre', centres.id AS 'id_centre'
+	SELECT
+	salles.id AS 'id_salle',
+	salles.nom AS 'salle',
+	salles.description AS 'description',
+	salles.nb_max_joueur AS 'nb_joueur_max',
+	salles.prix_unitaire AS 'prix',
+	salles.privee AS "privee",
+	compagnies.nom AS 'compagnie',
+	compagnies.id AS 'id_compagnie',
+	centres.nom AS 'centre',
+	centres.id AS 'id_centre'
 	FROM salles
 	INNER JOIN centres ON centres.id = salles.centre
 	INNER JOIN compagnies ON centres.compagnie = compagnies.id;
