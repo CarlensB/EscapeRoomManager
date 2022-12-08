@@ -1,8 +1,6 @@
-import datetime as dt
-from modele.actionDAO import ActionDAO
 from serveur_api import Serveur
-from modele.Modele import GestionSysteme, Enregistrement
-from modele.Liste_chainee import DoubleLinkedList
+from modele.Modele import GestionSysteme
+from dependancy import DependancyInstall
 
 '''
 Pour éviter les bugs d'affichage dans vscode désinstaller python for vscode.
@@ -27,9 +25,12 @@ e = {'compagnie': 1,
      'num_ass': 257_098_765,
      'mdp': "testAndroid18!@"}
 
+dependance = ["bcrypt", "mysql-connector-python"]
+
 
 def main():
     #définition du contorleur
+    #DependancyInstall(dependance)
     gs = GestionSysteme()
 
     #Test
