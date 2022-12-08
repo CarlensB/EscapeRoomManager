@@ -1,5 +1,7 @@
 import { makeAutoObservable } from "mobx";
+import { runReactions } from "mobx/dist/internal";
 import { useCallback } from "react";
+import accueilStore from "../AccueilStore";
 import { ActivePage, CreateAccountInfos, LoginInfos } from "../loginStore";
 
 
@@ -38,7 +40,7 @@ export class LoginPageActions {
         
     }
 
-    LoginAction(loginInfos: LoginInfos): boolean {
+    LoginAction = async (loginInfos: LoginInfos) => {
         // if (this.LoginError == true)
         // this.LoginError = false;
         // else this.LoginError=true;
@@ -49,26 +51,41 @@ export class LoginPageActions {
         formData.append("mdp", loginInfos.password);
         
         
-        try {
-            fetch('http://127.0.0.1:5000/validation',
+        
+        const resultat = await fetch('http://127.0.0.1:5000/validation',
             {
                 method: 'POST',
                 body: formData
             })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response[1]);
-        if (response[1] == "Connexion Validé")
+
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     console.log(response[1]);
+    //     if (response[1] == "Connexion Validé"){
+    //         accueilStore.token = response[2]
+    //     }
         
-        return true
-      })
-          } catch (e) {
-              console.log("")
-              this.LoginError = true;
-              return false
-          }
+    //   })
+
+      const object = await resultat.json();
+      return object
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     CreateAcountAction(createAccountInfos: CreateAccountInfos) {
         if (this.CreateAccountError == true)

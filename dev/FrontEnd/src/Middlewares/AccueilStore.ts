@@ -92,14 +92,45 @@ class AccueilStore {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
         this._compagnie = new Compagnie("Escaparium", []);
-        
+        console.log(this.token)
         
 
 
         
 
     }
+    
+    public initialiserinfos(){
+            
+        var session = localStorage.getItem('session');
+        console.log(localStorage)
+        console.log(session)
+      
+    //         fetch('http://127.0.0.1:5000/session',
+    //         {
+    //             method: 'POST',
+    //         })
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     if (response.length == undefined){
+    //     // this.ActivePage = eActivePage.Login
+    //     console.log(response)
+    //     }
+    //     else{
+    //         console.log(response)
+    //     //     this._id_emp = response[1]["id"]
+    //     //     this._id_compagnie = response[1]["id_compagnie"]
+    //     //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
+    //     //     this._courriel = response[1]["courriel"]
+    //     //     this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
+    //     //     this.initialiserCentres(response[0])
 
+    //     }
+    //   })
+          
+
+          
+    }
 
     initialiserSalles(){
         let centres = this.getCentres()
@@ -138,35 +169,6 @@ class AccueilStore {
           
     }
 
-    public initialiserinfos(){
-
-
-        try {
-            fetch('http://127.0.0.1:5000/id_connection',
-            {
-                method: 'GET',
-            })
-      .then(response => response.json())
-      .then(response => {
-        if (response == false)
-        this.ActivePage = eActivePage.Login
-        else{
-            this._id_emp = response[1]["id"]
-            this._id_compagnie = response[1]["id_compagnie"]
-            this._niveau_acces = parseInt(response[1]["niveau_acces"])
-            this._courriel = response[1]["courriel"]
-            this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
-            this.initialiserCentres(response[0])
-
-        }
-      })
-          } catch (e) {
-              console.log("Aucune variable de session")
-              
-          }
-
-          
-    }
 
     private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){
             let hr = hr_debut.split(":")

@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/accueil_REACT.tsx',
+    entry: './src/login_REACT.tsx',
     output: {
-        filename: 'accueil_bundled.js',
+        filename: 'login_bundled.js',
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {

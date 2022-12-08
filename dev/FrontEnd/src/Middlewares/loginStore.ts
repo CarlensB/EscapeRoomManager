@@ -2,6 +2,7 @@ import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
 import accueilStore, { eActivePage } from "./AccueilStore";
 import { LoginPageActions } from "./Actions/LoginActions";
+
 configure({
     enforceActions: "never",
 })
@@ -28,10 +29,7 @@ export class CreateAccountInfos{
             this.password = "";
             this.repeatpassword = "";
         }
-    
-
 }
-
 
 export class LoginInfos{
 
@@ -44,7 +42,6 @@ export class LoginInfos{
             this.username = "";
             this.password = "";
         }
-
 }
 
 
@@ -53,6 +50,7 @@ class LoginStore {
     private ActivePage: ActivePage = ActivePage.Login
     private createAccountInfos: CreateAccountInfos = new CreateAccountInfos()
     private loginInfos: LoginInfos = new LoginInfos()
+    public test = "aaa"
 
     
     constructor() {
@@ -85,31 +83,22 @@ class LoginStore {
         this.loginpage.GoToLoginPage();
     }
 
-    Login(){
-        let formData = new FormData();
-        formData.append("courriel", this.loginInfos.username);
-        formData.append("mdp", this.loginInfos.password);
-        
-        
-        try {
-            fetch('http://127.0.0.1:5000/validation',
-            {
-                method: 'POST',
-                body: formData
-            })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response[1]);
-        if (response[1] == "Connexion Validé")
-            accueilStore.token = "blablabla"
-            this.ActivePage = ActivePage.Loggedin
-      })
-          } catch (e) {
-              console.log("erreur")
-              
-          }
+    
 
+    
+    Login(){
+        //TODO redirection
+        let response = this.loginpage.LoginAction(this.loginInfos)
+        let resultat = response.then(
+            function(value) {
+                if (value[0] == true)
+                localStorage.setItem('session', value )
+                console.log(this.ActivePage)
+            }
+            )
+        
     }
+    
     
 
     updateLoginInfos_username(infos:string){
@@ -142,14 +131,6 @@ class LoginStore {
         this.createAccountInfos.repeatpassword = infos
     }
 
-
-    
-    
-
 }
-
-
-
 const loginStore = new LoginStore();
-
 export default loginStore

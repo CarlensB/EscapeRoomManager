@@ -9,6 +9,7 @@ import { AppCreerSucursalle } from './Comps/CreerCentreComp';
 import { AppCreerSalle } from './Comps/CreerSallesComp';
 
 accueilStore.initialiserinfos()
+
 const AccueilPageComp = observer(() => {
     
     if (accueilStore.ActivePage == eActivePage.Login){

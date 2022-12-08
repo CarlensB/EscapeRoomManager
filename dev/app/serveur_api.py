@@ -45,6 +45,7 @@ class Serveur():
                 session["token"] = result[2]
                 session["id_compagnie"] = result[3]
                 session["niv_acces"] = result[4]
+                print('test', session)
             return json.dumps(result)
 
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
