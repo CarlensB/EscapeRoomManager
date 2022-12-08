@@ -5,11 +5,10 @@ import loginStore from "../../src/Middlewares/loginStore"
 
 export const LoginPageComp = observer(() => {
 
-    const loginErr = loginStore.getLoginError()
-    let errMessage = ""
-    if (loginErr){
-      errMessage = "Le mot de passe ou l'indentifiant est erronné";
-    }
+    
+    let errMessage = loginStore.message
+    console.log(loginStore.message)
+    
     
     
     return(   

@@ -105,6 +105,10 @@ class AccueilStore {
         var session = localStorage.getItem('session');
         console.log(localStorage)
         console.log(session)
+        var myVar = localStorage.getItem('session');
+        if (myVar == null){
+            this.ActivePage = eActivePage.Login
+        }
       
     //         fetch('http://127.0.0.1:5000/session',
     //         {
@@ -213,21 +217,8 @@ class AccueilStore {
     
     
     public deconnecter(){
-        try {
-            fetch('http://127.0.0.1:5000/deconnecter',
-            {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(response => {
-                if (response == true)
-                this.ActivePage = eActivePage.Login
-                
-            })
-        } catch (e) {
-            console.log("Aucune variable de session")
-            
-        }     
+        window.localStorage.removeItem('session');
+        this.ActivePage = eActivePage.Login   
     }
     
     public get ActivePage(): eActivePage {
