@@ -34,45 +34,121 @@ const get_compagnie_info = (id_compagnie) =>{
     .then(result =>{
         console.log(result)
 
+        date = new Date()
+
+        document.querySelector(".date").innerHTML = [date.getFullYear(), date.getMonth() + 1, date.getDate()+ 1].join("/")
+
         let listeReservation = []
-        let listeCentres = null
-        let listeSalles = null
+        let listeCentres = []
+        let listeSalles = []
 
-        for (const horaire in result.horaires){
-            // let horaireInfo = document.createElement("div")
-            // horaireInfo.classList.add("horaireInfo")
-            listeReservation.push(reservationFactory(result.horaires[horaire], result.salles))
-        }
-        
         listeCentres = centreFactory(result.centres)
-        for (const s in result.salles){
-            listeSalles = salleFactory(result.salles[s])
+        listeSalles = salleFactory(result.salles)
+        console.log(listeCentres)
+        
+        for (const horaire in result.horaires){
+            listeReservation.push(reservationFactory(result.horaires[horaire], result.salles, listeSalles, listeCentres))
         }
 
-        console.log(listeReservation)
-        console.log(listeCentres)
+            
         console.log(listeSalles)
+        console.log(listeReservation)
+
+        // batir le scroll pour les centres
+        document.querySelector(".nomCentre").innerHTML = listeCentres[1]["nom"]
+
+        // batir le scroll pour les salles
+        document.querySelector(".nomSalle").innerHTML = listeSalles[0]["nom"]
         
         // batir les div de réservations
-        let reservationStruct = document.createElement("div")
-        reservationStruct.classList.add("reservationFrame")
+        for (const i in listeReservation){
+            for (const j in listeReservation[i]){
+                nom = listeReservation[i][j].salle.nom
+                centre = listeReservation[i][j].centre.nom
+                classe = nom+centre
+                divResa = document.createElement("div")
+                divHD = document.createElement("div")
+                particpant = document.createElement("div")
+                prix = document.createElement("div")
 
-        //div
+                
+                divResa.classList.add(classe)
+                divResa.classList.add("reservations")
+                divHD.classList.add("infoReservation")
+                particpant.classList.add("infoReservation")
+                prix.classList.add("infoReservation")
+                
+                divHD.innerHTML = listeReservation[i][j]["heureDebut"]
+                particpant.innerHTML = listeReservation[i][j]["salle"]["particpant"]
+                prix.innerHTML = listeReservation[i][j]["salle"]["prix_unitaire"] + "$"
+
+                //Rendre nos div clickable
+                divResa.onclick = () =>{
+                    afficherBoiteReservation()
+                }
+
+                divResa.append(divHD)
+                divResa.append(particpant)
+                divResa.append(prix)
+                
+                divResa.style.display = "None"
+                document.querySelector(".reservationFrame").append(divResa)
+            }
+        }
 
 
+        affichageReservation()
 
+        //Mettre affichage de reservation sur les boutons
+        for (const i in 4){
+            console.log(i)
+        }
+
+        document.querySelector(".btnGauche").style.cursor = "pointer"
+        document.querySelector(".btnDroit").style.cursor = "pointer"
+        btnG = document.querySelector(".btnGauche")
+        btnD = document.querySelector(".btnDroit")
+        
+        btnG.onclick = () =>{
+            OnClickBtn(btnG, listeSalles)
+
+            enfant = document.querySelector(".reservationFrame").children
+            for (const i in enfant){
+                if (enfant[i].style.display != 'None'){
+                    classe = "." + enfant[i].classList[0]
+                    break
+                }
+            }
+            cacherReservation(classe)
+            affichageReservation()
+        }
+        
+        btnD.onclick = () => {
+            OnClickBtn(btnD, listeSalles)
+            enfant = document.querySelector(".reservationFrame").children
+            for (const i in enfant){
+                if (enfant[i].style.display != 'None'){
+                    classe = "." + enfant[i].classList[0]
+                    break
+                }
+            }
+            cacherReservation(classe)
+            affichageReservation()
+        }
     })
 }
 
-const reservationFactory = (listHoraires, listeSalles) =>{
+const reservationFactory = (listHoraires, originSalles, listeSalles, listeCentres) =>{
     let reservationListe = []
     for (const h in listHoraires){
         let nom_salle = listHoraires[h][0]
         let heure_debut = listHoraires[h][1]
         let heure_fin = listHoraires[h][2]
-        const found = listeSalles.find(element => element[1] == nom_salle)
-        let centre = found[8]
-        reservationListe.push(new Reservation(heure_debut, heure_fin, centre, nom_salle))
+        const found = originSalles.find(element => element[1] == nom_salle)
+        let centreNom = found[8]
+        const centre = listeCentres.find(element => element["nom"] == centreNom)
+        const salle = listeSalles.find(element => element["nom"] == nom_salle)
+        reservationListe.push(new Reservation(heure_debut, heure_fin, salle, centre))
 
     }
 
@@ -94,11 +170,11 @@ const centreFactory = (centreInfo) =>{
 const salleFactory = (salleInfo) =>{
     let salleListe = []
     for (const s in salleInfo){
-        let nom = salleInfo[1]
-        let description = salleInfo[2]
-        let partipant = salleInfo[3]
-        let prix = salleInfo[4]
-        let privee = salleInfo[5]
+        let nom = salleInfo[s][1]
+        let description = salleInfo[s][2]
+        let partipant = salleInfo[s][3]
+        let prix = salleInfo[s][4]
+        let privee = salleInfo[s][5]
         salleListe.push(new Salle(nom, description, partipant, prix, privee))
     }
     return salleListe
@@ -119,8 +195,103 @@ const add_reservation = (reservation) =>{
     })
 }
 
+const afficherBoiteReservation = () =>{
+
+    boitePrincipale = document.createElement("div")
+    divInfo = document.createElement("div")
+    divUpperInfo = document.createElement("div")
+    divDownInfo = document.createElement("div")
+    divSalle = document.createElement("div")
+    btnReserver = document.createElement("button")
+
+    inputNom = document.createElement("input")
+    inputPrenom = document.createElement("input")
+    inputEmail = document.createElement("input")
+    inputConfirmEmail = document.createElement("input")
+    inpuTel = document.createElement("input")
+
+}
+
 const change_page_for_compagnie = () =>{
     console.log(document.querySelector(".dropdown-content").textContent)
+}
+
+// fonction affichage dom
+
+const OnClickBtn = (btn, liste) => {
+    value = btn.innerHTML
+    salle = document.querySelector(".nomSalle").innerHTML
+
+    for (const i in liste){
+        if (liste[i].nom == salle && value == '&gt;'){
+            try{
+                index = parseInt(i) + 1
+                document.querySelector(".nomSalle").innerHTML = liste[index].nom
+            }
+            catch{
+                if (i == liste.length -1){
+                    document.querySelector(".nomSalle").innerHTML = liste[0].nom
+                }
+                else{
+                    index = liste.length - 1
+                    document.querySelector(".nomSalle").innerHTML = liste[index].nom
+                }
+            }
+            break
+        }
+        else if (liste[i].nom == salle && value == '&lt;') {
+            try{
+                index = parseInt(i) - 1
+                document.querySelector(".nomSalle").innerHTML = liste[index].nom
+            }
+            catch{
+                index = liste.length - 1
+                document.querySelector(".nomSalle").innerHTML = liste[index].nom
+            }
+            break
+        }
+    } 
+}
+
+const cacherReservation = (classe) =>{
+    listeDiv = document.querySelectorAll(classe)
+
+    for (const i in listeDiv){
+        try{
+               listeDiv[i].style.display = "None"
+            }
+            catch{
+                console.log("Un imbécile est parti")
+            }
+    }
+}
+
+const affichageReservation = () =>{
+    c = document.querySelector(".nomCentre").innerHTML
+    nom = document.querySelector(".nomSalle").innerHTML
+    classe = "." + nom + c
+    listeDiv = document.querySelectorAll(classe)
+
+    console.log(listeDiv)
+
+    {
+        for (const i in listeDiv){
+            try{
+               listeDiv[i].style.display = "flex"
+
+               
+            //    if (listeReservation[i][j].heureDebut !=)
+            //    divResa.onclick = () =>{
+
+            //        afficherBoiteReservation()
+            //    }
+
+            }
+            catch{
+                console.log(listeDiv[i],"Un imbécile est parti")
+            }
+        }
+    } 
 }
 
 // JS Class
@@ -128,9 +299,9 @@ class Reservation{
     constructor(heureDebut, heureFin, nomSalle, centre, salle){
         this.heureDebut = heureDebut
         this.heureFin = heureFin
-        this.nom = nomSalle
+        this.salle = nomSalle
         this.centre = centre
-        this.salle = salle
+        //this.salle = salle
         this.prixTotal = null
     }
 

@@ -1,4 +1,8 @@
 
+h1{
+    text-align: center;
+}
+/*Classe*/
 .info{
     background-color: aqua;
 }
@@ -9,18 +13,73 @@
 
 .centres{
     background-color: bisque;
+    display: flex;
+    flex-direction: row;
+    margin: 5% auto;
+    width: 20%;
+    height: 20%;
+    border-style: solid;
+    border-color: black;
+}
+
+.nomCentre{
+    margin: 2% auto;
+    width: 75%;
+    height: 100%;
+    text-align: center;
+}
+
+.btnGauche{
+    background-color: white;
+    width: 25%;
+    margin: 2%;
+    text-align: center;
+}
+
+.btnDroit{
+    background-color: white;
+    width: 25%;
+    margin: 2%;
+    text-align: center;
+}
+
+.btnDroit:hover{
+    background-color: grey;
+}
+
+.btnGauche:hover{
+    background-color: grey;
 }
 
 .salles{
     background-color: blueviolet;
+    display: flex;
+    flex-direction: row;
 }
 
-.horaires{
-    background-color: cadetblue;
+.nomSalle{
+    margin: 2% auto;
+    width: 75%;
+    height: 100%;
+    text-align: center;
 }
 
 .reservations{
     background-color: cornflowerblue;
+    display: flex;
+    flex-direction: row;
+    margin: 1% 2%;
+}
+
+.reservations:hover{
+    background-color: #3e8e41;
+}
+
+.infoReservation{
+    background-color: lightcyan;
+    width: 30%;
+    text-align: center;
+    margin: 0.5% auto;
 }
 
 .reservationFrame{
@@ -30,6 +89,29 @@
 .horaireInfo{
     background-color: lightblue;
 }
+
+.date{
+    background-color: #ddd;
+    width: 30%;
+    text-align: center;
+    margin: 0% auto;
+}
+
+/*
+Boite pour confirmer une réservation
+*/
+
+.boiteReservation{
+    display: None;
+    background-color:darkseagreen;
+    width: 80%;
+}
+
+.boiteReservationInfo{
+
+}
+
+
 /*
 Source pour le code du bouton dropdown ci-dessous
 lien : https://www.w3schools.com/howto/howto_css_dropdown.asp#:~:text=Example%20Explained,dropdown%20menu%20correctly%20with%20CSS.
@@ -41,11 +123,14 @@ lien : https://www.w3schools.com/howto/howto_css_dropdown.asp#:~:text=Example%20
     padding: 16px;
     font-size: 16px;
     border: none;
+    width: 100%;
 }
 
 .dropdown{
-    position: relative;
-    display: inline-block;
+    /* position: relative;
+    display: inline-block; */
+    width: 30%;
+    margin: 0% auto;
 }
 
 .dropdown-content{
@@ -55,6 +140,7 @@ lien : https://www.w3schools.com/howto/howto_css_dropdown.asp#:~:text=Example%20
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    width: 29.3%;
 }
 .dropdown-content a{
     color: black;

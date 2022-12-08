@@ -479,8 +479,11 @@ class GestionSysteme:
         info_compagnie["horaires"] = horaires
         
         reservations = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION, [(int(id_compagnie),)])
-        info_compagnie["reservations"] = reservations        
-        
+        dict_reservation = {}
+        for reservation in reservations:
+            dict_reservation[reservation[0]] = {'horaire': reservation[4],'participants': reservation[6], "id_salle": reservation[10], "id_centre": reservation[11]}
+            
+        info_compagnie["reservations"] = dict_reservation
         return info_compagnie    
 
     def creation_horaire(self, **info: any) -> list:
