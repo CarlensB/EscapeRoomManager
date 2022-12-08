@@ -41,16 +41,11 @@ export class LoginPageActions {
     }
 
     LoginAction = async (loginInfos: LoginInfos) => {
-        // if (this.LoginError == true)
-        // this.LoginError = false;
-        // else this.LoginError=true;
-        
 
         let formData = new FormData();
         formData.append("courriel", loginInfos.username);
         formData.append("mdp", loginInfos.password);
-        
-        
+           
         
         const resultat = await fetch('http://127.0.0.1:5000/validation',
             {
@@ -58,14 +53,6 @@ export class LoginPageActions {
                 body: formData
             })
 
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     console.log(response[1]);
-    //     if (response[1] == "Connexion Validé"){
-    //         accueilStore.token = response[2]
-    //     }
-        
-    //   })
 
       const object = await resultat.json();
       return object
