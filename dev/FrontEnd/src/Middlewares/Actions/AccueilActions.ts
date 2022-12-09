@@ -336,6 +336,15 @@ export class Compagnie{
         return this._centres[this.selectionnee].a_modifier
     }
 
+    getCentreIndexById(id:number):number{
+        for (let i = 0; i < this._centres.length; i++){
+            if (this._centres[i].id == id){
+                return i
+            }
+        }
+
+    }
+
     
 }
 
