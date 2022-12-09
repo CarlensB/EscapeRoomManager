@@ -103,75 +103,67 @@ class AccueilStore {
     public initialiserinfos(){
             
         var session = localStorage.getItem('session');
-        console.log(localStorage)
-        console.log(session)
-        var myVar = localStorage.getItem('session');
-        if (myVar == null){
+        if (session == null){
             this.ActivePage = eActivePage.Login
         }
-      
-    //         fetch('http://127.0.0.1:5000/session',
-    //         {
-    //             method: 'POST',
-    //         })
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     if (response.length == undefined){
-    //     // this.ActivePage = eActivePage.Login
-    //     console.log(response)
-    //     }
-    //     else{
-    //         console.log(response)
-    //     //     this._id_emp = response[1]["id"]
-    //     //     this._id_compagnie = response[1]["id_compagnie"]
-    //     //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
-    //     //     this._courriel = response[1]["courriel"]
-    //     //     this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
-    //     //     this.initialiserCentres(response[0])
-
-    //     }
-    //   })
-          
-
-          
-    }
-
-    initialiserSalles(){
-        let centres = this.getCentres()
-        for (let i = 0; i< centres.length; i++)
-        try {
-            let formData = new FormData();
-            formData.append("id", centres[i].id.toString());
-            fetch('http://127.0.0.1:5000/selectionner_all/salle',
+        else{
+            let var_session = session.split(",")
+            this.token = var_session[3]
+            this._id_compagnie = parseInt(var_session[4])
+            this._niveau_acces = parseInt(var_session[5])
+            fetch('http://127.0.0.1:5000/api/compagnie_info/'+this._id_compagnie.toString(),
             {
                 method: 'POST',
-                body: formData
             })
       .then(response => response.json())
       .then(response => {
-        if (response.length > 0){
-            for (let j = 0; j< response.length; j++){
-                let salleInfos = new SalleInfos()
-                salleInfos.id = response[j][0]
-                salleInfos.nom = response[j][1]
-                salleInfos.description = response[j][3]
-                salleInfos.nbJrMax = response[j][5]
-                salleInfos.prix = response[j][6]
-                response[j][7] == 1 ? salleInfos.publique = true : false
-                centres[i].ajouterSalle(salleInfos, [])
-            }
-        }
+       
+            console.log(response)
+            this.initialiserCentres(response["centres"])
+            this.initialiserSalles(response["salles"])
+            this.initialiserHoraires(response["horaires"])
+        //     this._id_emp = response[1]["id"]
+        //     this._id_compagnie = response[1]["id_compagnie"]
+        //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
+        //     this._courriel = response[1]["courriel"]
+        //     this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
+        //     this.initialiserCentres(response[0])
         
-
       })
-          } catch (e) {
-              console.log("Aucune Salle")
-              
-          }
+    }
 
-          
           
     }
+
+    initialiserHoraires(horaires){
+        for (let j = 0; j< horaires.length; j++){
+        let id_salle = horaires[j][0]
+        let hr_debut = horaires[j][2]
+        let hr_fin = horaires[j][3]
+        }
+        
+    }
+
+    initialiserSalles(salles){
+        let centres = this.getCentres()
+
+            for (let j = 0; j< salles.length; j++){
+                let salleInfos = new SalleInfos()
+                salleInfos.id = salles[j][0]
+                salleInfos.nom = salles[j][1]
+                salleInfos.description = salles[j][2]
+                salleInfos.description = salles[j][3]
+                salleInfos.nbJrMax = salles[j][5]
+                salleInfos.prix = salles[j][6]
+                salles[j][7] == 1 ? salleInfos.publique = true : false
+
+                let centre_id = salles[j][9]
+                let index = this._compagnie.getCentreIndexById(centre_id)
+
+                centres[index].ajouterSalle(salleInfos, [])
+            
+    }
+}
 
 
     private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){
@@ -201,7 +193,6 @@ class AccueilStore {
 
     private initialiserCentres(centres){
         for (let i = 0; i< centres.length; i++){
-            this._id_compagnie = centres[i][2]
             let centreinfos = new newCentreInfos()
             centreinfos.nom = centres[i][1]
             centreinfos.id = centres[i][0]
@@ -209,10 +200,10 @@ class AccueilStore {
             centreinfos.ville = centres[i][4]
             centreinfos.pays = centres[i][5]
             centreinfos.code_postal = centres[i][6]
-            centres[i][4] == "ville" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
+            centreinfos.ville == "ville" && centreinfos.adresse == "*** rue" ? centreinfos.a_modifier = true : centreinfos.a_modifier = false
             this._compagnie.ajouterCentre(centreinfos)
         }
-        this.initialiserSalles()
+        
     }
     
     
