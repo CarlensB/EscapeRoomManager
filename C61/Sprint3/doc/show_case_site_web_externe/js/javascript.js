@@ -180,7 +180,10 @@ const salleFactory = (salleInfo) =>{
     return salleListe
 }
 
-const add_reservation = (reservation) =>{
+const addReservation = () =>{
+
+    reservation = null
+    // batir reservation
     
     formData = new FormData()
     formData.append("reservation", reservation)
