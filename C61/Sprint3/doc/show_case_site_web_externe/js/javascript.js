@@ -141,9 +141,9 @@ const get_compagnie_info = (id_compagnie) =>{
 const reservationFactory = (listHoraires, originSalles, listeSalles, listeCentres) =>{
     let reservationListe = []
     for (const h in listHoraires){
-        let nom_salle = listHoraires[h][0]
-        let heure_debut = listHoraires[h][1]
-        let heure_fin = listHoraires[h][2]
+        let nom_salle = listHoraires[h][1]
+        let heure_debut = listHoraires[h][2]
+        let heure_fin = listHoraires[h][3]
         const found = originSalles.find(element => element[1] == nom_salle)
         let centreNom = found[8]
         const centre = listeCentres.find(element => element["nom"] == centreNom)
