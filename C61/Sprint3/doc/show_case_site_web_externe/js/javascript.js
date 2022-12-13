@@ -203,16 +203,20 @@ const addReservation = () =>{
 const afficherBoiteReservation = (div) =>{
     boiteInfo = document.querySelector(".boiteReservation")
 
-    nbParticipantDiv = document.querySelector(".nbParticipant")
-    prixDiv = document.querySelector(".prix")
-    heureResaDiv = document.querySelector(".infoHoraire")
-
-    valeurParticipant = nbParticipantDiv.innerHTML
+    
+    valeurParticipant = document.querySelector(".nbParticipant").innerHTML.split(" ")
     valeurPrix = div.children[2].textContent
     valeurHeureDebut = div.children[0].textContent
     valeurHeureFin = parseInt(div.children[0].textContent.split("h")[0]) + 1 + 'h' + div.children[0].textContent.split("h")[1] // changer 1 pour une variable de durée
 
-    console.log(valeurParticipant, valeurPrix, valeurHeureDebut, valeurHeureFin)
+    console.log(valeurParticipant)
+
+    
+    document.querySelector(".prix").innerHTML = parseInt(valeurPrix.split("$")[0]) * parseInt(valeurParticipant[5]) + "$"
+    document.querySelector(".infoHoraire").innerHTML = valeurHeureDebut + "-" + valeurHeureFin
+
+
+    //console.log(valeurParticipant, valeurPrix, valeurHeureDebut, valeurHeureFin)
 
     boiteInfo.style.display = "block"
 
