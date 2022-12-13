@@ -105,37 +105,68 @@ const get_compagnie_info = (id_compagnie) =>{
         for (const i in 4){
             console.log(i)
         }
-
-        document.querySelector(".btnGauche").style.cursor = "pointer"
-        document.querySelector(".btnDroit").style.cursor = "pointer"
-        btnG = document.querySelector(".btnGauche")
-        btnD = document.querySelector(".btnDroit")
         
-        btnG.onclick = () =>{
-            OnClickBtn(btnG, listeSalles)
+        let listeBtnGauche = document.querySelectorAll(".btnGauche")
+        let listeBtnDroit = document.querySelectorAll(".btnDroit")
+        for (const i in listeBtnGauche){
+            try{
+                let liste = []
+                listeBtnGauche[i].style.cursor = "pointer"
+                if (listeBtnGauche[i].classList.contains("btnCentre")){
+                    liste = listeCentres
+                    }
+                else if(listeBtnGauche[i].classList.contains("btnSalle")){
+                    liste = listeSalles
+                }
 
-            enfant = document.querySelector(".reservationFrame").children
-            for (const i in enfant){
-                if (enfant[i].style.display != 'None'){
-                    classe = "." + enfant[i].classList[0]
-                    break
+                listeBtnGauche[i].onclick = () =>{
+                    OnClickBtn(listeBtnGauche[i], liste)
+
+                    enfant = document.querySelector(".reservationFrame").children
+                    for (const i in enfant){
+                        if (enfant[i].style.display != 'None'){
+                            classe = "." + enfant[i].classList[0]
+                            break
+                        }
+                    }
+                    cacherReservation(classe)
+                    affichageReservation()
                 }
             }
-            cacherReservation(classe)
-            affichageReservation()
+            catch{
+                console.log("fin des divs")
+            }
+                
         }
-        
-        btnD.onclick = () => {
-            OnClickBtn(btnD, listeSalles)
-            enfant = document.querySelector(".reservationFrame").children
-            for (const i in enfant){
-                if (enfant[i].style.display != 'None'){
-                    classe = "." + enfant[i].classList[0]
-                    break
+
+        for (const i in listeBtnDroit){
+            try{
+                listeBtnDroit[i].style.cursor = "pointer"
+                let liste = []
+                if (listeBtnDroit[i].classList.contains("btnCentre")){
+                    liste = listeCentres
+                    }
+                else if(listeBtnDroit[i].classList.contains("btnSalle")){
+                    liste = listeSalles
+                }
+
+                listeBtnDroit[i].onclick = () =>{
+                    OnClickBtn(listeBtnDroit[i], liste)
+
+                    enfant = document.querySelector(".reservationFrame").children
+                    for (const i in enfant){
+                        if (enfant[i].style.display != 'None'){
+                            classe = "." + enfant[i].classList[0]
+                            break
+                        }
+                    }
+                    cacherReservation(classe)
+                    affichageReservation()
                 }
             }
-            cacherReservation(classe)
-            affichageReservation()
+            catch{
+                console.log("fin des divs")
+            }
         }
     })
 }
@@ -203,16 +234,20 @@ const addReservation = () =>{
 const afficherBoiteReservation = (div) =>{
     boiteInfo = document.querySelector(".boiteReservation")
 
-    nbParticipantDiv = document.querySelector(".nbParticipant")
-    prixDiv = document.querySelector(".prix")
-    heureResaDiv = document.querySelector(".infoHoraire")
-
-    valeurParticipant = nbParticipantDiv.innerHTML
+    
+    valeurParticipant = document.querySelector(".nbParticipant").innerHTML.split(" ")
     valeurPrix = div.children[2].textContent
     valeurHeureDebut = div.children[0].textContent
     valeurHeureFin = parseInt(div.children[0].textContent.split("h")[0]) + 1 + 'h' + div.children[0].textContent.split("h")[1] // changer 1 pour une variable de durée
 
-    console.log(valeurParticipant, valeurPrix, valeurHeureDebut, valeurHeureFin)
+    console.log(valeurParticipant)
+
+    
+    document.querySelector(".prix").innerHTML = parseInt(valeurPrix.split("$")[0]) * parseInt(valeurParticipant[5]) + "$"
+    document.querySelector(".infoHoraire").innerHTML = valeurHeureDebut + "-" + valeurHeureFin
+
+
+    //console.log(valeurParticipant, valeurPrix, valeurHeureDebut, valeurHeureFin)
 
     boiteInfo.style.display = "block"
 
