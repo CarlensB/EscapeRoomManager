@@ -30,7 +30,7 @@ dependance = ["bcrypt", "mysql-connector-python"]
 
 def main():
     #définition du contorleur
-    #DependancyInstall(dependance)
+    DependancyInstall(*dependance)
     gs = GestionSysteme()
 
     #Test
