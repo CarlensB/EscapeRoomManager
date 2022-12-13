@@ -63,13 +63,13 @@ const get_compagnie_info = (id_compagnie) =>{
         // batir les div de réservations
         for (const i in listeReservation){
             for (const j in listeReservation[i]){
-                nom = listeReservation[i][j].salle.nom
-                centre = listeReservation[i][j].centre.nom
-                classe = nom+centre
-                divResa = document.createElement("div")
-                divHD = document.createElement("div")
-                particpant = document.createElement("div")
-                prix = document.createElement("div")
+                let nom = listeReservation[i][j].salle.nom
+                let centre = listeReservation[i][j].centre.nom
+                let classe = nom+centre
+                let divResa = document.createElement("div")
+                let divHD = document.createElement("div")
+                let particpant = document.createElement("div")
+                let prix = document.createElement("div")
 
                 
                 divResa.classList.add(classe)
@@ -82,16 +82,18 @@ const get_compagnie_info = (id_compagnie) =>{
                 particpant.innerHTML = listeReservation[i][j]["salle"]["particpant"]
                 prix.innerHTML = listeReservation[i][j]["salle"]["prix_unitaire"] + "$"
 
-                //Rendre nos div clickable
-                divResa.onclick = () =>{
-                    afficherBoiteReservation()
-                }
+                
 
                 divResa.append(divHD)
                 divResa.append(particpant)
                 divResa.append(prix)
                 
                 divResa.style.display = "None"
+
+                //Rendre nos div clickable
+                divResa.onclick = () =>{
+                    afficherBoiteReservation(divResa)
+                }
                 document.querySelector(".reservationFrame").append(divResa)
             }
         }
@@ -198,20 +200,21 @@ const addReservation = () =>{
     })
 }
 
-const afficherBoiteReservation = () =>{
+const afficherBoiteReservation = (div) =>{
+    boiteInfo = document.querySelector(".boiteReservation")
 
-    boitePrincipale = document.createElement("div")
-    divInfo = document.createElement("div")
-    divUpperInfo = document.createElement("div")
-    divDownInfo = document.createElement("div")
-    divSalle = document.createElement("div")
-    btnReserver = document.createElement("button")
+    nbParticipantDiv = document.querySelector(".nbParticipant")
+    prixDiv = document.querySelector(".prix")
+    heureResaDiv = document.querySelector(".infoHoraire")
 
-    inputNom = document.createElement("input")
-    inputPrenom = document.createElement("input")
-    inputEmail = document.createElement("input")
-    inputConfirmEmail = document.createElement("input")
-    inpuTel = document.createElement("input")
+    valeurParticipant = nbParticipantDiv.innerHTML
+    valeurPrix = div.children[2].textContent
+    valeurHeureDebut = div.children[0].textContent
+    valeurHeureFin = parseInt(div.children[0].textContent.split("h")[0]) + 1 + 'h' + div.children[0].textContent.split("h")[1] // changer 1 pour une variable de durée
+
+    console.log(valeurParticipant, valeurPrix, valeurHeureDebut, valeurHeureFin)
+
+    boiteInfo.style.display = "block"
 
 }
 

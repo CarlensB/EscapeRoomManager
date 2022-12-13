@@ -102,19 +102,11 @@ Boite pour confirmer une réservation
 */
 
 .boiteReservation{
-    display: block;
+    display: none;
     background-color:darkseagreen;
     width: 80%;
     margin: 0% auto;
-}
-
-.titreSalle{
-    display: block;
-    background-color: white;
-    color: green;
-    text-align: end;
-    width: 20%;
-    margin: 0% 80% 
+    text-align: center;
 }
 
 .boiteReservationInfo{
@@ -125,29 +117,45 @@ Boite pour confirmer une réservation
 .boiteInfoUpper{
     display: flex;
     flex-direction: column;
+    text-align: left;
+    width: 75%;
+    margin: 0% auto;
 }
 .boiteInfoDown{
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
+    flex-wrap: wrap;
+    width: 25%;
+    margin: 0% auto;
 }
 
 .participant{
     background-color: red;
     display: flex;
     flex-direction: row;
+    align-content: space-around;
 }
 
 .nbParticipant{
-    width: 50%;
+    width: 22%;
+    margin-right: 1%;
+    background-color: green;
 }
 
 .buttonParticpant{
+    width: 10%;
+}
+
+.titreReservation{
     width: 50%;
 }
 
 .inputReservation{
     width: 50%;
+}
+
+.btnReservation{
+    width: 30%;
 }
 
 
