@@ -1,5 +1,4 @@
 from serveur_api import Serveur
-from modele.Modele import GestionSysteme
 from dependancy import DependancyInstall
 
 '''
@@ -30,7 +29,9 @@ dependance = ["bcrypt", "mysql-connector-python"]
 
 def main():
     #définition du contorleur
-    DependancyInstall(*dependance)
+    di = DependancyInstall(*dependance)
+    di.install_stuff()
+    from modele.Modele import GestionSysteme
     gs = GestionSysteme()
 
     #Test

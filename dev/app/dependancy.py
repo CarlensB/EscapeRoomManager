@@ -7,10 +7,7 @@ class DependancyInstall:
         self.__dependancy =  [stuff for stuff in args]
         self.__arguments = ["python", "pip.exe", "install"]
         
-    def __call__(self, *args: any, **kwds: any) -> any:
-        print(self.__install_stuff(*args))
-        
-    def __install_stuff(self, *args):
+    def install_stuff(self):
         for d in self.__dependancy:
             try:
                 sub.run(["C:\Python310\Scripts\pip.exe",  self.__arguments[2], d], check=True, capture_output=True)
