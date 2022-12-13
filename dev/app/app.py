@@ -28,7 +28,6 @@ dependance = ["bcrypt", "mysql-connector-python"]
 
 
 def main():
-    #définition du contorleur
     di = DependancyInstall(*dependance)
     di.install_stuff()
     from modele.Modele import GestionSysteme
