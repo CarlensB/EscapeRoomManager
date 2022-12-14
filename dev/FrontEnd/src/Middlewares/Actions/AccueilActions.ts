@@ -342,9 +342,17 @@ export class Compagnie{
                 return i
             }
         }
-
     }
 
+    getSalleById(id:number):Salle{
+        for (let i = 0; i < this._centres.length; i++){
+            let salles = this._centres[i].salles
+            for (let j = 0; j < salles.length; j++){
+                if (salles[j].id == id)
+                return salles[j]
+            }
+        }
+    }
     
 }
 

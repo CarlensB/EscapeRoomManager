@@ -122,10 +122,9 @@ class AccueilStore {
             this.initialiserCentres(response["centres"])
             this.initialiserSalles(response["salles"])
             this.initialiserHoraires(response["horaires"])
-            //TODO appeller response["id"] et ..compagnie
-        //     this._id_emp = response[1]["id"]
-        //     this._id_compagnie = response[1]["id_compagnie"]
-        //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
+            this._id_compagnie = response["index"]
+            this._nom_complet = response["compagnie"]
+
       })
     }
 
@@ -133,10 +132,16 @@ class AccueilStore {
     }
 
     initialiserHoraires(horaires){
+        console.log(horaires)
         for (let j = 0; j< horaires.length; j++){
-        let id_salle = horaires[j][0]
-        let hr_debut = horaires[j][2]
-        let hr_fin = horaires[j][3]
+            let id_salle = horaires[j][0][0]
+            let salle = this._compagnie.getSalleById(id_salle)
+            for (let i = 0; i< horaires[j].length; i++){
+            
+                let hr_debut = horaires[j][i][2]
+                let hr_fin = horaires[j][i][3]
+                salle.ajouterHoraire([hr_debut, hr_fin])
+            }
         }
         
     }
