@@ -1,5 +1,6 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 from datetime import datetime
+from http import server
 import json
 from modele.Liste_chainee import DoubleLinkedList
 from modele.Modele import Usager
@@ -30,10 +31,7 @@ class Serveur():
         '''
         if isinstance(obj, datetime):
             return obj.isoformat()
-        
         raise TypeError ("Type %s not seriazible" %type(obj))
-        
-
 
     # Pour la connexion et l'enregistrement de nouvelle compagnie ou employe
 
@@ -84,7 +82,7 @@ class Serveur():
     @__app.route('/session', methods=['GET', 'POST'])
     def session():
         if request.method == 'POST':
-            return session
+            return json.dumps(Serveur.__controleur.utilisateurs, default=Serveur.rendre_json_compatible)
     
     # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
     @__app.route('/id_connection')

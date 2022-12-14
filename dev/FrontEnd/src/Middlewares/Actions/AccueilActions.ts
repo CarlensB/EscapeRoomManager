@@ -6,19 +6,12 @@ class Horaire{
     constructor(
         private _hrDebut: string = "",
         private _hrFin: string = "",
-        private _id: number = 9999,
-        
+   
         )
         {
             makeAutoObservable(this);
         }
 
-        public get id(): number {
-            return this._id;
-        }
-        public set id(value: number) {
-            this._id = value;
-        }
         public get hrFin(): string {
             return this._hrFin;
         }
@@ -43,7 +36,7 @@ class Salle{
         private _centre: string = "NomCentre",
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
-        private _id: number = 999999,
+        private _id: number = -1,
         private _listeHoraire = [] // TODO getter setter
         )
         {
@@ -342,9 +335,17 @@ export class Compagnie{
                 return i
             }
         }
-
     }
 
+    getSalleById(id:number):Salle{
+        for (let i = 0; i < this._centres.length; i++){
+            let salles = this._centres[i].salles
+            for (let j = 0; j < salles.length; j++){
+                if (salles[j].id == id)
+                return salles[j]
+            }
+        }
+    }
     
 }
 
