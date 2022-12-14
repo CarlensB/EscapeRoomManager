@@ -462,8 +462,8 @@ class GestionSysteme:
         
         compagnie = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(int(id_compagnie),)])
         index, nom = compagnie[0][:2]
-        info_compagnie[nom] = nom
-        info_compagnie[index] = index
+        info_compagnie['compangie'] = nom
+        info_compagnie['index'] = index
         
         centres = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE, [(int(id_compagnie),)])
         info_compagnie["centres"] = centres
