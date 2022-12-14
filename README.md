@@ -78,14 +78,21 @@ Soyez conscient qu'un mot de passe doit correspondre à une liste de critère. S
 - un chiffre au minimum;
 - un caractère spécial au minimum;
 
-Expliquer comment utiliser le projet.
-Capture d'écran si possible
+Une fois que vous avez une compagnie de créer, il vous sera possible de modifier les informations relative à votre premier centre. Il vous sera aussi possible de rajouter des salles ainsi qu'un horaire à ceux-ci.
+
+Sur la page montrant les plages horaires des salles, il est possible d'ajouter ou de modifier une réservation en plus de voir celle qui sont réservé et celle qui sont libre.
+
+Dans gérer succursale, il vous sera possible d'ajouter une succursale au besoin ou une nouvelle salle. Pour une nouvelle salle, vous aurez d'autres onglet à remplir.
+
+![Image création de salle](/C61/Sprint3/doc/SalleMdoif.PNG)
+
+Il est également possible de créer un horaire automatiquement à une salle et le modifier si besoin.
+
+Sur la page rapport vous pourrez consulter les statistiques sur les performances de vos salles.
+
 
 ## Références
 Indiquer les références et sources
-
-## Contact
-(optionnelle)
 
 ## Remerciement
 Nous tenons à remercier Pierre-Paul Monty et Frédéric Thériault qui ont généreusement répondu à nos questions tout au long du projet synthèse. Grâce à eux nous avons pu relever le niveau de notre application sur plusieurs niveaux.
