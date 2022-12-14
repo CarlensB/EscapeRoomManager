@@ -1,6 +1,8 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 from datetime import datetime
 import json
+from modele.Liste_chainee import DoubleLinkedList
+from modele.Modele import Usager
 
 from flask_utils import HOTE, PORT
 from flask import Flask, request, render_template, session, redirect
@@ -28,6 +30,11 @@ class Serveur():
         '''
         if isinstance(obj, datetime):
             return obj.isoformat()
+        elif isinstance(obj, DoubleLinkedList):
+            return obj.isformat()
+        elif isinstance(obj, Usager):
+            return obj.isformat()
+        
         raise TypeError ("Type %s not seriazible" %type(obj))
         
 
@@ -70,9 +77,10 @@ class Serveur():
 
         if request.method == 'POST':
             info = request.form.to_dict()
-            token = session["token"] #info[0]
+            token = info["token"] #info[0]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
-            return json.dumps(result, default=Serveur.rendre_json_compatible)
+            print(result)
+            return json.dumps(result.__dict__, default=Serveur.rendre_json_compatible)
         else:
             return json.dumps(Serveur.__GET_MSG)
 
