@@ -411,7 +411,7 @@ class GestionSysteme:
             else:
                 result = self.enregistrer(table, info)
 
-            return result
+            return result if table != "reservation" else result.to_json()
         
         elif token is None and table == "reservation":
             liste = []
