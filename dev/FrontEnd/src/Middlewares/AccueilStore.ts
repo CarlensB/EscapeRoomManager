@@ -74,7 +74,7 @@ class AccueilStore {
     private _id_compagnie: number = 0
     private _nom_complet: string = ""
     private _token: string = "non"
-    private _selected_horaire_id: number = -1;
+    private _selected_horaire = null;
     
     private _niveau_acces: number = 1
     private _id_emp: number = 0
@@ -95,11 +95,11 @@ class AccueilStore {
         return this._token;
     }
 
-    public get selected_horaire_id(): number {
-        return this._selected_horaire_id;
+    public get selected_horaire() {
+        return this._selected_horaire;
     }
-    public set selected_horaire_id(value: number) {
-        this._selected_horaire_id = value;
+    public set selected_horaire(value) {
+        this._selected_horaire = value;
     }
 
     
@@ -149,16 +149,16 @@ class AccueilStore {
 
 })
 
-fetch('http://127.0.0.1:5000/session',
-            {
-                method: 'POST',
-            })
-            .then(response => response.json())
-            .then(response => {
+// fetch('http://127.0.0.1:5000/session',
+//             {
+//                 method: 'POST',
+//             })
+//             .then(response => response.json())
+//             .then(response => {
         
-            console.log(response)
+//             console.log(response)
 
-})
+// })
 
 // fetch('http://127.0.0.1:5000/selectionner_all/horaire',
 //             {
@@ -220,11 +220,11 @@ fetch('http://127.0.0.1:5000/session',
         
     }
 
-    matchReservationId(id_horaire:number){
-        if (id_horaire in this.reservations){
-            return this.reservations[id_horaire]
-        }
-        else return null
+    matchReservation(horaire){
+        // if (id_horaire in this.reservations){
+        //     return this.reservations[id_horaire]
+        // }
+        // else return null
     }
 
 

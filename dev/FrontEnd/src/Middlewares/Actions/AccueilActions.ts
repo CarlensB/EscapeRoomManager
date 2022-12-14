@@ -6,19 +6,12 @@ class Horaire{
     constructor(
         private _hrDebut: string = "",
         private _hrFin: string = "",
-        private _id: number = 99999,
-        
+   
         )
         {
             makeAutoObservable(this);
         }
 
-        public get id(): number {
-            return this._id;
-        }
-        public set id(value: number) {
-            this._id = value;
-        }
         public get hrFin(): string {
             return this._hrFin;
         }
@@ -99,12 +92,10 @@ class Salle{
         this._nom = value;
     }
 
-    ajouterHoraire(infos:string[], id=null){
+    ajouterHoraire(infos:string[]){
         let horaire = new Horaire()
         horaire.hrDebut = infos[0]
         horaire.hrFin = infos[1]
-        if (id != null)
-        horaire.id = id
         this._listeHoraire.push(horaire)
     }
 
