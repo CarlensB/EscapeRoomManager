@@ -238,7 +238,7 @@ class Enregistrement:
 
     def __validation_mdp(self, mdp: str):
         # règle du mot de passe : 
-        # 12 caractère minimum, une majuscule, une minuscule, un chiffre, un caractère spécial
+        # 12 caractères minimums, une majuscule, une minuscule, un chiffre, un caractère spécial
         pattern = [(self.__MESSAGE_MDP_CHIFFRE, r'\d+'),
                    (self.__MESSAGE_MDP_MAJ, r'[A-Z]+'),
                    (self.__MESSAGE_MDP_MIN, r'[a-z]+'),

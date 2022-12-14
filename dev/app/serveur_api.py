@@ -2,6 +2,8 @@
 from datetime import datetime
 from http import server
 import json
+from modele.Liste_chainee import DoubleLinkedList
+from modele.Modele import Usager
 
 from flask_utils import HOTE, PORT
 from flask import Flask, request, render_template, session, redirect
@@ -29,7 +31,14 @@ class Serveur():
         '''
         if isinstance(obj, datetime):
             return obj.isoformat()
-        #raise TypeError ("Type %s not seriazible" %type(obj))
+
+        elif isinstance(obj, DoubleLinkedList):
+            return obj.isformat()
+        elif isinstance(obj, Usager):
+            return obj.isformat()
+        
+        raise TypeError ("Type %s not seriazible" %type(obj))
+
         
 
 
@@ -74,7 +83,9 @@ class Serveur():
             token = info["token"] #info[0]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
             print(result)
+
             return json.dumps(result, default=Serveur.rendre_json_compatible)
+
         else:
             return json.dumps(Serveur.__GET_MSG)
 
