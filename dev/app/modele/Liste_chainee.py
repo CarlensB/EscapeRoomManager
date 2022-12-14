@@ -39,7 +39,7 @@ class DoubleLinkedList:
         
         def __repr__(self) -> str:
             return str(self.value)
-        
+
         # Source pour la fonction __eq__
         # Source : https://www.pythontutorial.net/python-oop/python-__eq__/
 
@@ -112,7 +112,7 @@ class DoubleLinkedList:
     
     def __bool__(self) -> bool:
         return not self.is_empty
-
+    
     @property
     def data_type(self):
         return self.__data_type
@@ -263,3 +263,9 @@ class DoubleLinkedList:
         search_node = first if last.value != data else last
         return search_node
    
+    def to_json(self):
+        json = {}
+        for idx, elem in enumerate(self):
+            json[idx] = elem
+        return json
+            

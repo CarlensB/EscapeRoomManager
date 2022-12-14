@@ -1,8 +1,6 @@
 body{
     background-image: url('./images/background1.jpg'); 
 }
-    
-
 
 .form{
     width: 400px;
@@ -19,7 +17,7 @@ body{
 }
 .form *{
     font-family: 'Poppins',sans-serif;
-    color: #000000;
+    color: white;
     letter-spacing: 0.5px;
     outline: none;
     border: none;
