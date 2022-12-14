@@ -122,13 +122,10 @@ class AccueilStore {
             this.initialiserCentres(response["centres"])
             this.initialiserSalles(response["salles"])
             this.initialiserHoraires(response["horaires"])
+            //TODO appeller response["id"] et ..compagnie
         //     this._id_emp = response[1]["id"]
         //     this._id_compagnie = response[1]["id_compagnie"]
         //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
-        //     this._courriel = response[1]["courriel"]
-        //     this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
-        //     this.initialiserCentres(response[0])
-        
       })
     }
 
@@ -161,7 +158,7 @@ class AccueilStore {
                 let index = this._compagnie.getCentreIndexById(centre_id)
 
                 centres[index].ajouterSalle(salleInfos, [])
-            
+                
     }
 }
 
