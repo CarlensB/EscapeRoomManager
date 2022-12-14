@@ -70,7 +70,7 @@ class Serveur():
 
         if request.method == 'POST':
             info = request.form.to_dict()
-            token = session["token"] #info[0]
+            token = info["token"] #info[0]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
             return json.dumps(result, default=Serveur.rendre_json_compatible)
         else:

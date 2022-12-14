@@ -72,11 +72,19 @@ class AccueilStore {
     private _newSalleInfos: SalleInfos = new SalleInfos()
     private _modSalleInfos: SalleInfos = new SalleInfos()
     private _id_compagnie: number = 0
+    private _nom_complet: string = ""
+    private _token: string = "non"
+    private _selected_horaire_id: number = -1;
+    
+    private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
-    private _nom_complet: string = ""
-    private _niveau_acces: number = 1
-    private _token: string = "non"
+    private _reservations:{} = {99999: ["ALLO"]};
+
+    public get reservations() {
+        return this._reservations;
+    }
+    
 
 
     public set token(value: string) {
@@ -87,17 +95,18 @@ class AccueilStore {
         return this._token;
     }
 
+    public get selected_horaire_id(): number {
+        return this._selected_horaire_id;
+    }
+    public set selected_horaire_id(value: number) {
+        this._selected_horaire_id = value;
+    }
+
     
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
-        this._compagnie = new Compagnie("Escaparium", []);
-        console.log(this.token)
-        
-
-
-        
-
+        this._compagnie = new Compagnie("Escaparium", []);   
     }
     
     public initialiserinfos(){
@@ -115,10 +124,9 @@ class AccueilStore {
             {
                 method: 'POST',
             })
-      .then(response => response.json())
-      .then(response => {
+            .then(response => response.json())
+            .then(response => {
        
-            console.log(response)
             this.initialiserCentres(response["centres"])
             this.initialiserSalles(response["salles"])
             this.initialiserHoraires(response["horaires"])
@@ -126,18 +134,48 @@ class AccueilStore {
             this._nom_complet = response["compagnie"]
 
       })
+            let formdata = new FormData()
+            formdata.append("token", this.token)
+            
+//             fetch('http://127.0.0.1:5000/selectionner_all/reservations',
+//             {
+//                 method: 'POST',
+//                 body: formdata
+//             })
+//             .then(response => response.json())
+//             .then(response => {
+        
+//             console.log(response)
+
+// })
+
+fetch('http://127.0.0.1:5000/selectionner_all/horaire',
+            {
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(response => {
+            console.log("oui")
+            console.log(response)
+
+})
+      
+
+
+
+
     }
 
           
     }
 
     initialiserHoraires(horaires){
-        console.log(horaires)
         for (let j = 0; j< horaires.length; j++){
             let id_salle = horaires[j][0][0]
             let salle = this._compagnie.getSalleById(id_salle)
             for (let i = 0; i< horaires[j].length; i++){
-            
+                console.log(horaires[j][i][1])
                 let hr_debut = horaires[j][i][2]
                 let hr_fin = horaires[j][i][3]
                 salle.ajouterHoraire([hr_debut, hr_fin])
@@ -166,6 +204,17 @@ class AccueilStore {
                 
     }
 }
+
+    initialiserReservations(){
+        
+    }
+
+    matchReservationId(id_horaire:number){
+        if (id_horaire in this.reservations){
+            return this.reservations[id_horaire]
+        }
+        else return null
+    }
 
 
     private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){

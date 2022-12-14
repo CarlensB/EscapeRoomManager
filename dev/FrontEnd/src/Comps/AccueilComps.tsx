@@ -137,7 +137,10 @@ const Salles = observer(() => {
                 arrayReservations.push(
                     React.createElement(
                         'div',
-                        {class:'reservation'},
+                        {class:'reservation', onClick: () => {
+                            accueilStore.selected_horaire_id = horaires[i].id
+                            accueilStore.ActivePage = eActivePage.CreateReservation
+                        }},
                         message)
                     )
                 }
