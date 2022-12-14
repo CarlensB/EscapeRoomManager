@@ -79,7 +79,7 @@ class AccueilStore {
     private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
-    private _reservations:{} = {1: ["ALLO"]};
+    public _reservations:{} = {};
 
     public get reservations() {
         return this._reservations;
@@ -133,7 +133,6 @@ class AccueilStore {
             this._id_compagnie = response["index"]
             this._nom_complet = response["compagnie"]
 
-      })
             let formdata = new FormData()
             formdata.append("token", this.token)
             
@@ -145,35 +144,13 @@ class AccueilStore {
             .then(response => response.json())
             .then(response => {
         
-            console.log(response)
+            this.initialiserReservations(response)
+            // console.log(response[0]["centre"])
 
 })
 
-// fetch('http://127.0.0.1:5000/session',
-//             {
-//                 method: 'POST',
-//             })
-//             .then(response => response.json())
-//             .then(response => {
-        
-//             console.log(response)
-
-// })
-
-// fetch('http://127.0.0.1:5000/selectionner_all/horaire',
-//             {
-//                 method: 'POST',
-//                 body: formdata
-//             })
-//             .then(response => response.json())
-//             .then(response => {
-//             console.log("oui")
-//             console.log(response)
-
-// })
-      
-
-
+      })
+            
 
 
     }
@@ -186,10 +163,10 @@ class AccueilStore {
             let id_salle = horaires[j][0][0]
             let salle = this._compagnie.getSalleById(id_salle)
             for (let i = 0; i< horaires[j].length; i++){
-                console.log(horaires[j][i][1])
+               let nomsalle = horaires[j][i][1]
                 let hr_debut = horaires[j][i][2]
                 let hr_fin = horaires[j][i][3]
-                salle.ajouterHoraire([hr_debut, hr_fin])
+                salle.ajouterHoraire([nomsalle, hr_debut, hr_fin])
             }
         }
         
@@ -216,8 +193,19 @@ class AccueilStore {
     }
 }
 
-    initialiserReservations(){
-        
+    initialiserReservations(reservations){
+        console.log(reservations)  
+        for (let i = 0; i < Object.keys(reservations).length; i++)
+        {
+            let date = reservations[i]["date"]
+            date = date.split('T')
+            let key = (date[0] + " " + date[1] + " " + reservations[i]["centre"]).toString()
+            this._reservations[key] = [reservations[i]]
+            console.log(key)
+        }
+        let a = this._reservations["2022-12-03 11:30:00 Laval"]
+
+        console.log("les reservations: " + a["centre"])
     }
 
     matchReservation(horaire){
@@ -228,7 +216,7 @@ class AccueilStore {
     }
 
 
-    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string){
+    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string, nom_salle:string){
             let hr = hr_debut.split(":")
             let hr_debut_min = parseInt(hr[0])*60 + parseInt(hr[1])
             hr = hr_fin.split(":")
@@ -243,9 +231,10 @@ class AccueilStore {
 
             for (let horaire_debut = hr_debut_min; horaire_debut<= (hr_fin_min - intervalle_min); horaire_debut += intervalle_min){
                 let horaire = []
-                horaire[0] = Math.floor(horaire_debut / 60).toString() + ":" + (horaire_debut%60).toString()
+                horaire[0] = nom_salle
+                horaire[1] = Math.floor(horaire_debut / 60).toString() + ":" + (horaire_debut%60).toString()
                 let horaire_fin = horaire_debut + intervalle_min
-                horaire[1] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
+                horaire[2] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
                 array_horaires.push(horaire)
             }
             return array_horaires
@@ -315,6 +304,7 @@ class AccueilStore {
         if (valide1 && valide2 && valide3)
         {
             let formData = new FormData();
+            formData.append("token", this.token)
             formData.append("nom", this._modCentreInfos.nom);
             formData.append("compagnie", this._id_compagnie.toString());
             formData.append("adresse", this._modCentreInfos.adresse);
@@ -383,6 +373,7 @@ class AccueilStore {
         if (valide1 && valide2 && valide3)
         {
             let formData = new FormData();
+            formData.append("token", this.token)
             formData.append("nom", this._newCentreInfos.nom);
             formData.append("compagnie", this._id_compagnie.toString());
             formData.append("adresse", this._newCentreInfos.adresse);
@@ -416,6 +407,7 @@ class AccueilStore {
         let id = this._compagnie.getCurrentCentreID()
 
         let formData = new FormData();
+        formData.append("token", this.token)
         formData.append("id", id.toString());
         try {
             fetch('http://127.0.0.1:5000/supprimer/centre',
@@ -529,6 +521,7 @@ class AccueilStore {
         if (valide)
         {
             let formData = new FormData();
+            formData.append("token", this.token)
             formData.append("nom", this._newSalleInfos.nom);
             formData.append("adresse", this._newSalleInfos.description);
             formData.append("centre", this._compagnie.getCurrentCentreID().toString());
@@ -546,7 +539,7 @@ class AccueilStore {
           .then(response => {
               
             this._newSalleInfos.id = response[0][0]         
-            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle)
+            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle, this._newSalleInfos.nom)
             this._compagnie.ajouterSalle(this._newSalleInfos, list_horaire)
 
 
@@ -566,6 +559,7 @@ class AccueilStore {
         {
             this._modSalleInfos.id = this.getCurrentSalle().id
             let formData = new FormData();
+            formData.append("token", this.token)
             formData.append("nom", this._modSalleInfos.nom);
             formData.append("description", this._modSalleInfos.description);
             formData.append("centre", this.getCentres()[this.getSelectionCentre()].id.toString());
@@ -604,6 +598,7 @@ class AccueilStore {
 
         let formData = new FormData();
         let id = this.getCurrentSalle().id.toString()
+        formData.append("token", this.token)
         formData.append("id", this.getCurrentSalle().id.toString());
         try {
             fetch('http://127.0.0.1:5000/supprimer/salle',
