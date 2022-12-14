@@ -79,7 +79,7 @@ class AccueilStore {
     private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
-    private _reservations:{} = {99999: ["ALLO"]};
+    private _reservations:{} = {1: ["ALLO"]};
 
     public get reservations() {
         return this._reservations;
@@ -137,29 +137,40 @@ class AccueilStore {
             let formdata = new FormData()
             formdata.append("token", this.token)
             
-//             fetch('http://127.0.0.1:5000/selectionner_all/reservations',
-//             {
-//                 method: 'POST',
-//                 body: formdata
-//             })
-//             .then(response => response.json())
-//             .then(response => {
-        
-//             console.log(response)
-
-// })
-
-fetch('http://127.0.0.1:5000/selectionner_all/horaire',
+            fetch('http://127.0.0.1:5000/selectionner_all/reservation',
             {
                 method: 'POST',
                 body: formdata
             })
             .then(response => response.json())
             .then(response => {
-            console.log("oui")
+        
             console.log(response)
 
 })
+
+fetch('http://127.0.0.1:5000/session',
+            {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(response => {
+        
+            console.log(response)
+
+})
+
+// fetch('http://127.0.0.1:5000/selectionner_all/horaire',
+//             {
+//                 method: 'POST',
+//                 body: formdata
+//             })
+//             .then(response => response.json())
+//             .then(response => {
+//             console.log("oui")
+//             console.log(response)
+
+// })
       
 
 
