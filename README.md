@@ -64,7 +64,19 @@ Ensuite, vous pouvez aller vous connecter sur notre site à cette adresse [Page 
 
 Vous pouvez utiliser le compte par défaut de la compagnie test pour vous connecter soit bonjour@courriel.com et le mot de passe suivant testAndroid18!@.
 
-Pour créer une nouvelle compagnie appuyer sur créer un compte. On vous demandera les informations suivantes
+Pour créer une nouvelle compagnie appuyer sur créer un compte. On vous demandera les informations suivantes :
+- Le courriel de la compagnie;
+- Le nom de la compagnie;
+- Le mot de passe de la compagnie
+
+![Page Register](/C61/Sprint3/doc/register.PNG)
+
+Soyez conscient qu'un mot de passe doit correspondre à une liste de critère. Soit les suivants:
+- 12 caractères minimums;
+- une majuscule au minimum;
+- une minuscule au minimum;
+- un chiffre au minimum;
+- un caractère spécial au minimum;
 
 Expliquer comment utiliser le projet.
 Capture d'écran si possible

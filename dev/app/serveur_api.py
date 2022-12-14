@@ -33,9 +33,6 @@ class Serveur():
             return obj.isoformat()
         raise TypeError ("Type %s not seriazible" %type(obj))
 
-        
-
-
     # Pour la connexion et l'enregistrement de nouvelle compagnie ou employe
 
     @__app.route('/validation', methods=['GET', 'POST'])
@@ -77,9 +74,7 @@ class Serveur():
             token = info["token"] #info[0]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
             print(result)
-
-            return json.dumps(result.__dict__) #, default=Serveur.rendre_json_compatible)
-
+            return json.dumps(result, default=Serveur.rendre_json_compatible)
         else:
             return json.dumps(Serveur.__GET_MSG)
 

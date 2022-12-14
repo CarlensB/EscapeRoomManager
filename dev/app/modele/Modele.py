@@ -164,7 +164,8 @@ class Usager:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
-                self.__session_info["reservations"].add(Reservation(*e[:-3]))
+                reservation = Reservation(*e[:-3])
+                self.__session_info["reservations"].add(reservation.__dict__)
         except:
             msg_erreur.append("Aucune réservation répertorié")
             
@@ -425,7 +426,7 @@ class GestionSysteme:
         key = table + 's' if table != 'usager' else 'usager'
         for elem in usager.session_info[key]:
             if elem.id == info[0][0]:
-                return elem.__dict__
+                return elem
 
     def selectionner_tout(self, usager: Usager, table: str, info: list) -> list:
         key = table + 's' if table != 'usager' else 'usager'
