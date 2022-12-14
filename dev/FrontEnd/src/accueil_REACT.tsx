@@ -7,6 +7,7 @@ import { AppAccueil} from './Comps/AccueilComps'
 import accueilStore from "./Middlewares/AccueilStore"
 import { AppCreerSucursalle } from './Comps/CreerCentreComp';
 import { AppCreerSalle } from './Comps/CreerSallesComp';
+import { AppGererReservation } from './Comps/GererReservation';
 
 accueilStore.initialiserinfos()
 
@@ -22,7 +23,8 @@ const AccueilPageComp = observer(() => {
           React.createElement(Menu),
           React.createElement((accueilStore.ActivePage == eActivePage.Accueil) ? AppAccueil :
                                 (accueilStore.ActivePage == eActivePage.CreateSalle) ? AppCreerSalle :
-                            AppCreerSucursalle)
+                                (accueilStore.ActivePage == eActivePage.CreateCentre) ? AppCreerSucursalle :
+                                AppGererReservation)
           
       )
   ) 

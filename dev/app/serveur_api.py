@@ -1,5 +1,6 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 from datetime import datetime
+from http import server
 import json
 from modele.Liste_chainee import DoubleLinkedList
 from modele.Modele import Usager
@@ -30,12 +31,14 @@ class Serveur():
         '''
         if isinstance(obj, datetime):
             return obj.isoformat()
+
         elif isinstance(obj, DoubleLinkedList):
             return obj.isformat()
         elif isinstance(obj, Usager):
             return obj.isformat()
         
         raise TypeError ("Type %s not seriazible" %type(obj))
+
         
 
 
@@ -80,7 +83,9 @@ class Serveur():
             token = info["token"] #info[0]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
             print(result)
-            return json.dumps(result.__dict__, default=Serveur.rendre_json_compatible)
+
+            return json.dumps(result, default=Serveur.rendre_json_compatible)
+
         else:
             return json.dumps(Serveur.__GET_MSG)
 
@@ -88,7 +93,7 @@ class Serveur():
     @__app.route('/session', methods=['GET', 'POST'])
     def session():
         if request.method == 'POST':
-            return session
+            return Serveur.__controleur.utilisateurs
     
     # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
     @__app.route('/id_connection')

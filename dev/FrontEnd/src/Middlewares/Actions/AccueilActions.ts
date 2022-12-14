@@ -6,7 +6,7 @@ class Horaire{
     constructor(
         private _hrDebut: string = "",
         private _hrFin: string = "",
-        private _id: number = 9999,
+        private _id: number = 99999,
         
         )
         {
@@ -43,7 +43,7 @@ class Salle{
         private _centre: string = "NomCentre",
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
-        private _id: number = 999999,
+        private _id: number = -1,
         private _listeHoraire = [] // TODO getter setter
         )
         {
@@ -99,10 +99,12 @@ class Salle{
         this._nom = value;
     }
 
-    ajouterHoraire(infos:string[]){
+    ajouterHoraire(infos:string[], id=null){
         let horaire = new Horaire()
         horaire.hrDebut = infos[0]
         horaire.hrFin = infos[1]
+        if (id != null)
+        horaire.id = id
         this._listeHoraire.push(horaire)
     }
 
@@ -342,9 +344,17 @@ export class Compagnie{
                 return i
             }
         }
-
     }
 
+    getSalleById(id:number):Salle{
+        for (let i = 0; i < this._centres.length; i++){
+            let salles = this._centres[i].salles
+            for (let j = 0; j < salles.length; j++){
+                if (salles[j].id == id)
+                return salles[j]
+            }
+        }
+    }
     
 }
 
