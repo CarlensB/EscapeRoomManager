@@ -108,9 +108,9 @@ class AccueilStore {
         }
         else{
             let var_session = session.split(",")
-            this.token = var_session[3]
-            this._id_compagnie = parseInt(var_session[4])
-            this._niveau_acces = parseInt(var_session[5])
+            this.token = var_session[2]
+            this._id_compagnie = parseInt(var_session[3])
+            this._niveau_acces = parseInt(var_session[4])
             fetch('http://127.0.0.1:5000/api/compagnie_info/'+this._id_compagnie.toString(),
             {
                 method: 'POST',
@@ -122,13 +122,10 @@ class AccueilStore {
             this.initialiserCentres(response["centres"])
             this.initialiserSalles(response["salles"])
             this.initialiserHoraires(response["horaires"])
+            //TODO appeller response["id"] et ..compagnie
         //     this._id_emp = response[1]["id"]
         //     this._id_compagnie = response[1]["id_compagnie"]
         //     this._niveau_acces = parseInt(response[1]["niveau_acces"])
-        //     this._courriel = response[1]["courriel"]
-        //     this._nom_complet = response[1]["prenom"] + " " + response[1]["nom"]
-        //     this.initialiserCentres(response[0])
-        
       })
     }
 
@@ -161,7 +158,7 @@ class AccueilStore {
                 let index = this._compagnie.getCentreIndexById(centre_id)
 
                 centres[index].ajouterSalle(salleInfos, [])
-            
+                
     }
 }
 
