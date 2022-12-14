@@ -23,7 +23,7 @@ const boutonRetour = observer(() => {
 )
 
 const GererReservation = observer(() => {
-    let reservation = accueilStore.matchReservationId(accueilStore.selected_horaire_id)
+    let reservation = accueilStore.matchReservation(accueilStore.selected_horaire)
     return(
         React.createElement(
           'div',
@@ -52,7 +52,7 @@ const AjouterRerservation = observer(() => {
 )
 
 const ModifierRerservation = observer(() => {
-    let reservation = accueilStore.matchReservationId(accueilStore.selected_horaire_id)
+    let reservation = accueilStore.matchReservation(accueilStore.selected_horaire)
     return(
         React.createElement(
             'div',
