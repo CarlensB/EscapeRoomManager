@@ -108,9 +108,9 @@ class AccueilStore {
         }
         else{
             let var_session = session.split(",")
-            this.token = var_session[3]
-            this._id_compagnie = parseInt(var_session[4])
-            this._niveau_acces = parseInt(var_session[5])
+            this.token = var_session[2]
+            this._id_compagnie = parseInt(var_session[3])
+            this._niveau_acces = parseInt(var_session[4])
             fetch('http://127.0.0.1:5000/api/compagnie_info/'+this._id_compagnie.toString(),
             {
                 method: 'POST',
