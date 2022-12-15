@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+import traceback
 from .actionDAO import ActionDAO
 import bcrypt
 import hashlib
@@ -102,7 +103,7 @@ class Usager:
             'rabais': [],
             'typeClient': []
         }
-        self.__obtenir_info_initiale()
+        print(self.__obtenir_info_initiale())
         
     @property
     def session_info(self):
@@ -151,7 +152,7 @@ class Usager:
             for salle in self.__session_info['salles']:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
                 for e in info:
-                    debut, fin = e[1:]
+                    debut, fin = e[2:]
                     h = Horaire(debut, fin)
                     salle.liste_horaire.append(h)
         except:
@@ -161,10 +162,23 @@ class Usager:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
-                reservation = Reservation(*e[:-3])
-                self.__session_info["reservations"].add(reservation.__dict__)
-        except:
-            msg_erreur.append("Aucune réservation répertorié")
+                if self.__session_info["reservations"]:
+                    for idx, reservation in enumerate(self.__session_info["reservations"]):
+                        try:
+                            if reservation["date"] < e[4] and e[4] < self.__session_info["reservations"][idx+1]:
+                                resa = Reservation(*e[:-3])
+                                self.__session_info["reservations"].add(resa.__dict__, reservation)
+                        except:
+                            self.__session_info["reservations"].add_last(Reservation(*e[:-3]).__dict__)
+                            
+                        # else:
+                        #     self.__session_info["reservations"].add_first(Reservation(*e[:-3]).__dict__)
+                else:
+                    reservation = Reservation(*e[:-3])
+                    self.__session_info["reservations"].add_first(reservation.__dict__)
+    
+        except Exception as e:
+            msg_erreur.append(("Aucune réservation répertorié", traceback.format_exception(e)))
             
         # Rabais
         try:
