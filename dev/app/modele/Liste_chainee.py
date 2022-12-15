@@ -1,3 +1,6 @@
+import traceback
+
+
 class DoubleLinkedList:
 
     __ERROR_MSG = f"The type of the element you place are not the same. They need to be of the same type."
@@ -147,6 +150,7 @@ class DoubleLinkedList:
             self.__determine_data_type(new_data)
         new_node.next_val = self.__front_node
         self.__front_node = new_node
+        self.__last_node = self.__front_node
         self.__lenght += 1
     
     def add_last(self, new_data: any) -> None:
@@ -188,8 +192,8 @@ class DoubleLinkedList:
                 self.__last_node = new_node if search_node is self.__last_node else self.__last_node
                 self.__lenght += 1
 
-            except AttributeError:
-                raise ValueError(f"The object passed as previous data is not in the list {prev_data}")
+            except AttributeError as ae:
+                raise ValueError(f"The object passed as previous data is not in the list {prev_data}, {traceback.format_exception(ae)}")
         else:
             self.add_last(new_data)
    
@@ -260,7 +264,11 @@ class DoubleLinkedList:
         while first.value != data and last.value != data:
             first = first.next_val
             last = last.prev_val
-        search_node = first if last.value != data else last
+        if last is not None and last.value != data:
+            search_node = first
+        else:
+            search_node = last
+        #search_node = first if last is None and last.value != data else last
         return search_node
    
     def to_json(self):
@@ -268,3 +276,11 @@ class DoubleLinkedList:
         for idx, elem in enumerate(self):
             json[idx] = elem
         return json
+
+# Test
+# =========================================
+
+if __name__ == "__main__":
+    liste = DoubleLinkedList(1,2,3,4,5,6,7,9)
+    liste.add(8, 9)
+    print(liste)
