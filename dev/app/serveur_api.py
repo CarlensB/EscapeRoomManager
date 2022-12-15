@@ -1,9 +1,7 @@
 # Fichier pour aller chercher les informations à afficher sur le site web.
 from datetime import datetime
-from http import server
 import json
-from modele.Liste_chainee import DoubleLinkedList
-from modele.Modele import Usager
+
 
 from flask_utils import HOTE, PORT
 from flask import Flask, request, render_template, session, redirect
