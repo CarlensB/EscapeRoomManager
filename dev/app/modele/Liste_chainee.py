@@ -268,4 +268,3 @@ class DoubleLinkedList:
         for idx, elem in enumerate(self):
             json[idx] = elem
         return json
-            
