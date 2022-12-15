@@ -92,10 +92,13 @@ class CreationResarvationTest:
         for i in range(nb_reservation):
             reservation = self.create_reservation(id_compagnie, date_debut, date_fin)
             self.dao.requete_dao(self.dao.Requete.INSERT, self.dao.Table.RESERVATION, [reservation])
+            
+    def get_reservation(self, id_compagnie):
+        pass
 
 def main():
     crt = CreationResarvationTest()
-    crt.get_name()
+    crt.get_reservation(id_compagnie=1)
     crt.enter_reservation_bd(1, nb_reservation=250)
     
 if __name__ == '__main__':
