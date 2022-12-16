@@ -232,4 +232,4 @@ class MinConflict:
 
 if __name__ == '__main__':
     s = AlgoContext()
-    print(s.create_schedule(8.*60, 21.*60, 90, 30))
+    print(s.create_schedule(8.*60, 21.*60, 90, 30, nb_room=3, buffer=15))
