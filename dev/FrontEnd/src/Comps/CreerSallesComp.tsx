@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
-import accueilStore, { eActivePage } from "../Middlewares/AccueilStore"
+import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
 
 
 export const AppCreerSalle = observer(() => {

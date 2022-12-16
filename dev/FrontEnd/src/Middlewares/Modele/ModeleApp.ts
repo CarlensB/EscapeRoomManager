@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { newCentreInfos, SalleInfos } from "../AccueilStore";
+import { newCentreInfos, SalleInfos } from "../ControlleurApp";
 
 
 class Horaire{

@@ -1,13 +1,14 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import reactDom from "react-dom";
-import { eActivePage } from './Middlewares/AccueilStore';
+import { eActivePage } from './Middlewares/ControlleurApp';
 import './CSS/Accueil.css'
 import { AppAccueil} from './Comps/AccueilComps'
-import accueilStore from "./Middlewares/AccueilStore"
+import accueilStore from "./Middlewares/ControlleurApp"
 import { AppCreerSucursalle } from './Comps/CreerCentreComp';
 import { AppCreerSalle } from './Comps/CreerSallesComp';
 import { AppGererReservation } from './Comps/GererReservation';
+import {AppRapport} from './Comps/RapportsComps';
 
 accueilStore.initialiserinfos()
 
@@ -24,6 +25,7 @@ const AccueilPageComp = observer(() => {
           React.createElement((accueilStore.ActivePage == eActivePage.Accueil) ? AppAccueil :
                                 (accueilStore.ActivePage == eActivePage.CreateSalle) ? AppCreerSalle :
                                 (accueilStore.ActivePage == eActivePage.CreateCentre) ? AppCreerSucursalle :
+                                (accueilStore.ActivePage == eActivePage.Rapports) ? AppRapport :
                                 AppGererReservation)
           
       )
@@ -54,9 +56,12 @@ const Menu = observer(() => {
         'Gérer Succursales'))
 
         ArrayMenu.push(React.createElement('div',
+        {class: active_page == eActivePage.Rapports ? 'menuItem selected' : 'menuItem', onClick: () => {accueilStore.ActivePage =eActivePage.Rapports}},
+        'Rapports'))
+
+        ArrayMenu.push(React.createElement('div',
         {class: 'menuItem', onClick: () => {accueilStore.deconnecter()}},
         'Déconnecter'))
-        
 
         return ArrayMenu
     }

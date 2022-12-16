@@ -1,6 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { Compagnie} from "./Actions/AccueilActions";
+import { Compagnie} from "./Modele/ModeleApp";
 configure({
     enforceActions: "never",
 })
@@ -10,7 +10,8 @@ export enum eActivePage {
     CreateCentre= 2,
     CreateSalle=3,
     CreateReservation= 4,
-    Login=5
+    Login=5,
+    Rapports=6
 }
 
 export class newCentreInfos{
@@ -79,7 +80,7 @@ class AccueilStore {
     private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
-    public _reservations:{} = {};
+    public _reservations:{}
 
     public get reservations() {
         return this._reservations;
@@ -194,18 +195,18 @@ class AccueilStore {
 }
 
     initialiserReservations(reservations){
-        console.log(reservations)  
+        console.log(reservations)
+        let dict = {} 
         for (let i = 0; i < Object.keys(reservations).length; i++)
         {
             let date = reservations[i]["date"]
             date = date.split('T')
-            let key = (date[0] + " " + date[1] + " " + reservations[i]["centre"]).toString()
-            this._reservations[key] = [reservations[i]]
-            console.log(key)
+            let key = [date[0], date[1], reservations[i]["centre"]].join(" ")
+            dict[key] = reservations[i]
         }
-        let a = this._reservations["2022-12-03 11:30:00 Laval"]
+        this._reservations = dict
 
-        console.log("les reservations: " + a["centre"])
+        console.log("les reservations: ", this._reservations)
     }
 
     matchReservation(horaire){

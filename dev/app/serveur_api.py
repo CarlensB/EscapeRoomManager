@@ -38,11 +38,6 @@ class Serveur():
         if request.method == 'POST':
             info = request.form
             result = Serveur.__controleur.valider_connexion(info)
-            if result[0]:
-                session["token"] = result[2]
-                session["id_compagnie"] = result[3]
-                session["niv_acces"] = result[4]
-                print('test', session)
             return json.dumps(result)
 
     @__app.route('/enregistrement/<name>', methods=['GET', 'POST'])
@@ -83,28 +78,26 @@ class Serveur():
             return json.dumps(Serveur.__controleur.utilisateurs.keys())
     
     # Pour avoir accès aux centres de l'usager connecté SEULEMENT SI la connection a été établie
-    @__app.route('/id_connection')
+    @__app.route('/id_connection', methods=['GET', 'POST'])
     def id_connection():
-        user = Serveur.__controleur.utilisateur
-        print(user)
-        if user is not None:
-            result = (Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":user.id_compagnie}), user.__dict__)
-            print(result)
-            if len(result) > 0:
-                return json.dumps(result)
-            else: return json.dumps(user)
-        else:
-            return json.dumps(False)
+        if request.method == 'POST':
+            info = request.form.to_dict()
+            user = Serveur.__controleur.utilisateurs[info["token"].session_info["usager"]]
+            if user is not None:
+                result = (Serveur.__controleur.interaction_dao("selectionner_all", "centre",{"id":user.id_compagnie}), user.__dict__)
+                if len(result) > 0:
+                    return json.dumps(result)
+                else: return json.dumps(user)
+            else:
+                return json.dumps(False)
         
     # Pour se déconnecter
     @__app.route('/deconnecter', methods=['GET', 'POST'])
     def deconnecter():
         print(Serveur.__controleur.utilisateurs.keys())
         if request.method == 'POST' or request.method == 'GET':
-            retour = Serveur.__controleur.deconnecter_id(session["token"])
-            session.pop("token", None)
-            session.pop("id_compagnie", None)
-            session.pop("niv_acces", None)
+            info = request.form.to_dict()
+            retour = Serveur.__controleur.deconnecter_id(info["token"])
             return json.dumps(retour)
         
     # API pour les sites externes de nos clients     

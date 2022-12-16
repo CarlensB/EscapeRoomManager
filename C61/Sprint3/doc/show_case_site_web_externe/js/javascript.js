@@ -55,7 +55,7 @@ const get_compagnie_info = (id_compagnie) =>{
         console.log(listeReservation)
 
         // batir le scroll pour les centres
-        document.querySelector(".nomCentre").innerHTML = listeCentres[1]["nom"]
+        document.querySelector(".nomCentre").innerHTML = listeCentres[0]["nom"]
 
         // batir le scroll pour les salles
         document.querySelector(".nomSalle").innerHTML = listeSalles[0]["nom"]
@@ -335,6 +335,24 @@ const affichageReservation = () =>{
     } 
 }
 
+const download = (data, filename, type) => {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
 // JS Class
 class Reservation{
     constructor(heureDebut, heureFin, nomSalle, centre, salle){
@@ -344,6 +362,7 @@ class Reservation{
         this.centre = centre
         //this.salle = salle
         this.prixTotal = null
+        this.free = null
     }
 
     obtenir_duree(){
@@ -399,5 +418,4 @@ class Salle{
     retourner_info(){
         return (this.nom, this.description, this.prix, this.particpant, this.prix_unitaire)
     }
-    
 }
