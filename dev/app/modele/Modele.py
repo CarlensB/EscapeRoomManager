@@ -161,12 +161,10 @@ class Usager:
             
         # Reservation
         try:
-            time = perf_counter()
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
                 reservation = Reservation(*e[:-3])
                 self.__session_info["reservations"].add_first(reservation.__dict__)
-            print(perf_counter() - time)
                 
         except Exception as e:
             msg_erreur.append(("Aucune réservation répertorié", traceback.format_exception(e)))
