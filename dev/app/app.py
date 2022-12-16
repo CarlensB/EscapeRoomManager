@@ -35,18 +35,13 @@ def main():
     gs = GestionSysteme()
 
     #Test
-    gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
+    #gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
 #     gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
-#     gs.interaction_dao("modifier", "salle", {'nom':"Salle2", 'description':"Nouvelle Description", 'centre':16, 'nbmax':4, 'prix':25.0, 'privee':0, 'id':3})
-#     gs.utilisateurs[gs.retourner_id].mise_a_jour_session_info(ActionDAO.Table.SALLE)
-#     print(gs.interaction_dao(gs.retourner_id, 'ajouter', 'employe', e))
-    result = gs.interaction_dao(gs.retourner_id, "selectionner_all", "reservation", {})
-    print(result)
-#     print(json.dumps(result, default=lambda o: o.isoformat()))
+
 
     # Démarrage du serveur
-    # Serveur.definir_controleur(gs)
-    # Serveur.demarrer_serveur()
+    Serveur.definir_controleur(gs)
+    Serveur.demarrer_serveur()
     
     
 if __name__=='__main__':
