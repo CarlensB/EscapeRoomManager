@@ -7,6 +7,9 @@ class CreationResarvationTest:
     def __init__(self) -> None:
         self.nom = []
         self.prenom = []
+        self.dao = ActionDAO()
+        self.get_name()
+        
         
     def get_name(self):
         with open("dev/app/banqueNom.txt", encoding="utf-8") as file: # modele/banqueNom.txt') as file:
@@ -15,7 +18,6 @@ class CreationResarvationTest:
                 self.nom.append(row[0])
                 self.prenom.append(row[1])
                 self.prenom.append(row[2])
-                self.dao = ActionDAO()
                 self.date_keep_trace = []
                 
     def build_name(self) -> str:
@@ -57,7 +59,7 @@ class CreationResarvationTest:
         reservation[5] = "".join(reservation[0].split(" "))+"@courriel.com"
         
         # Get Prix_total
-        reservation[6] = reservation[4] * 30
+        reservation[6] = reservation[4] * salle_active[5]
         
         # Getdate
         for h in horaire_salle:
@@ -69,37 +71,48 @@ class CreationResarvationTest:
         hd = time[2].split("h")
         year = randint(date_debut[0], date_fin[0])
         
-        while reservation[7] not in self.date_keep_trace:
-            if year == date_debut[0]:
-                month = randint(date_debut[1],12)
-            else:
-                month = randint(1, date_fin[1])
-                
-            if month == 2:
-                day_max =28
-            else:
-                day_max = 30
-                
-            if hd[1] != "":
-                reservation[7] = datetime(year, month, randint(1,day_max), int(hd[0]), int(hd[1]) )
-            else:
-                reservation[7] = datetime(year, month, randint(1,day_max), int(hd[0]))
+        info_unique_reservation = self.create_schedule(year, date_debut, date_fin, hd, reservation, salle_active)
         
-            self.date_keep_trace.append(reservation[7])
-        return tuple(reservation)       
+        while info_unique_reservation in self.date_keep_trace:
+            info_unique_reservation = self.create_schedule(year, date_debut, date_fin, hd, reservation, salle_active)
+            
+        self.date_keep_trace.append(info_unique_reservation)
+        return tuple(reservation)
+    
+    def create_schedule(self, year, date_debut, date_fin, hd, reservation, salle_active):
+        if year == date_debut[0]:
+            month = randint(date_debut[1],12)
+        else:
+            month = randint(1, date_fin[1])
+            
+        if month == 2:
+            day_max =28
+        else:
+            day_max = 30
+            
+        if hd[1] != "":
+            reservation[7] = datetime(year, month, randint(1,day_max), int(hd[0]), int(hd[1]) )
+        else:
+            reservation[7] = datetime(year, month, randint(1,day_max), int(hd[0]))
+            
+        return (salle_active[3], salle_active[1], reservation[7])
+        
     
     def enter_reservation_bd(self, id_compagnie, date_debut: tuple[int, int, int] = (2022, 9, 1), date_fin: tuple[int, int, int] = (2023, 3,30), nb_reservation: int = 1):
+        reservation = [0]*nb_reservation
         for i in range(nb_reservation):
-            reservation = self.create_reservation(id_compagnie, date_debut, date_fin)
-            self.dao.requete_dao(self.dao.Requete.INSERT, self.dao.Table.RESERVATION, [reservation])
+            reservation[i] = self.create_reservation(id_compagnie, date_debut, date_fin)
+        print(reservation)
+        self.dao.requete_dao(self.dao.Requete.INSERT, self.dao.Table.RESERVATION, reservation)
             
     def get_reservation(self, id_compagnie):
-        pass
+        result = self.dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(id_compagnie,)])
+        self.date_keep_trace = [(r[11], r[3], r[4]) for r in result]
 
 def main():
     crt = CreationResarvationTest()
     crt.get_reservation(id_compagnie=1)
-    crt.enter_reservation_bd(1, nb_reservation=250)
+    crt.enter_reservation_bd(1, nb_reservation=363)
     
 if __name__ == '__main__':
     quit(main())

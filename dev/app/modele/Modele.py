@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from time import perf_counter
 import traceback
 from .actionDAO import ActionDAO
 import bcrypt
@@ -160,23 +161,13 @@ class Usager:
             
         # Reservation
         try:
+            time = perf_counter()
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
-                if self.__session_info["reservations"]:
-                    for idx, reservation in enumerate(self.__session_info["reservations"]):
-                        try:
-                            if reservation["date"] < e[4] and e[4] < self.__session_info["reservations"][idx+1]:
-                                resa = Reservation(*e[:-3])
-                                self.__session_info["reservations"].add(resa.__dict__, reservation)
-                        except:
-                            self.__session_info["reservations"].add_last(Reservation(*e[:-3]).__dict__)
-                            
-                        # else:
-                        #     self.__session_info["reservations"].add_first(Reservation(*e[:-3]).__dict__)
-                else:
-                    reservation = Reservation(*e[:-3])
-                    self.__session_info["reservations"].add_first(reservation.__dict__)
-    
+                reservation = Reservation(*e[:-3])
+                self.__session_info["reservations"].add_first(reservation.__dict__)
+            print(perf_counter() - time)
+                
         except Exception as e:
             msg_erreur.append(("Aucune réservation répertorié", traceback.format_exception(e)))
             
