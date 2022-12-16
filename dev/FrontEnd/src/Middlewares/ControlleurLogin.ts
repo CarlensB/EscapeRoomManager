@@ -1,8 +1,8 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
 import { collectStoredAnnotations } from "mobx/dist/internal";
-import accueilStore, { eActivePage } from "./AccueilStore";
-import { LoginPageActions } from "./Actions/LoginActions";
+import accueilStore, { eActivePage } from "./ControlleurApp";
+import { LoginPageActions } from "./Modele/ModeleLogin";
 
 configure({
     enforceActions: "never",

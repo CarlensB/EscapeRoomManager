@@ -2,8 +2,8 @@ import { observer } from 'mobx-react';
 import React, {lazy, Suspense} from 'react';
 import reactDom from "react-dom";
 import { redirect } from 'react-router-dom';
-import "./Middlewares/loginStore"
-import loginStore, { ActivePage } from './Middlewares/loginStore';
+import "./Middlewares/ControlleurLogin"
+import loginStore, { ActivePage } from './Middlewares/ControlleurLogin';
 import './CSS/Login.css';
 import { LoginPageComp } from './Comps/LoginPageComp';
 import { CreateAccountComp } from './Comps/CreerCompteComp';

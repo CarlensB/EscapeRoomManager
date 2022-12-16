@@ -29,6 +29,7 @@ body{
 }
 .selected{
     background-color: #8bd432;
+    color:white;
 }
 
 /* ____________________________________SALLES______________________________ */
@@ -271,4 +272,12 @@ button:focus {
 
 .add{
     background-image: url('./images/plus.jpg');
+}
+
+/* ______________________ RESERVATIONS _____________________________ */
+
+.RapportsBoite{
+    background-color: red;
+    height: 50%;
+    width: 50%;
 }
