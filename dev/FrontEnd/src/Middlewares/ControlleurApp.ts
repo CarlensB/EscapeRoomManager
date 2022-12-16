@@ -195,7 +195,6 @@ class AccueilStore {
 }
 
     initialiserReservations(reservations){
-        console.log(reservations)
         let dict = {} 
         for (let i = 0; i < Object.keys(reservations).length; i++)
         {
@@ -205,8 +204,7 @@ class AccueilStore {
             dict[key] = reservations[i]
         }
         this._reservations = dict
-
-        console.log("les reservations: ", this._reservations)
+        //console.log(this._reservations)
     }
 
     matchReservation(horaire){
