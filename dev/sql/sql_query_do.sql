@@ -1,3 +1,10 @@
+-- Nom du fichier : sql_query_do.sql
+-- Ce fichier permet la création de la base
+-- de données ERM_DB, d'un utilisateur ainsi
+-- que ses tables, ses vues et ses triggers
+-- Auteur : Maxence Guindon
+-- Équipe : Carlens Belony et Maxence Guindon
+
 CREATE DATABASE IF NOT EXISTS ERM_DB
 CHARACTER SET utf8
 COLLATE utf8_general_ci;
@@ -5,8 +12,8 @@ COLLATE utf8_general_ci;
 USE ERM_DB;
 
 -- Création de l'utilisateur
--- CREATE USER 'erm_user'@'localhost' IDENTIFIED by 'EscapeRoomManager';
--- GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
+CREATE USER 'erm_user'@'localhost' IDENTIFIED by 'EscapeRoomManager';
+GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 
 	-- Supression des tables
 	DROP TABLE IF EXISTS emp_cent;

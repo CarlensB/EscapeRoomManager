@@ -1,3 +1,8 @@
+-- Nom du fichier : compagnie_test.sql
+-- Ce fichier permet la création d'une compagnie test.
+-- Auteur : Maxence Guindon
+-- Équipe : Carlens Belony et Maxence Guindon
+
 USE ERM_DB;
 
 INSERT INTO compagnies (nom, info_paiement, courriel, mot_de_passe)
