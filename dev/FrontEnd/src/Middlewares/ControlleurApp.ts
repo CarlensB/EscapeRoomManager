@@ -14,6 +14,25 @@ export enum eActivePage {
     Rapports=6
 }
 
+export class ResInfos{
+    constructor(
+        public nom: string = "",
+        public nb_participants: number = 1,
+        public num_tel: string = "",
+        public courriel: string = "",
+        public paye: boolean = false,
+    )
+    {}
+        reset() {
+            this.nom = "";
+            this.nb_participants = 1;
+            this.num_tel = "";
+            this.courriel = "";
+            this.paye = true;
+        }
+}
+
+
 export class newCentreInfos{
 
     constructor(
@@ -66,6 +85,7 @@ export class SalleInfos{
 
 
 class AccueilStore {
+    
     private _compagnie: Compagnie;
     private _ActivePage: eActivePage = eActivePage.Accueil;
     private _newCentreInfos: newCentreInfos = new newCentreInfos()
@@ -77,6 +97,7 @@ class AccueilStore {
     private _token: string = "non"
     private _selected_horaire:Horaire = null;
     private _date: Date = new Date();
+    private _modResInfo: ResInfos = new ResInfos();
     
     
     private _niveau_acces: number = 1
@@ -302,6 +323,22 @@ class AccueilStore {
         this._newCentreInfos.reset()
     }
 
+    updateModResInfoNom(value: string) {
+        this._modResInfo.nom = value
+      }
+      updateModResInfoParticipants(value: number) {
+        this._modResInfo.nb_participants = value
+      }
+      updateModResInfoNumeroTelephone(value: string) {
+        this._modResInfo.num_tel = value
+      }
+      updateModResInfoCourriel(value: string) {
+        this._modResInfo.courriel = value
+      }
+      updateModResInfoPaye(value: boolean) {
+        this._modResInfo.paye = value
+      }
+
     getCurrentCentreValideOuPas(){
         return this._compagnie.getCurrentCentrevalidity()
     }
@@ -460,6 +497,14 @@ class AccueilStore {
 
     getCentres(){
         return this._compagnie.centres;
+    }
+
+    getCurrentCentre(){
+        return this._compagnie.getCurrentCentre()
+    }
+
+    getSalleByName(name:string){
+        return this._compagnie.getSalleByName(name)
     }
 
     getSelectionCentre(){

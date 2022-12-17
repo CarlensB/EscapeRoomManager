@@ -21,7 +21,6 @@ const Calendrier = observer(() => {
     let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
     let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
     let date = year + "-" + month + "-" + day;
-    console.log(accueilStore.date)
     return date;
 }
     

@@ -238,6 +238,16 @@ class Centre{
 }
 
 export class Compagnie{
+    getSalleByName(name:string) {
+        let centre = this.getCurrentCentre()
+        let salles = centre.salles
+        for (let i = 0; i< salles.length; i++)
+        {
+            if (salles[i].nom == name)
+            return salles[i]
+        }
+        return null;
+    }
 
     constructor(
         private _name: string = "Nom de Compagnie",
