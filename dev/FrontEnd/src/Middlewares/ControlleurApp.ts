@@ -204,7 +204,7 @@ class AccueilStore {
             dict[key] = reservations[i]
         }
         this._reservations = dict
-        //console.log(this._reservations)
+        console.log(this._reservations)
     }
 
     matchReservation(horaire){
