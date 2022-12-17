@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { newCentreInfos, SalleInfos } from "../ControlleurApp";
 
 
-class Horaire{
+export class Horaire{
     constructor(
         private _hrDebut: string = "",
         private _hrFin: string = "",
@@ -335,6 +335,10 @@ export class Compagnie{
 
     getCurrentCentrevalidity(){
         return this._centres[this.selectionnee].a_modifier
+    }
+
+    getCurrentCentre(){
+        return this._centres[this.selectionnee]
     }
 
     getCentreIndexById(id:number):number{

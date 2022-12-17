@@ -12,15 +12,6 @@ export const AppGererReservation = observer(() => {
 })
 
 
-const boutonRetour = observer(() => {
-    return(
-        React.createElement(
-          'div',
-          {class:'boutonRetour', onClick: () => {accueilStore.ActivePage = eActivePage.Accueil}},
-          "Retourner à l'accueil")
-    )
-  }
-)
 
 const GererReservation = observer(() => {
     let reservation = accueilStore.matchReservation(accueilStore.selected_horaire)
@@ -28,7 +19,7 @@ const GererReservation = observer(() => {
         React.createElement(
           'div',
           {class:'ContainerFormulaire'},
-          reservation == null ? React.createElement(AjouterRerservation) : React.createElement(ModifierRerservation))
+          reservation == undefined ? React.createElement(AjouterRerservation) : React.createElement(ModifierRerservation))
     )
   }
 )
@@ -52,7 +43,7 @@ const AjouterRerservation = observer(() => {
 )
 
 const ModifierRerservation = observer(() => {
-    let reservation = accueilStore.matchReservation(accueilStore.selected_horaire)
+    
     return(
         React.createElement(
             'div',

@@ -1,6 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { Compagnie} from "./Modele/ModeleApp";
+import { Compagnie, Horaire} from "./Modele/ModeleApp";
 configure({
     enforceActions: "never",
 })
@@ -75,7 +75,9 @@ class AccueilStore {
     private _id_compagnie: number = 0
     private _nom_complet: string = ""
     private _token: string = "non"
-    private _selected_horaire = null;
+    private _selected_horaire:Horaire = null;
+    private _date: Date = new Date();
+    
     
     private _niveau_acces: number = 1
     private _id_emp: number = 0
@@ -86,7 +88,20 @@ class AccueilStore {
         return this._reservations;
     }
     
+    public get date(): Date {
+        return this._date;
+    }
 
+    public modify_date(value: number) {
+        let date = new Date(this._date);
+        date.setDate(this._date.getDate() + value);
+        this._date = date;
+    }
+
+    public resetDate(){
+        let date = new Date();
+        this._date = date;
+    }
 
     public set token(value: string) {
         this._token = value;
@@ -107,7 +122,8 @@ class AccueilStore {
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
-        this._compagnie = new Compagnie("Escaparium", []);   
+        this._compagnie = new Compagnie("Escaparium", []);
+        let a = new Date();
     }
     
     public initialiserinfos(){
@@ -121,6 +137,23 @@ class AccueilStore {
             this.token = var_session[2]
             this._id_compagnie = parseInt(var_session[3])
             this._niveau_acces = parseInt(var_session[4])
+
+            let formdata = new FormData()
+            formdata.append("token", this.token)
+            fetch('http://127.0.0.1:5000/selectionner_all/reservation',
+            {
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(response => {
+        
+            this.initialiserReservations(response)
+            // console.log(response[0]["centre"])
+
+})
+
+
             fetch('http://127.0.0.1:5000/api/compagnie_info/'+this._id_compagnie.toString(),
             {
                 method: 'POST',
@@ -134,21 +167,9 @@ class AccueilStore {
             this._id_compagnie = response["index"]
             this._nom_complet = response["compagnie"]
 
-            let formdata = new FormData()
-            formdata.append("token", this.token)
             
-            fetch('http://127.0.0.1:5000/selectionner_all/reservation',
-            {
-                method: 'POST',
-                body: formdata
-            })
-            .then(response => response.json())
-            .then(response => {
-        
-            this.initialiserReservations(response)
-            // console.log(response[0]["centre"])
-
-})
+            
+            
 
       })
             
@@ -200,18 +221,26 @@ class AccueilStore {
         {
             let date = reservations[i]["date"]
             date = date.split('T')
-            let key = [date[0], date[1], reservations[i]["centre"]].join(" ")
+            let key = [date[0], date[1], reservations[i]["centre"], reservations[i]["salle"]].join(" ")
             dict[key] = reservations[i]
         }
         this._reservations = dict
-        //console.log(this._reservations)
+        console.log(this._reservations)
     }
 
     matchReservation(horaire){
-        // if (id_horaire in this.reservations){
-        //     return this.reservations[id_horaire]
-        // }
-        // else return null
+    let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+    let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
+    let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
+    let date = year + "-" + month + "-" + day;
+    let horaire_debut = horaire._hrDebut.replace("h", ":");
+
+    if (horaire_debut.length < 4)
+        horaire_debut = horaire_debut + "00"
+
+    let key = date + " " + horaire_debut + ":00 " + this._compagnie.getCurrentCentre().nom + " " + horaire.nomSalle
+    let reservation = this.reservations[key]
+    return reservation
     }
 
 
