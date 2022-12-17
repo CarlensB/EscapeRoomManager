@@ -26,10 +26,11 @@ e = {'compagnie': 1,
      'mdp': "testAndroid18!@"}
 
 dependance = ["bcrypt", "mysql-connector-python"]
+path = r"C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts\pip.exe"
 
 
 def main():
-    di = DependancyInstall(*dependance)
+    di = DependancyInstall(*dependance, path=path)
     di.install_stuff()
     from modele.Modele import GestionSysteme
     gs = GestionSysteme()
