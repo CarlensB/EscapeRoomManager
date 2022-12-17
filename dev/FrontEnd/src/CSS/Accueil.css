@@ -316,13 +316,17 @@ button:focus {
 .AppRapport{
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 65%;
+    margin: 7% 1%;
 }
 
 .RapportsBoite{
-    background-color: rgba(110, 185, 204, 0.767);
-    height: 80%;
+    background-color: rgb(34 122 145 / 77%);
+    height: 100%;
     width: 50%;
+    border-radius: 5%;
+    margin-right: 1%;
+    padding: 1%;
 }
 
 .RapportsInfo{
@@ -348,7 +352,6 @@ button:focus {
 .RapportsPourcentage{
     width: 30%;
     height: 20%;
-    background-color: #8bd432;
     display: block;
     color: white;
     margin: 0.5% 0.5%;
