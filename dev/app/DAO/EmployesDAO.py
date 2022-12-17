@@ -1,4 +1,11 @@
-# Pour enregistrer les informations des employes sur la base de données
+# ===============================================
+# Nom du fichier : EmployesDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les employes.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 class EmployeDAO:
     
     def __init__(self, bd) -> None:

@@ -1,4 +1,11 @@
-from enum import Enum, auto
+# ===============================================
+# Nom du fichier : Algorithme.py
+# Ce fichier permet d'effectuer la création d'un horaire
+# unique pour 1 ou plusieurs activités.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 from abc import ABC, abstractmethod
 
 class AlgoContext():
@@ -9,8 +16,6 @@ class AlgoContext():
     def __init__(self):
         self.__strategy_naive = AlgoNaive()
         self.__strategy_bc = BackChecking()
-        self.__strategy_fc = FowardChecking()
-        #... else
         
     def create_schedule(self, h_start: float, h_end: float, duration: float = 60., interval: float = 15., **kwargs):
         '''
@@ -142,8 +147,6 @@ class AlgoNaive(AlgoStrategy):
             h_end = self.ajust_schedule_end(h_end)
         self.schedule = self.create_schedule(h_start, h_end)
 
-#...
-
 class BackChecking(AlgoNaive):
     '''
     L'algorithme de Back checking ou back tracking est un algorithme naif qui avance vers une solution jusqu'à ce que
@@ -218,18 +221,6 @@ class FowardChecking:
     def __init__(self) -> None:
         pass
 
-#...
 
 class MinConflict:
     pass
-
-#...
-
-
- # +-+-+-+-+
- # |T|E|S|T|
- # +-+-+-+-+
-
-if __name__ == '__main__':
-    s = AlgoContext()
-    print(s.create_schedule(8.*60, 21.*60, 90, 30, nb_room=3, buffer=15))

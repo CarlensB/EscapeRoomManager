@@ -1,4 +1,11 @@
-from typing import Union
+# ===============================================
+# Nom du fichier : actionDAO.py
+# Ce fichier encapsule les différentes actions qu'il
+# est possible de demander au dao.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 from enum import Enum
 
 from DAO.ConnectionDAO import ConnexionDAO

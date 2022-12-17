@@ -1,4 +1,10 @@
-#from modele.actionDAO import ActionDAO
+# ===============================================
+# Nom du fichier : CompagniesDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les compagnies.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
 
 class CompagniesDAO:
 

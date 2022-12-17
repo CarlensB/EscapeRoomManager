@@ -1,13 +1,18 @@
+# ===============================================
+# Nom du fichier : Modele.py
+# Ce fichier contient les classes permettant d'effectuer
+# la gestion des données du côté serveur.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 from dataclasses import dataclass
 from enum import Enum
-from time import perf_counter
 import traceback
 from .actionDAO import ActionDAO
 import bcrypt
 import hashlib
 import datetime as date
-# installation : python pip.exe install bcrypt
-# folder : C:\Python310\Scripts
 import re
 import codecs
 from .Algorithme import AlgoContext
@@ -79,7 +84,7 @@ class Employe:
 class Rabais:
     id: int
     nom: str
-    pourcentage: float  # Exemple 0.15 pour 15%
+    pourcentage: float
     actif: bool
     id_compagnie: int
     date_fin: str
@@ -99,7 +104,7 @@ class Usager:
             'employes': [],
             'compagnie': None,
             'centres': [],
-            'salles': DoubleLinkedList(), # Prends les salles des centres, organisé par centre
+            'salles': DoubleLinkedList(),
             'reservations': DoubleLinkedList(),
             'rabais': [],
             'typeClient': []
@@ -116,7 +121,6 @@ class Usager:
     
     def __obtenir_info_initiale(self):
         msg_erreur = []
-        # Employe
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.EMPLOYE, [(self.__id_compagnie,)])
             for e in info:
@@ -124,14 +128,12 @@ class Usager:
         except:
             msg_erreur.append("Aucun employe à afficher")
         
-        # Compagnie
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(self.__id_compagnie,)])[0]
             self.__session_info["compagnie"] = Compagnie(*info[:-1])
         except:
             msg_erreur.append("Usager invalide, il n'est associé à aucune compagnie")
         
-        # Centre
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE,[(self.__id_compagnie,)])
             for e in info:
@@ -139,7 +141,6 @@ class Usager:
         except:
             msg_erreur.append("Aucun centre répertorié")
             
-        # Salle
         try:
             for centre in self.__session_info["centres"]:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.SALLE,[(centre.id,)])
@@ -148,7 +149,6 @@ class Usager:
         except:
             msg_erreur.append("Aucune salle n'est incluse dans un centre")
             
-        # Horaire
         try:
             for salle in self.__session_info['salles']:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
@@ -159,7 +159,6 @@ class Usager:
         except:
             msg_erreur.append("Aucune horaire répertorié")
             
-        # Reservation
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
@@ -169,14 +168,13 @@ class Usager:
         except Exception as e:
             msg_erreur.append(("Aucune réservation répertorié", traceback.format_exception(e)))
             
-        # Rabais
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RABAIS,[(self.__id_compagnie,)])
             for e in info:
                 self.__session_info["rabais"].append(Rabais(*e))
         except:
             msg_erreur.append("Aucun rabais répertorié")
-        # TypeClient
+
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.TYPECLIENT,[(self.__id_compagnie,)])
             for e in info:
@@ -353,7 +351,9 @@ class GestionSysteme:
         return True
 
     def valider_connexion(self, info: dict):
-        # info, contient courriel et mdp
+        '''
+        info doit contient les clefs courriel et mdp
+        '''
         a = ActionDAO()
         result = a.requete_dao(a.Requete.SELECT, a.Table.EMPLOYE, [(info['courriel'],)])
         if not result:
@@ -518,25 +518,25 @@ class GestionSysteme:
     def renvoi_compagnie(self):
         return self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.COMPAGNIE, [(1,)])
 
-    # ==============================================================================
-    #           Fonctions protégés
+    # # ==============================================================================
+    # #           Fonctions protégés
 
-    def __verifier_centre(self, a: ActionDAO, centre: tuple):
-        liste_centre = a.requete_dao(a.Requete.SELECT, a.Table.CENTRE, centre[1])
-        for c in liste_centre:
-            if centre[0] == c[1]:
-                return c[0]
-        a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
-        self.__verifier_centre(a, centre)     
+    # def __verifier_centre(self, a: ActionDAO, centre: tuple):
+    #     liste_centre = a.requete_dao(a.Requete.SELECT, a.Table.CENTRE, centre[1])
+    #     for c in liste_centre:
+    #         if centre[0] == c[1]:
+    #             return c[0]
+    #     a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
+    #     self.__verifier_centre(a, centre)     
 
-    def __get_client(self, index: int):
-        a = ActionDAO()
-        result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, [(index,)])
-        print(result)
-        return result[0][1]
+    # def __get_client(self, index: int):
+    #     a = ActionDAO()
+    #     result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, [(index,)])
+    #     print(result)
+    #     return result[0][1]
 
-    def __determiner_prix(self, r: 'Reservation'):
-        tps = 0.05
-        tvq = 0.09975
-        cout_base = self.__participant * self.__salle.prix
-        r.prix_total = cout_base + cout_base * tps + cout_base * tvq
+    # def __determiner_prix(self, r: 'Reservation'):
+    #     tps = 0.05
+    #     tvq = 0.09975
+    #     cout_base = self.__participant * self.__salle.prix
+    #     r.prix_total = cout_base + cout_base * tps + cout_base * tvq

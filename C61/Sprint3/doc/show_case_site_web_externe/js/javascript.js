@@ -1,3 +1,11 @@
+/*
+    Nom du fichier : javascript.js
+    Ce fichier contient la logique pour afficher les
+    plages horaires possibles ainsi que la possibilité de les réserver.
+    Auteur : Maxence Guindon
+    Équipe : Carlens Belony et Maxence Guindon
+*/
+
 let compagnies = []
 let info_compagnie = {}
 

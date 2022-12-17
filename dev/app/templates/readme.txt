@@ -1,1 +1,0 @@
-Endroit pour les fichiers html.

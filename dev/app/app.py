@@ -1,3 +1,12 @@
+# ===============================================
+# Nom du fichier : app.py
+# Ce fichier effectue l'installation des dépendances si besoin
+# ainsi que le démarrage du serveur Flask.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
+
 from serveur_api import Serveur
 from dependancy import DependancyInstall
 
@@ -25,23 +34,27 @@ e = {'compagnie': 1,
      'num_ass': 257_098_765,
      'mdp': "testAndroid18!@"}
 
-dependance = ["bcrypt", "mysql-connector-python"]
-path = [r"C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts\pip.exe", r"C:\Python310\Scripts\pip.exe"]
-
+class App:
+    def __init__(self) -> None:
+        dependance = ["bcrypt", "mysql-connector-python"]
+        path = [r"C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts\pip.exe", r"C:\Python310\Scripts\pip.exe"]
+        self.__dependancy_install = DependancyInstall(*dependance, path=path[1])
+        
+    def define_app_controleur(self):
+        self.__dependancy_install.install_stuff()
+        from modele.Modele import GestionSysteme
+        return GestionSysteme()
+    
 
 def main():
-    di = DependancyInstall(*dependance, path=path[1])
-    di.install_stuff()
-    from modele.Modele import GestionSysteme
-    gs = GestionSysteme()
-
     #Test
     #gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
-#     gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
+    #gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
 
 
     # Démarrage du serveur
-    Serveur.definir_controleur(gs)
+    app = App()
+    Serveur.definir_controleur(app.define_app_controleur())
     Serveur.demarrer_serveur()
     
     

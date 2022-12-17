@@ -1,3 +1,11 @@
+# ===============================================
+# Nom du fichier : RabaisDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les rabais.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 class RabaisDAO:
     
     def __init__(self, bd) -> None:
