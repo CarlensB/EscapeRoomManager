@@ -1,7 +1,13 @@
+# ===============================================
+# Nom du fichier : ConnectionDAO.py
+# Ce fichier contient les actions pour se connecter
+# à la base de donnée.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 from types import TracebackType
 import mysql.connector
-# python pip.exe install mysql-connector-python
-# dossier : C:\Python310\Scripts
 import traceback
 from .UTILS import USER, HOTE, MDP, DB
 

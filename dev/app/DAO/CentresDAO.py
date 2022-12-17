@@ -1,4 +1,10 @@
-#from ..modele.actionDAO import ActionDAO
+# ===============================================
+# Nom du fichier : CentresDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les centres.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
 
 class CentresDAO:
 

@@ -1,4 +1,11 @@
-# Fichier pour aller chercher les informations à afficher sur le site web.
+# ===============================================
+# Nom du fichier : serveur_api.py
+# Ce fichier permet de faire le lien entre les données
+# de la base donnée au site web.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 from datetime import datetime
 import json
 
@@ -64,7 +71,7 @@ class Serveur():
 
         if request.method == 'POST':
             info = request.form.to_dict()
-            token = info["token"] #info[0]
+            token = info["token"]
             del info["token"]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
             return json.dumps(result, default=Serveur.rendre_json_compatible)

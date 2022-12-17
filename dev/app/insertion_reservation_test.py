@@ -1,6 +1,14 @@
+# ===============================================
+# Nom du fichier : insertion_reservation_test.py
+# Ce fichier permet d'insérer des réservations aléatoires
+# à la compagnie voulue.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 import csv
 from random import randint
-from datetime import date, datetime
+from datetime import datetime
 from modele.actionDAO import ActionDAO
 
 class CreationResarvationTest:
@@ -12,7 +20,7 @@ class CreationResarvationTest:
         
         
     def get_name(self):
-        with open("dev/app/banqueNom.txt", encoding="utf-8") as file: # modele/banqueNom.txt') as file:
+        with open("dev/app/banqueNom.txt", encoding="utf-8") as file:
             csv_reader = csv.reader(file, delimiter=",")
             for row in csv_reader:
                 self.nom.append(row[0])

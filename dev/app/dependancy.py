@@ -1,4 +1,10 @@
-import sys
+# ===============================================
+# Nom du fichier : dependancy.py
+# Ce fichier contient le code pour installer les dépendances du logiciel.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 import traceback
 import subprocess as sub
 

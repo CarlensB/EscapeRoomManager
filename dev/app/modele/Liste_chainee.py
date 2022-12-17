@@ -1,3 +1,11 @@
+# ===============================================
+# Nom du fichier : Liste_chainee.py
+# Ce fichier contient la classe DoubleLinkedList
+# qui est une liste double chainée.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 import traceback
 
 

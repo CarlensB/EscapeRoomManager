@@ -1,4 +1,11 @@
-# Connection bd
+# ===============================================
+# Nom du fichier : UTILS.py
+# Ce fichier contient les infromations permettant de
+# de se connecter à la base de données.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 USER = 'erm_user'
 HOTE = '165.227.39.93'
 MDP = 'ERM@C61mc'

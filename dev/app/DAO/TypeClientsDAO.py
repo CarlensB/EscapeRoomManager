@@ -1,3 +1,12 @@
+# ===============================================
+# Nom du fichier : TypeClientsDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table qui contient les différents 
+# types de client.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 class TypeClientsDAO:
 
     def __init__(self, bd) -> None:
@@ -17,7 +26,7 @@ class TypeClientsDAO:
 
     def ajouter(self, args: list[tuple[str| float |int]]):
         sql = "INSERT INTO typeclient (categorie, prix, compagnie) VALUES (%s, %s, %s)"
-        val = args # str, str, int
+        val = args
         self.__execute_query(sql, val)
     
     def supprimer(self, tc: list[tuple[int]]) ->None:

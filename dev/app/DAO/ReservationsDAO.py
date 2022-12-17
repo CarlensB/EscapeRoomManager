@@ -1,3 +1,11 @@
+# ===============================================
+# Nom du fichier : ReservationsDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les reservations.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 class ReservationsDAO:
     
     def __init__(self, bd) -> None:

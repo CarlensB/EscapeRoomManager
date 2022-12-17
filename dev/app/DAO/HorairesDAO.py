@@ -1,3 +1,11 @@
+# ===============================================
+# Nom du fichier : HorairesDAO.py
+# Ce fichier contient les actions pour interagir
+# avec la table contenant les horaires.
+# Auteur : Maxence Guindon
+# Équipe : Carlens Belony et Maxence Guindon
+# ===============================================
+
 class HorairesDAO:
     
     def __init__(self, bd) -> None:
