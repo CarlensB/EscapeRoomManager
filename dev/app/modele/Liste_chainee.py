@@ -276,11 +276,4 @@ class DoubleLinkedList:
         for idx, elem in enumerate(self):
             json[idx] = elem
         return json
-
-# Test
-# =========================================
-
-if __name__ == "__main__":
-    liste = DoubleLinkedList(1,2,3,4,5,6,7,9)
-    liste.add(8, 9)
-    print(liste)
+        

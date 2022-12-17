@@ -277,7 +277,37 @@ button:focus {
 /* ______________________ RESERVATIONS _____________________________ */
 
 .RapportsBoite{
-    background-color: red;
+    background-color: rgba(110, 185, 204, 0.767);
     height: 50%;
     width: 50%;
+}
+
+.RapportsInfo{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.RapportsEntrées{
+    background-color: lightblue;
+}
+
+.RapportsTitre{
+    color: white;
+    text-align: center;
+    margin: 0.5% auto;
+    width: 91.5%;
+    height: 25%;
+    background-color: rgba(0, 253, 114, 0.5);
+}
+
+.RapportsPourcentage{
+    width: 30%;
+    height: 20%;
+    background-color: #8bd432;
+    display: block;
+    color: white;
+    margin: 0.5% 0.5%;
+    text-align: center;
 }
