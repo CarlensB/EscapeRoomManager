@@ -455,6 +455,18 @@ class AccueilStore {
           .then(response => {
             this._newCentreInfos.id = response[0][0]
             this._compagnie.ajouterCentre(this._newCentreInfos)
+            let inputs = document.querySelectorAll("input")
+            for(let i = 0; i < inputs.length; i++){
+                inputs[i].value = ""
+            }
+
+            let msgSucces = document.createElement("div")
+            msgSucces.innerHTML = "Centre enregistrer"
+            msgSucces.addEventListener("click", (() =>{
+                document.querySelector(".nouveauCentreFormulaire").removeChild(msgSucces)
+            }))
+
+            document.querySelector(".nouveauCentreFormulaire").append(msgSucces)
         
           })
               } catch (e) {

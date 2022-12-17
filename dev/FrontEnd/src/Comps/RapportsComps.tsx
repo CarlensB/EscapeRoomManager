@@ -5,12 +5,8 @@ import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
 export const AppRapport = observer(() => {
 
   return(
-      React.createElement(
-          'div',
-          {class: 'AppRight'},
-          React.createElement(Rapport)
-      )
-  ) 
+      React.createElement((Rapport))
+    ) 
 })
 
 const Rapport = observer(() => {
@@ -19,22 +15,33 @@ const Rapport = observer(() => {
 
         let statistiques = genererStat()
         // rapport.genererRevenu()
-        return (React.createElement(
-            'div',
-            {class:"RapportsBoite"},
-            genererTitleRapport(statistiques[0], ""),
-            genererTitleRapport(statistiques[1], "Taux d'occupation"),
-            genererTitleRapport(statistiques[2], "Réservation par Salle"),
-            genererTitleRapport(statistiques[3], "Revenu moyen par Salle"),
-            genererTitleRapport(statistiques[4], "Revenu par Salle"),
-            genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
-            genererTitleRapport(statistiques[6], "Performances")
+        return (
+            React.createElement(
+                'div',
+                {class: 'AppRapport'},
+                React.createElement(
+                    'div',
+                    {class:"RapportsBoite"},
+                    genererTitleRapport(statistiques[0], "Salles"),
+                    genererTitleRapport(statistiques[1], "Taux d'occupation"),
+                    genererTitleRapport(statistiques[2], "Réservation par Salle"),
+                    genererTitleRapport(statistiques[3], "Revenu moyen par Salle"),
+                    genererTitleRapport(statistiques[4], "Revenu par Salle"),
+                    genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
+                    genererTitleRapport(statistiques[6], "Performances")
+                ),
+                React.createElement(
+                    'div',
+                    {class:"RapportsBoite"},
+                    genererTitleRapport([], accueilStore.getCompany().name),
+                    genererTitleRapport(statistiques[8]["Revenu"], "Revenu globale"),
+                    genererTitleRapport(statistiques[8]["ReservationTotal"], "Nombre de réservation globale"),
+                    genererTitleRapport(statistiques[8]["Potentiel"], "Potentielle de réservation globale"),
+                    genererTitleRapport(statistiques[8]["Salle"], "Nombre de salle"),
+                    genererTitleRapport(statistiques[8]["ClientTotal"], "Nombre de clients globale"),
+                    genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale"),
+                )
             )
-            // React.createElement(
-            //     'div',
-            //     {class:"RapportsBoite"},
-            //     genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale")
-            // )
         )}
 })
 
@@ -121,12 +128,12 @@ const genererStat = () => {
 
     // Rapport pour la compagnie
     let infoCompagnie = {
-        "Revenu": revenuCompagnie,
-        "ReservationTotal": nombreTotalReservation,
-        "Potentiel": potentielsTotal,
-        "Salle": nbSalle,
-        "ClientTotal": totalJoueur,
-        "TauxOccupation": nombreTotalReservation/potentielsTotal
+        "Revenu": [revenuCompagnie+"$"],
+        "ReservationTotal": [nombreTotalReservation],
+        "Potentiel": [potentielsTotal],
+        "Salle": [nbSalle],
+        "ClientTotal": [totalJoueur],
+        "TauxOccupation": [((nombreTotalReservation/potentielsTotal)*100).toFixed(2)+"%"]
     }
 
     // Formater l'affichage

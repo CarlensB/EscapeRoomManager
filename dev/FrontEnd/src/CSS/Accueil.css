@@ -313,6 +313,12 @@ button:focus {
 
 /* ______________________ RESERVATIONS _____________________________ */
 
+.AppRapport{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+}
+
 .RapportsBoite{
     background-color: rgba(110, 185, 204, 0.767);
     height: 80%;
