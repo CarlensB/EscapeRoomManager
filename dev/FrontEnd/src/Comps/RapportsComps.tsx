@@ -18,13 +18,12 @@ const Rapport = observer(() => {
     if(Object.keys(accueilStore.reservations).length > 0){
 
         let statistiques = genererStat()
-        console.log(statistiques)
-        genererStat()
         // rapport.genererRevenu()
         return (React.createElement(
             'div',
             {class:"RapportsBoite"},
-            genererOccupation(statistiques[0], statistiques[1])
+            genererOccupation(statistiques[0], statistiques[1]),
+            genererRevenu(statistiques[2])
             
             //React.createElement(genererRevenu)
             
@@ -126,4 +125,28 @@ const genererOccupation = (nomSalle, AffichagesOccupation) =>{
 
 const genererRevenu = (venteActuelle) => {
     console.log(venteActuelle)
+    return(
+        React.createElement(
+            'div',
+            {class: "RapportsInfo"},
+        React.createElement(
+            'div',
+            {class: "RapportsTitre"},
+            "Réservation par Salle"
+        ),
+        React.createElement(
+            'div',
+            {class: "RapportsPourcentage"},
+            venteActuelle[0]
+        ),
+        React.createElement(
+            'div',
+            {class: "RapportsPourcentage"},
+            venteActuelle[1]
+        ),
+        React.createElement(
+            'div',
+            {class: "RapportsPourcentage"},
+            venteActuelle[2]
+        )))
 }
