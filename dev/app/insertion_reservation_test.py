@@ -120,7 +120,7 @@ class CreationResarvationTest:
 def main():
     crt = CreationResarvationTest()
     crt.get_reservation(id_compagnie=1)
-    crt.enter_reservation_bd(1, nb_reservation=55)
+    crt.enter_reservation_bd(1, (2022, 12, 1), (2023,1,8), nb_reservation=100)
     
 if __name__ == '__main__':
     quit(main())

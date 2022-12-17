@@ -29,12 +29,12 @@ const Rapport = observer(() => {
             genererTitleRapport(statistiques[4], "Revenu par Salle"),
             genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
             genererTitleRapport(statistiques[6], "Performances")
-            ),
-            React.createElement(
-                'div',
-                {class:"RapportsBoite"},
-                genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale")
             )
+            // React.createElement(
+            //     'div',
+            //     {class:"RapportsBoite"},
+            //     genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale")
+            // )
         )}
 })
 
@@ -58,7 +58,7 @@ const genererStat = () => {
     let lastReservationDate = Object.keys(reservations)[0].split(" ")
     let firstReservationDate = Object.keys(reservations).pop().split(" ")
 
-    let donneesSTD = generatePlayerPerDay(reservations)
+    let donneesSTD = generateClientPerMonth(reservations)
     
     
     // Déterminer la période d'activité
@@ -111,8 +111,8 @@ const genererStat = () => {
         return accumulator + value;
     }, 0);
     
-    
     let std = standardDeviation(donneesSTD, totalJoueur)
+
     console.log(std)
 
     let potentielsTotal = potentiels.reduce((accumulator, value) =>{
@@ -139,7 +139,6 @@ const genererStat = () => {
         revenuTotaux[i] = revenuTotaux[i] + "$"
     }
 
-    console.log(revenuMoyen, revenuTotaux)
     return [nomSalle, AffichagesOccupation, venteActuelle, revenuMoyen, revenuTotaux, nombreJoueur, performances, donneesSTD, infoCompagnie]
 }
 
@@ -189,12 +188,13 @@ const median = (array) =>{
     return
 }
 
-const generatePlayerPerDay = (reservations) =>{
+const generateClientPerMonth = (reservations) =>{
     let donnees = {}
 
     for (const i in Object.keys(reservations)){
         let key = Object.keys(reservations)[i]
         let date = key.split(" ")[0]
+        date = date.split("-")[1]
         if (date in donnees){
             donnees[date] += parseInt(reservations[key]["participant"])
         }
@@ -206,18 +206,26 @@ const generatePlayerPerDay = (reservations) =>{
     return donnees
 } 
 
-const standardDeviation = (arrayJoueur, totalJoueur) =>{
+const standardDeviation = (info, totaux) =>{
     let std = 0
-    let NombreJour = Object.keys(arrayJoueur).length
+    let NombreMois = Object.keys(info).length
 
-    let Moyenne = totalJoueur/NombreJour
+    let Moyenne = totaux/NombreMois
 
     let somme = 0
 
-    for (let i = 0; i < NombreJour ; i++){
-        somme += (arrayJoueur[Object.keys(arrayJoueur)[i]] - Moyenne)**2
+    let infoNormalisé = {}
+
+    for (let i = 0; i < NombreMois ; i++){
+        somme += (info[Object.keys(info)[i]] - Moyenne)**2
+    }
+    
+    std = (somme/NombreMois)**(1/2)
+
+    //standardisation
+    for (let i = 0; i < NombreMois; i++){
+        infoNormalisé[Object.keys(info)[i]] = (info[Object.keys(info)[i]] - Moyenne)/std
     }
 
-    std = (somme/NombreJour)**(1/2)
-    return std
+    return infoNormalisé
 }
