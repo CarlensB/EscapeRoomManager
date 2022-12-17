@@ -279,7 +279,7 @@ button:focus {
 .RapportsBoite{
     background-color: rgba(110, 185, 204, 0.767);
     height: 80%;
-    width: 80%;
+    width: 50%;
 }
 
 .RapportsInfo{

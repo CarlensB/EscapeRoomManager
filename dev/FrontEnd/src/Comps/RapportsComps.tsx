@@ -29,18 +29,13 @@ const Rapport = observer(() => {
             genererTitleRapport(statistiques[4], "Revenu par Salle"),
             genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
             genererTitleRapport(statistiques[6], "Performances")
-            // genererTitleRapport(statistiques[7], "Performances")
-
-            // genererOccupation(statistiques[0], statistiques[1]),
-            // genererTotalReservation(statistiques[2]),
-            // genererRevenu(statistiques[3], statistiques[4])
-            // genererRevenuMoyen()
-            // genererNbJoueur()
-            // genererPerformance()
-            
-            //React.createElement(genererRevenu)
-            
-        ))}
+            ),
+            React.createElement(
+                'div',
+                {class:"RapportsBoite"},
+                genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale")
+            )
+        )}
 })
 
 const genererStat = () => {
