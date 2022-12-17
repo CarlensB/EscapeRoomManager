@@ -22,9 +22,18 @@ const Rapport = observer(() => {
         return (React.createElement(
             'div',
             {class:"RapportsBoite"},
-            genererOccupation(statistiques[0], statistiques[1]),
-            genererTotalReservation(statistiques[2])
-            // genererRevenu()
+            genererTitleRapport(statistiques[0], ""),
+            genererTitleRapport(statistiques[1], "Taux d'occupation"),
+            genererTitleRapport(statistiques[2], "Réservation par Salle"),
+            genererTitleRapport(statistiques[3], "Revenu moyen par Salle"),
+            genererTitleRapport(statistiques[4], "Revenu par Salle"),
+            genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
+            genererTitleRapport(statistiques[6], "Performances")
+            // genererTitleRapport(statistiques[7], "Performances")
+
+            // genererOccupation(statistiques[0], statistiques[1]),
+            // genererTotalReservation(statistiques[2]),
+            // genererRevenu(statistiques[3], statistiques[4])
             // genererRevenuMoyen()
             // genererNbJoueur()
             // genererPerformance()
@@ -55,7 +64,7 @@ const genererStat = () => {
     let firstReservationDate = Object.keys(reservations).pop().split(" ")
 
     let donneesSTD = generatePlayerPerDay(reservations)
-
+    
     
     // Déterminer la période d'activité
     let dateDebut = new Date(firstReservationDate[0])
@@ -103,27 +112,27 @@ const genererStat = () => {
         nombreJoueur[i] = med
     }
     
-    console.log(revenuMoyen, nombreJoueur)
-    
     let revenuCompagnie = revenuTotaux.reduce((accumulator, value) =>{
         return accumulator + value;
     }, 0);
     
     
-    standardDeviation(donneesSTD, totalJoueur)
+    let std = standardDeviation(donneesSTD, totalJoueur)
+    console.log(std)
 
-    // Déterminer les revenus totaux
-
-
-    // Déterminer le revenu moyen par salle
-
-    // Determiner le nombre de joueurs
-
-    // Determiner la performance relative
+    let potentielsTotal = potentiels.reduce((accumulator, value) =>{
+        return accumulator + value
+    },0)
 
     // Rapport pour la compagnie
-    let infoCompagnie = [revenuCompagnie, nombreTotalReservation, potentiels, nbSalle, totalJoueur]
-    console.log(infoCompagnie)
+    let infoCompagnie = {
+        "Revenu": revenuCompagnie,
+        "ReservationTotal": nombreTotalReservation,
+        "Potentiel": potentielsTotal,
+        "Salle": nbSalle,
+        "ClientTotal": totalJoueur,
+        "TauxOccupation": nombreTotalReservation/potentielsTotal
+    }
 
     // Formater l'affichage
     for (const i in venteActuelle){
@@ -132,84 +141,41 @@ const genererStat = () => {
 
     for (const i in revenuTotaux){
         performances[i] = (((revenuTotaux[i]/revenuCompagnie)*100).toFixed(2)+"%")
+        revenuTotaux[i] = revenuTotaux[i] + "$"
     }
-    
-    console.log(performances)
-    return [nomSalle, AffichagesOccupation, venteActuelle]
-}
-    
-const genererOccupation = (nomSalle, AffichagesOccupation) =>{    
-    return(
-    React.createElement(
-        'div',
-        {class: "RapportsInfo"},
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            nomSalle[0]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            nomSalle[1]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            nomSalle[2]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsTitre"},
-            "Taux d'occupation"
-        )
-        ,
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            AffichagesOccupation[0]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            AffichagesOccupation[1]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            AffichagesOccupation[2]
-        )
-    ))
+
+    console.log(revenuMoyen, revenuTotaux)
+    return [nomSalle, AffichagesOccupation, venteActuelle, revenuMoyen, revenuTotaux, nombreJoueur, performances, donneesSTD, infoCompagnie]
 }
 
-const genererTotalReservation = (venteActuelle) => {
+const genererTitleRapport = (array, title) =>{
     return(
         React.createElement(
             'div',
             {class: "RapportsInfo"},
-        React.createElement(
-            'div',
-            {class: "RapportsTitre"},
-            "Réservation par Salle"
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            venteActuelle[0]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            venteActuelle[1]
-        ),
-        React.createElement(
-            'div',
-            {class: "RapportsPourcentage"},
-            venteActuelle[2]
-        )))
+            React.createElement(
+                'div',
+                {class: "RapportsTitre"},
+                title
+            ),
+            genererLineRapport(array)
+        ))
 }
 
-const genererRevenu = () =>{
+const genererLineRapport = (array) =>{
+    let listeDiv = []
+    for (const i in array){
+        listeDiv.push(React.createElement(
+            'div',
+            {class: "RapportsPourcentage"},
+            array[i]
+        ))
+    }
+    return listeDiv
+}
+
+
+const genererGraph = () =>{
 
 }
 
@@ -254,7 +220,7 @@ const standardDeviation = (arrayJoueur, totalJoueur) =>{
     let somme = 0
 
     for (let i = 0; i < NombreJour ; i++){
-        somme = (arrayJoueur[Object.keys(arrayJoueur)[i]] - Moyenne)**2
+        somme += (arrayJoueur[Object.keys(arrayJoueur)[i]] - Moyenne)**2
     }
 
     std = (somme/NombreJour)**(1/2)
