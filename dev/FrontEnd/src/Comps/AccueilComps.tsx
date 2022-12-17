@@ -6,6 +6,7 @@ import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
 export const AppAccueil = observer(() => {
     return (React.createElement('div',
     {class: 'AppRight'},
+    React.createElement(Calendrier),
     React.createElement(Centres),
     React.createElement(Salles)
     ))
@@ -13,6 +14,90 @@ export const AppAccueil = observer(() => {
 
 )
 
+
+const Calendrier = observer(() => {
+
+    function getDate(){let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+    let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
+    let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
+    let date = year + "-" + month + "-" + day;
+    return date;
+}
+    
+    
+
+return(
+
+    React.createElement(
+        'div',
+        {class: 'calendarContainer'},
+
+        React.createElement(
+            'div',
+            {class:'labelContainer'},
+
+            React.createElement(
+                'div',
+                {class: 'TitreCalendrier'},
+                getDate())
+        ),
+        
+
+        React.createElement(
+            'div',
+            {class:'labelContainerCalendar'},
+        
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-365)}},
+                '<- Année'),
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-30)}},
+                '<- Mois'),
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-7)}},
+                '<- Semaine'),
+            
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-1)}},
+                '<- Jour'),
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.resetDate()}},
+                "Aujourd'hui"),
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(1)}},
+                'Jour ->'),
+
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(7)}},
+                'Semaine ->'),
+                
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(30)}},
+                'Mois ->'),
+                
+                        
+            React.createElement(
+                'div',
+                {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(365)}},
+                'Année ->')
+        )
+
+    )
+)
+})
 
 
 const Centres = observer(() => {
@@ -133,16 +218,34 @@ const Salles = observer(() => {
 
         if (horaires.length != 0) {
             for (let i = 0; i<horaires.length; i++){
+                horaires[i].nomSalle = salle.nom
+                let reservation = accueilStore.matchReservation(horaires[i])
+                if (reservation == undefined)
+                {
                 let message = horaires[i].hrDebut + " à " + horaires[i].hrFin
                 arrayReservations.push(
                     React.createElement(
                         'div',
-                        {class:'reservation', onClick: () => {
+                        {class:'reservation vide', onClick: () => {
                             accueilStore.selected_horaire = horaires[i]
                             accueilStore.ActivePage = eActivePage.CreateReservation
                         }},
                         message)
                     )
+                }
+                else {
+                    let message = horaires[i].hrDebut + " à " + horaires[i].hrFin + "\n" +
+                    reservation["nom_client"] + " " + reservation["participant"] + " participants"
+                arrayReservations.push(
+                    React.createElement(
+                        'div',
+                        {class: reservation["statut"] == 1 ? 'reservation vert' : 'reservation jaune', onClick: () => {
+                            accueilStore.selected_horaire = horaires[i]
+                            accueilStore.ActivePage = eActivePage.CreateReservation
+                        }},
+                        message)
+                    )
+                }
                 }
             }
 
