@@ -1,6 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
-import { Compagnie} from "./Modele/ModeleApp";
+import { Compagnie, Horaire} from "./Modele/ModeleApp";
 configure({
     enforceActions: "never",
 })
@@ -13,6 +13,25 @@ export enum eActivePage {
     Login=5,
     Rapports=6
 }
+
+export class ResInfos{
+    constructor(
+        public nom: string = "",
+        public nb_participants: number = 1,
+        public num_tel: string = "",
+        public courriel: string = "",
+        public paye: boolean = false,
+    )
+    {}
+        reset() {
+            this.nom = "";
+            this.nb_participants = 1;
+            this.num_tel = "";
+            this.courriel = "";
+            this.paye = true;
+        }
+}
+
 
 export class newCentreInfos{
 
@@ -66,6 +85,7 @@ export class SalleInfos{
 
 
 class AccueilStore {
+    
     private _compagnie: Compagnie;
     private _ActivePage: eActivePage = eActivePage.Accueil;
     private _newCentreInfos: newCentreInfos = new newCentreInfos()
@@ -75,7 +95,10 @@ class AccueilStore {
     private _id_compagnie: number = 0
     private _nom_complet: string = ""
     private _token: string = "non"
-    private _selected_horaire = null;
+    private _selected_horaire:Horaire = null;
+    private _date: Date = new Date();
+    private _modResInfo: ResInfos = new ResInfos();
+    
     
     private _niveau_acces: number = 1
     private _id_emp: number = 0
@@ -86,7 +109,20 @@ class AccueilStore {
         return this._reservations;
     }
     
+    public get date(): Date {
+        return this._date;
+    }
 
+    public modify_date(value: number) {
+        let date = new Date(this._date);
+        date.setDate(this._date.getDate() + value);
+        this._date = date;
+    }
+
+    public resetDate(){
+        let date = new Date();
+        this._date = date;
+    }
 
     public set token(value: string) {
         this._token = value;
@@ -107,7 +143,8 @@ class AccueilStore {
     constructor() {
         makeAutoObservable(this);
         remotedev(this, { global: true, name: this.constructor.name });
-        this._compagnie = new Compagnie("Escaparium", []);   
+        this._compagnie = new Compagnie("Escaparium", []);
+        let a = new Date();
     }
     
     public initialiserinfos(){
@@ -121,6 +158,23 @@ class AccueilStore {
             this.token = var_session[2]
             this._id_compagnie = parseInt(var_session[3])
             this._niveau_acces = parseInt(var_session[4])
+
+            let formdata = new FormData()
+            formdata.append("token", this.token)
+            fetch('http://127.0.0.1:5000/selectionner_all/reservation',
+            {
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(response => {
+        
+            this.initialiserReservations(response)
+            // console.log(response[0]["centre"])
+
+})
+
+
             fetch('http://127.0.0.1:5000/api/compagnie_info/'+this._id_compagnie.toString(),
             {
                 method: 'POST',
@@ -134,21 +188,9 @@ class AccueilStore {
             this._id_compagnie = response["index"]
             this._nom_complet = response["compagnie"]
 
-            let formdata = new FormData()
-            formdata.append("token", this.token)
             
-            fetch('http://127.0.0.1:5000/selectionner_all/reservation',
-            {
-                method: 'POST',
-                body: formdata
-            })
-            .then(response => response.json())
-            .then(response => {
-        
-            this.initialiserReservations(response)
-            // console.log(response[0]["centre"])
-
-})
+            
+            
 
       })
             
@@ -200,7 +242,7 @@ class AccueilStore {
         {
             let date = reservations[i]["date"]
             date = date.split('T')
-            let key = [date[0], date[1], reservations[i]["centre"]].join(" ")
+            let key = [date[0], date[1], reservations[i]["centre"], reservations[i]["salle"]].join(" ")
             dict[key] = reservations[i]
         }
         this._reservations = dict
@@ -208,10 +250,18 @@ class AccueilStore {
     }
 
     matchReservation(horaire){
-        // if (id_horaire in this.reservations){
-        //     return this.reservations[id_horaire]
-        // }
-        // else return null
+    let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+    let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
+    let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
+    let date = year + "-" + month + "-" + day;
+    let horaire_debut = horaire._hrDebut.replace("h", ":");
+
+    if (horaire_debut.length < 4)
+        horaire_debut = horaire_debut + "00"
+
+    let key = date + " " + horaire_debut + ":00 " + this._compagnie.getCurrentCentre().nom + " " + horaire.nomSalle
+    let reservation = this.reservations[key]
+    return reservation
     }
 
 
@@ -272,6 +322,22 @@ class AccueilStore {
         this._newSalleInfos.reset()
         this._newCentreInfos.reset()
     }
+
+    updateModResInfoNom(value: string) {
+        this._modResInfo.nom = value
+      }
+      updateModResInfoParticipants(value: number) {
+        this._modResInfo.nb_participants = value
+      }
+      updateModResInfoNumeroTelephone(value: string) {
+        this._modResInfo.num_tel = value
+      }
+      updateModResInfoCourriel(value: string) {
+        this._modResInfo.courriel = value
+      }
+      updateModResInfoPaye(value: boolean) {
+        this._modResInfo.paye = value
+      }
 
     getCurrentCentreValideOuPas(){
         return this._compagnie.getCurrentCentrevalidity()
@@ -431,6 +497,14 @@ class AccueilStore {
 
     getCentres(){
         return this._compagnie.centres;
+    }
+
+    getCurrentCentre(){
+        return this._compagnie.getCurrentCentre()
+    }
+
+    getSalleByName(name:string){
+        return this._compagnie.getSalleByName(name)
     }
 
     getSelectionCentre(){
