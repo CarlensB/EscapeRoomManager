@@ -315,9 +315,15 @@ button:focus {
 
 .AppRapport{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 65%;
     margin: 7% 1%;
+}
+
+.contenantInfoBoite{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .RapportsBoite{
@@ -336,10 +342,6 @@ button:focus {
     justify-content: center;
 }
 
-.RapportsEntrées{
-    background-color: lightblue;
-}
-
 .RapportsTitre{
     color: white;
     text-align: center;
@@ -356,4 +358,65 @@ button:focus {
     color: white;
     margin: 0.5% 0.5%;
     text-align: center;
+}
+
+
+.RapportGraph{
+    background-color: #276874cf;
+    color: white;
+    width: 95%;
+    height: 250px;
+    margin-top: 3%;
+    border-radius: 2%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+.topGraph{
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 50%;
+    height: 50%;
+    align-self: center;
+}
+
+.bottomGraph{
+    border-top: black 2px;
+    background-color: green;
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    height: 30%;
+    align-self: center;
+}
+
+.ladderGraph{
+    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    width: 5%;
+}
+
+.legendLadderGraph{
+    background-color: black;
+    color: white;
+    margin: 50% 15%;
+    text-align: center;
+}
+
+.dataGraph{
+    background-color: yellow;
+    width: 20%;
+    margin: 0% 5%;
+    display: block;
+    height: 80%;
+}
+.legendGraph{
+    background-color: orange;
+    width: 50%;
+    height: 20%;
+    align-self: center;
 }

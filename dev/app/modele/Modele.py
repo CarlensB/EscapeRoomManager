@@ -433,9 +433,30 @@ class GestionSysteme:
         return usager.session_info[key]
 
     def ajouter(self, usager: Usager, table: str, info: list) -> str:
-        table = self.__action_table[table]
-        result = self.__dao.requete_dao(ActionDAO.Requete.INSERT, table, info)            
-        usager.mise_a_jour_session_info(table)
+        table_liaison = []
+        if table == "horaire":
+            table = self.__action_table[table]
+            horaire = list(info[0])
+            for idx, text in enumerate(horaire[1:]):
+                _, hd, hf = text.split(",")
+                heure_debut, minute_debut = hd.split(":")
+                heure_fin, minute_fin = hf.split(":")
+                horaire[idx+1] = "h".join((heure_debut, minute_debut if minute_debut != '0' else "")), "h".join((heure_fin, minute_fin if minute_fin != '0' else ""))
+            print(horaire)
+            
+            for h in horaire[1:]:
+                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT, table, [h])
+                if result:
+                    table_liaison.append((result[0][0], horaire[0]))
+                else:
+                    table_liaison.append((self.__dao.requete_dao(ActionDAO.Requete.INSERT, table, [h])[0][0], horaire[0]))
+            
+            result = self.__dao.requete_dao(ActionDAO.Requete.LIER, ActionDAO.Table.SALLE, table_liaison)
+            
+        else:
+            table = self.__action_table[table]
+            result = self.__dao.requete_dao(ActionDAO.Requete.INSERT, table, info)            
+            usager.mise_a_jour_session_info(table)
         return result
 
 
@@ -512,31 +533,8 @@ class GestionSysteme:
         try:
             return self.__algo.create_schedule(**info)
         except (ValueError, KeyError) as e:
-            return ValueError(self.__ALGO_ERROR)
+            return ValueError(self.__ALGO_ERROR)       
         
     # fonction pour le site de showcase
     def renvoi_compagnie(self):
         return self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.COMPAGNIE, [(1,)])
-
-    # # ==============================================================================
-    # #           Fonctions protégés
-
-    # def __verifier_centre(self, a: ActionDAO, centre: tuple):
-    #     liste_centre = a.requete_dao(a.Requete.SELECT, a.Table.CENTRE, centre[1])
-    #     for c in liste_centre:
-    #         if centre[0] == c[1]:
-    #             return c[0]
-    #     a.requete_dao(a.Requete.INSERT, a.Table.CENTRE, centre)
-    #     self.__verifier_centre(a, centre)     
-
-    # def __get_client(self, index: int):
-    #     a = ActionDAO()
-    #     result = a.requete_dao(a.Requete.SELECT, a.Table.COMPAGNIE, [(index,)])
-    #     print(result)
-    #     return result[0][1]
-
-    # def __determiner_prix(self, r: 'Reservation'):
-    #     tps = 0.05
-    #     tvq = 0.09975
-    #     cout_base = self.__participant * self.__salle.prix
-    #     r.prix_total = cout_base + cout_base * tps + cout_base * tvq

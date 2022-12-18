@@ -1,5 +1,6 @@
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
+import { Form } from "react-router-dom";
 import { Compagnie, Horaire} from "./Modele/ModeleApp";
 configure({
     enforceActions: "never",
@@ -594,6 +595,29 @@ class AccueilStore {
     updatemodSalleInfosDescription(description:string){
         this._modSalleInfos.description = description
     }
+    
+    ajouterHoraire (listeHoraire){
+        let formData = new FormData()
+        formData.append("token", this.token)
+        formData.append("id_salle", this._newSalleInfos.id.toString())
+
+        for (let i =0; i < listeHoraire.length; i++){
+            formData.append("horaire"+[i], listeHoraire[i])
+        }
+
+        try{
+            fetch('http://127.0.0.1:5000/ajouter/horaire', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+            })
+        }catch(e){
+            console.log("horaire invalide")
+        }
+    }
 
     ajouterSalle(){
         let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null &&
@@ -626,9 +650,7 @@ class AccueilStore {
             this._newSalleInfos.id = response[0][0]         
             let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle, this._newSalleInfos.nom)
             this._compagnie.ajouterSalle(this._newSalleInfos, list_horaire)
-
-
-        
+            this.ajouterHoraire(list_horaire)
           })
               } catch (e) {
                   console.log("CA MARCHE POOOH")

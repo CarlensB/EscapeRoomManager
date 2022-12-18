@@ -25,9 +25,9 @@ class HorairesDAO:
 
     def ajouter(self, args: list[tuple[str, str]]) -> None:
         sql = '''
-        INSERT INTO horaires (heure_debut, heure_fin)
+        INSERT INTO horaires (heure_debut, heure_fin) 
         VALUES(%s, %s)
-        '''
+        '''#INSERT OR 
         val = args
         self.__execute_query(sql, val)
         sql = "SELECT id FROM horaires WHERE heure_debut = %s AND heure_fin = %s"
@@ -35,7 +35,7 @@ class HorairesDAO:
 
     def selectionner(self, horaire: list[tuple[int]]) -> None:
         sql = '''
-        SELECT * FROM horaires WHERE id= %s
+        SELECT id FROM horaires WHERE heure_debut = %s AND heure_fin = %s
         '''
         val = horaire[0]
         return self.__select(sql, val)

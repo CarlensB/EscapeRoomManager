@@ -7,6 +7,7 @@
 # ===============================================
 
 
+
 from serveur_api import Serveur
 from dependancy import DependancyInstall
 
@@ -34,6 +35,16 @@ e = {'compagnie': 1,
      'num_ass': 257_098_765,
      'mdp': "testAndroid18!@"}
 
+s = {
+    "nom": "Test",
+    "description": "Test description",
+    "centre": 1,
+    "nb_max_joueur": 6,
+    "prix": 25,
+    "privee": 1,
+    "horaires": (480, 1320, 60)
+}
+
 class App:
     def __init__(self) -> None:
         dependance = ["bcrypt", "mysql-connector-python"]
@@ -47,15 +58,17 @@ class App:
     
 
 def main():
-    #Test
-    #gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
-    #gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
-
-
     # Démarrage du serveur
     app = App()
     Serveur.definir_controleur(app.define_app_controleur())
     Serveur.demarrer_serveur()
+    
+    #Test
+    # gs = app.define_app_controleur()
+    # gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
+    # gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
+    
+    # print(gs.interaction_dao(gs.retourner_id, "ajouter", "salle", s))
     
     
 if __name__=='__main__':
