@@ -36,12 +36,14 @@ class CreationResarvationTest:
     def create_reservation(self, id_compagnie, date_debut: tuple[int, int, int], date_fin: tuple[int, int, int] = (2023, 3,30)):
         reservation = ["nom", "num_telephone", "statut_reservation", "salle", "nb_personne", "courriel", "prix_total", "date"]
         horaire_salle = []
+        salle = []
         horaire = ""
         # Get salle
         
         centres = self.dao.requete_dao(self.dao.Requete.SELECT_ALL, self.dao.Table.CENTRE, [(id_compagnie,)])
         for idx in centres:
-            salle = self.dao.requete_dao(self.dao.Requete.SELECT_ALL, self.dao.Table.SALLE, [(idx[0],)])
+            for s in self.dao.requete_dao(self.dao.Requete.SELECT_ALL, self.dao.Table.SALLE, [(idx[0],)]):
+                salle.append(s)
      
         # Get horaire
         for s in salle:
@@ -110,7 +112,6 @@ class CreationResarvationTest:
         reservation = [0]*nb_reservation
         for i in range(nb_reservation):
             reservation[i] = self.create_reservation(id_compagnie, date_debut, date_fin)
-        print(reservation)
         self.dao.requete_dao(self.dao.Requete.INSERT, self.dao.Table.RESERVATION, reservation)
             
     def get_reservation(self, id_compagnie):
@@ -120,7 +121,8 @@ class CreationResarvationTest:
 def main():
     crt = CreationResarvationTest()
     crt.get_reservation(id_compagnie=1)
-    crt.enter_reservation_bd(1, (2022, 12, 1), (2023,1,8), nb_reservation=100)
+    crt.enter_reservation_bd(1, (2022, 12, 1), (2023,1,8), nb_reservation=550)
+    print("done")
     
 if __name__ == '__main__':
     quit(main())

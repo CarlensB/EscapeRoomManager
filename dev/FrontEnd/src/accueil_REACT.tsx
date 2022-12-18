@@ -27,6 +27,7 @@ const AccueilPageComp = observer(() => {
                                 (accueilStore.ActivePage == eActivePage.CreateCentre) ? AppCreerSucursalle :
                                 (accueilStore.ActivePage == eActivePage.Rapports) ? AppRapport :
                                 AppGererReservation)
+        
           
       )
   ) 

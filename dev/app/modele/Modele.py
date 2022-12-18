@@ -441,7 +441,7 @@ class GestionSysteme:
                 _, hd, hf = text.split(",")
                 heure_debut, minute_debut = hd.split(":")
                 heure_fin, minute_fin = hf.split(":")
-                horaire[idx+1] = "h".join((heure_debut, minute_debut if minute_debut != 0 else "")), "h".join((heure_fin, minute_fin if minute_fin != 0 else ""))
+                horaire[idx+1] = "h".join((heure_debut, minute_debut if minute_debut != '0' else "")), "h".join((heure_fin, minute_fin if minute_fin != '0' else ""))
             print(horaire)
             
             for h in horaire[1:]:

@@ -1,6 +1,27 @@
 import { observer } from "mobx-react"
 import React from "react"
 import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   BarElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+// }
+// from 'chart.js'
+// import {Bar} from 'react-chartjs-2'
+
+
+// ChartJS.register(
+//     CategoryScale,
+//     LinearScale,
+//     BarElement,
+//     Title,
+//     Tooltip,
+//     Legend
+//   )
 
 export const AppRapport = observer(() => {
 
@@ -14,34 +35,37 @@ const Rapport = observer(() => {
     if(Object.keys(accueilStore.reservations).length > 0){
 
         let statistiques = genererStat()
-        // rapport.genererRevenu()
         return (
             React.createElement(
                 'div',
                 {class: 'AppRapport'},
                 React.createElement(
                     'div',
-                    {class:"RapportsBoite"},
-                    genererTitleRapport(statistiques[0], "Salles"),
-                    genererTitleRapport(statistiques[1], "Taux d'occupation"),
-                    genererTitleRapport(statistiques[2], "Réservation par Salle"),
-                    genererTitleRapport(statistiques[3], "Revenu moyen par Salle"),
-                    genererTitleRapport(statistiques[4], "Revenu par Salle"),
-                    genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
-                    genererTitleRapport(statistiques[6], "Performances")
+                    {class: "contenantInfoBoite"},
+                    React.createElement(
+                        'div',
+                        {class:"RapportsBoite"},
+                        genererTitleRapport(statistiques[0], "Salles"),
+                        genererTitleRapport(statistiques[1], "Taux d'occupation"),
+                        genererTitleRapport(statistiques[2], "Réservation par Salle"),
+                        genererTitleRapport(statistiques[3], "Revenu moyen par Salle"),
+                        genererTitleRapport(statistiques[4], "Revenu par Salle"),
+                        genererTitleRapport(statistiques[5], "Taille moyen du groupe par salle"),
+                        genererTitleRapport(statistiques[6], "Performances")
+                    ),
+                    React.createElement(
+                        'div',
+                        {class:"RapportsBoite"},
+                        genererTitleRapport([], accueilStore.getCompany().getCurrentCentre().nom),
+                        genererTitleRapport(statistiques[8]["Revenu"], "Revenu globale"),
+                        genererTitleRapport(statistiques[8]["ReservationTotal"], "Nombre de réservation globale"),
+                        genererTitleRapport(statistiques[8]["Potentiel"], "Potentielle de réservation globale"),
+                        genererTitleRapport(statistiques[8]["Salle"], "Nombre de salle"),
+                        genererTitleRapport(statistiques[8]["ClientTotal"], "Nombre de clients globale"),
+                        genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale"),
+                    ),
                 ),
-                React.createElement(
-                    'div',
-                    {class:"RapportsBoite"},
-                    genererTitleRapport([], accueilStore.getCompany().name),
-                    genererTitleRapport(statistiques[8]["Revenu"], "Revenu globale"),
-                    genererTitleRapport(statistiques[8]["ReservationTotal"], "Nombre de réservation globale"),
-                    genererTitleRapport(statistiques[8]["Potentiel"], "Potentielle de réservation globale"),
-                    genererTitleRapport(statistiques[8]["Salle"], "Nombre de salle"),
-                    genererTitleRapport(statistiques[8]["ClientTotal"], "Nombre de clients globale"),
-                    genererTitleRapport(statistiques[8]["TauxOccupation"], "Taux d'occupation globale"),
-                )
-            )
+                genererGraph(statistiques[9]))
         )}
 })
 
@@ -58,9 +82,12 @@ const genererStat = () => {
     let performances = []
     let totalJoueur = 0
 
+    // nom du centre
+    let centre = accueilStore.getCompany().getCurrentCentre().nom
+
     // Aller chercher les réservations
     let reservations = accueilStore.reservations
-    let nombreTotalReservation = Object.keys(reservations).length
+    let nombreTotalReservation = 0
     let nbSalle = accueilStore.getSalles().length
     let lastReservationDate = Object.keys(reservations)[0].split(" ")
     let firstReservationDate = Object.keys(reservations).pop().split(" ")
@@ -99,12 +126,15 @@ const genererStat = () => {
     // Déterminer le nombre de réservations par salles
     for (let resa in Object.values(reservations)){
         let stuff = Object.values(reservations)[resa]
-        let index = nomSalle.indexOf(stuff["salle"])
-        venteActuelle[index] += 1
-        revenuTotaux[index] += stuff["prix_total"]
-        totalJoueur += stuff["participant"]
-        nombreJoueur[index].push(stuff["participant"])
-        revenuMoyen[index].push(stuff["prix_total"])
+        if(stuff["centre"] == centre){
+            let index = nomSalle.indexOf(stuff["salle"])
+            venteActuelle[index] += 1
+            revenuTotaux[index] += stuff["prix_total"]
+            totalJoueur += stuff["participant"]
+            nombreJoueur[index].push(stuff["participant"])
+            revenuMoyen[index].push(stuff["prix_total"])
+            nombreTotalReservation += 1
+        }
     }
     
     for (const i in revenuMoyen){
@@ -120,7 +150,7 @@ const genererStat = () => {
     
     let std = standardDeviation(donneesSTD, totalJoueur)
 
-    console.log(std)
+    console.log("deviation standard",std)
 
     let potentielsTotal = potentiels.reduce((accumulator, value) =>{
         return accumulator + value
@@ -146,7 +176,7 @@ const genererStat = () => {
         revenuTotaux[i] = revenuTotaux[i] + "$"
     }
 
-    return [nomSalle, AffichagesOccupation, venteActuelle, revenuMoyen, revenuTotaux, nombreJoueur, performances, donneesSTD, infoCompagnie]
+    return [nomSalle, AffichagesOccupation, venteActuelle, revenuMoyen, revenuTotaux, nombreJoueur, performances, donneesSTD, infoCompagnie, std]
 }
 
 const genererTitleRapport = (array, title) =>{
@@ -175,10 +205,125 @@ const genererLineRapport = (array) =>{
     return listeDiv
 }
 
+const generateData = (dataArray, direction) =>{
+    let divList = []
+    let visible = 'none'
 
-const genererGraph = () =>{
+    for (let i = 0; i < dataArray.length; i++){
+        divList.push(
+            React.createElement(
+                'div',
+                {class: "dataGraph"}
+            )
+        )
+
+        if (direction == 'top' && dataArray[i] >= 0){
+            visible = 'block'
+        }
+
+        console.log(divList[i])
+
+        divList[i].style.display = visible
+        divList[i].style.heigth = "80%"
+    }
+
+    return divList
+}
+
+const generateLegendYAxis = (data) =>{
+    let divList = []
+    for (let i = 0; i < data; i++){
+        divList.push(
+            React.createElement(
+                'div',
+                {class: "legendLadderGraph"},
+                data-i
+            )
+        )
+    }
+    return divList
+}
+
+const genererGraph = (std) =>{
+    return(
+        React.createElement(
+            'div',
+            {class:"RapportGraph"},
+            React.createElement(
+                'div',
+                {class: "topGraph"},
+                React.createElement(
+                    'div',
+                    {class: "ladderGraph"},
+                    generateLegendYAxis(3)
+                ),
+                generateData(Object.values(std), "top")
+            ),
+            React.createElement(
+                'div',
+                {class: "bottomGraph"},
+                React.createElement(
+                    'div',
+                    {class: "ladderGraph"},
+                    React.createElement(
+                        'div',
+                        {class:"legendLadderGraph"},
+                        '-1'
+                    )
+                ),
+                generateData(Object.values(std), "bottom")
+            ),
+            React.createElement(
+                'div',
+                {class:"legendGraph"},
+                Object.keys(std)
+            )
+        )
+    )
 
 }
+// {
+//     let colors = ['rgb(53, 162, 235)', 'rgb(255, 99, 132)']
+//     let datasets = []
+
+//     for (const i in Object.keys(std)){
+//         let entree = Object.keys(std)[i]
+
+//         datasets.push({
+//             label: entree,
+//             data: std[entree],
+//             borderColor: colors[i],
+//             backgroundColor: 'rgba(53, 162, 235, 0.5)',
+//         })
+//     }
+
+//     let data = {
+//         labels: Object.keys(std),
+//         datasets: datasets
+        
+//     }
+
+//     let options = {
+//         indexAxis: 'y' as const,
+//         elements: {
+//             bar: {
+//                 borderWidth: 2,
+//             },
+//         },
+//         responsive: true,
+//         plugins: {
+//             legend: {
+//                 position: 'right' as const,
+//             },
+//             title: {
+//                 display: true,
+//                 text: "Performances selon le mois"
+//             },
+//         },
+//     }
+
+//     return (<Bar options={options} data={data}/>)
+// }
 
 
 /* _________________ Math function ____________________ */
