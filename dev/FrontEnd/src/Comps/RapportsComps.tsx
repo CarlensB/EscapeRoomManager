@@ -207,24 +207,18 @@ const genererLineRapport = (array) =>{
 
 const generateData = (dataArray, direction) =>{
     let divList = []
-    let visible = 'none'
 
     for (let i = 0; i < dataArray.length; i++){
-        divList.push(
-            React.createElement(
-                'div',
-                {class: "dataGraph"}
+        if (direction == 'top' && dataArray[i] >= 0)
+        {
+            divList.push(
+                React.createElement(
+                    'div',
+                    {class: "dataGraph"},
+                    "allô"
+                )
             )
-        )
-
-        if (direction == 'top' && dataArray[i] >= 0){
-            visible = 'block'
         }
-
-        console.log(divList[i])
-
-        divList[i].style.display = visible
-        divList[i].style.heigth = "80%"
     }
 
     return divList

@@ -377,6 +377,7 @@ button:focus {
     background-color: red;
     display: flex;
     flex-direction: row;
+    align-items: flex-end;
     width: 50%;
     height: 50%;
     align-self: center;
@@ -408,7 +409,10 @@ button:focus {
 
 .dataGraph{
     background-color: yellow;
+    width: 20%;
     margin: 0% 5%;
+    display: block;
+    height: 80%;
 }
 .legendGraph{
     background-color: orange;
