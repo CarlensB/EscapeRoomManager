@@ -1,3 +1,11 @@
+// ===============================================
+// Nom du fichier : accueil_REACT.tsx
+// Ce fichier contient les composantes REACT
+// necéssaires pour l'application complète
+// Auteur : Carlens Belony
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
+
 import { observer } from 'mobx-react';
 import React from 'react';
 import reactDom from "react-dom";

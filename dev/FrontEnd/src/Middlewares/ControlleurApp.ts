@@ -1,3 +1,11 @@
+// ===============================================
+// Nom du fichier : ControlleurApp.tsx
+// Ce fichier contient le Controlleur de l'app
+// qui fait le lien entre la base de donnée et 
+// le modèle ainsi que le modèle et les pages React.
+// Auteur : Carlens Belony et Maxence Guindon
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
 import { Form } from "react-router-dom";
@@ -113,8 +121,8 @@ class AccueilStore {
     .then(response => response.json())
     .then(response => {
         let reservation = {}
-
-        reservation["centre"] = salle.centre
+        let centre_nom = this._compagnie.getCurrentCentre().nom
+        reservation["centre"] = centre_nom
         reservation["courriel"] =response[0][6]
         reservation["date"] =response[0][8]
         reservation["id"] =response[0][0]
@@ -128,6 +136,7 @@ class AccueilStore {
         date = response[0][8].split('T')
         let key = [date[0], date[1], reservation["centre"], reservation["salle"]].join(" ")
         this._reservations[key] = reservation
+        console.log(key)
 
         this.ActivePage = eActivePage.Accueil
 

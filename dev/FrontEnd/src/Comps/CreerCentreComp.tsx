@@ -1,3 +1,13 @@
+// ===============================================
+// Nom du fichier : CreerCentreComp.tsx
+// Ce fichier contient les composantes REACT
+// necéssaires pour l'affichage de la page de
+// gestion de centres et les méthodes qui viennent
+// avec.
+// ainsi que les méthodes qui viennent avec.
+// Auteur : Carlens Belony
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
 import { observer } from "mobx-react"
 import React from "react"
 import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
