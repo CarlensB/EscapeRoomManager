@@ -18,7 +18,6 @@ import codecs
 from .Algorithme import AlgoContext
 from .Liste_chainee import DoubleLinkedList
 
-
 # source pour l'encodage et décodage du mot de passe :
 # https://zetcode.com/python/bcrypt/ et un peu d'aide de Pierre-Paul Monty pour la libraire codecs
   
