@@ -23,8 +23,12 @@ body{
 
 .AppRight{
     width: 70%;
+    height: 90%;
     padding-top: 5%;
     margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 /* ________________________ ACCUEIL ______________________________*/
 .ContainerCentres{
@@ -96,17 +100,18 @@ body{
 .Containersalles{
     background-color: #276874cf;
     display: inline-flex;
-    width: 70%;
-    height: 100%;
+    width: 85%;
+    height: 95%;
     padding: 1% 5% 1% 5%;
     overflow: auto;
+    border: rgba(51, 137, 235, 0.842) solid 2px;
 }
 
 .ContainerSalle{
     background-color: #27ca8e;
     display: inline-block;
     margin: 20px;
-    width: 55%;
+    width: 350px;
     height: 400px;
     border-radius: 5%;
 }
@@ -185,6 +190,7 @@ body{
 
 .App{
     display: flex;
+    height: 100%;
 }
 
 /* ______________________ CREER SALLES _____________________________ */
