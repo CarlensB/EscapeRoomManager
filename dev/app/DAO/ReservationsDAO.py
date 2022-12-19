@@ -31,6 +31,9 @@ class ReservationsDAO:
         '''
         val = args
         self.__execute_query(sql, val)
+        sql = """SELECT * FROM reservations WHERE nom_client = %s AND num_telephone = %s AND statut_reservation = %s AND salle = %s AND
+        nb_personnes = %s AND courriel = %s AND prix_total = %s AND date = %s"""
+        return self.__select(sql, val[0])
 
     def supprimer(self, reservation: list[tuple[int]]) -> None:
         sql = "DELETE FROM reservations WHERE id = %s"
