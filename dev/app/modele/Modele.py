@@ -131,7 +131,7 @@ class Usager:
     
     def __obtenir_info_initiale(self):
         for key in self.__usager_fonction.keys():
-            msg_erreur = self.__usager_fonction.get[key]
+            msg_erreur = self.__usager_fonction[key]()
         return msg_erreur
     
     def  __obtenir_info_employes(self) -> str:
@@ -205,7 +205,7 @@ class Usager:
             
     def mise_a_jour_session_info(self, table: ActionDAO.Table):
         str_table = str(table).split(".")[1].lower()
-        self.__usager_fonction[str_table]
+        self.__usager_fonction[str_table]()
             
 
 class Enregistrement:
