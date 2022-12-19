@@ -293,16 +293,19 @@ class GestionSysteme:
     
     def interaction_dao(self, token: str, action: str, table: str, info: dict):
         if token in set(self.utilisateurs.keys()):
-            # usager = self.utilisateurs[token]
             result = ""
 
             table_et_action = (table, action)
 
             if table_et_action != ("employe", "ajouter") and table_et_action != ("compagnie", "ajouter"):
                 liste = []
+                
                 for key in info.keys():
                     liste.append(info[key])
                 liste = [tuple(liste)]
+                
+                if not info:
+                    liste = [(self.utilisateurs[token].id_compagnie,)]
 
                 requete = self.__action[action]
                 result = requete(table, liste)
@@ -324,21 +327,17 @@ class GestionSysteme:
     def selectionner(self, table: str, info: list) -> dict:
         table = self.__action_table[table]
         return self.__dao.requete_dao(ActionDAO.Requete.SELECT, table, info)
-        
-        # key = table + 's' if table != 'usager' else 'usager'
-        # for elem in usager.session_info[key]:
-        #     if isinstance(elem, dict):
-        #         if elem['id'] == info[0][0]:
-        #             return elem
-        #     elif elem.id == info[0][0]:
-        #         return elem
 
     def selectionner_tout(self, table: str, info: list) -> list:
         table = self.__action_table[table]
-        return self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, info)
-        
-        # key = table + 's' if table != 'usager' else 'usager'
-        # return usager.session_info[key] if key != "reservations" else usager.session_info[key].to_json()
+        if table == ActionDAO.Table.RESERVATION:
+            liste = DoubleLinkedList()
+            info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, info)
+            for elem in info:
+                liste.add(Reservation(*elem[:-3]).__dict__)
+            return liste.to_json()
+        else:
+            return self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, info)
 
     def ajouter(self, table: str, info: list) -> str:
         table_liaison = []
