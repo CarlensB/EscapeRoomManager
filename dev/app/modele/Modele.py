@@ -422,7 +422,7 @@ class GestionSysteme:
             else:
                 result = self.enregistrer(table, info)
 
-            return result.to_json() if table != "reservation" and (action == "selectionner" or action == "selectionner_all") else result
+            return result
         
         elif token is None and table == "reservation":
             liste = []
@@ -441,7 +441,7 @@ class GestionSysteme:
 
     def selectionner_tout(self, usager: Usager, table: str, info: list) -> list:
         key = table + 's' if table != 'usager' else 'usager'
-        return usager.session_info[key]
+        return usager.session_info[key] if key != "reservations" else usager.session_info[key].to_json()
 
     def ajouter(self, usager: Usager, table: str, info: list) -> str:
         table_liaison = []

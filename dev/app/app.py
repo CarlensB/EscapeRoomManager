@@ -69,6 +69,7 @@ def main():
     # gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
     
     # print(gs.interaction_dao(gs.retourner_id, "ajouter", "salle", s))
+    # print(gs.interaction_dao(gs.retourner_id, "selectionner", "reservation", {'id': 1107}))
     
     
 if __name__=='__main__':
