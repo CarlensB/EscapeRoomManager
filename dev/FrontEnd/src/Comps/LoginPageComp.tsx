@@ -1,3 +1,14 @@
+// ===============================================
+// Nom du fichier : LoginPageComp.tsx
+// Ce fichier contient les composantes REACT
+// necéssaires pour l'affichage de la page de
+// connection et les méthodes qui viennent
+// avec.
+// ainsi que les méthodes qui viennent avec.
+// Auteur : Carlens Belony
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
+
 import { observer } from "mobx-react";
 import React from "react";
 import loginStore from "../Middlewares/ControlleurLogin"

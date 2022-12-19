@@ -1,3 +1,11 @@
+// ===============================================
+// Nom du fichier : login_REACT.tsx
+// Ce fichier contient les composantes REACT
+// necéssaires pour la page de connection
+// Auteur : Carlens Belony
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
+
 import { observer } from 'mobx-react';
 import React, {lazy, Suspense} from 'react';
 import reactDom from "react-dom";
