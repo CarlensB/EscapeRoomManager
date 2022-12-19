@@ -1,4 +1,3 @@
-import { DatasetController } from "chart.js"
 import { observer } from "mobx-react"
 import React from "react"
 import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
@@ -69,16 +68,19 @@ const genererStat = () => {
     let reservations = accueilStore.reservations
     let nombreTotalReservation = 0
     let nbSalle = accueilStore.getSalles().length
-    let lastReservationDate = Object.keys(reservations)[0].split(" ")
-    let firstReservationDate = Object.keys(reservations).pop().split(" ")
+    let firstReservationDate = Object.keys(reservations)[0].split(" ")
+    let lastReservationDate = Object.keys(reservations).pop().split(" ")
 
+   
     let donneesSTD = generateClientPerMonth(reservations)
     
     
     // Déterminer la période d'activité
     let dateDebut = new Date(firstReservationDate[0])
     let dateFin = new Date(lastReservationDate[0])
+
     let totalTime = (dateFin.getTime() - dateDebut.getTime())/ (1000 * 3600 * 24)
+
     // Source :
     // https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
     

@@ -3,6 +3,24 @@ body{
   background-image: url('./images/loggedin.jpg');
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #27ca8e;
+  }
+  
+
+  ::-webkit-scrollbar-thumb {
+    background: #023522;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #276874cf;
+  }
+
 .AppRight{
     width: 70%;
     padding-top: 5%;
@@ -19,11 +37,11 @@ body{
 }
 
 .vert{
-    background-color: #80f63698;
+    background-color: #44df4c98;
 }
 
 .jaune{
-    background-color: #fffb00da;
+    background-color: #f0ec18da;
 }
 
 .vide{
@@ -33,7 +51,6 @@ body{
     width: 100%;
     display: flex;
     flex-direction: row;
-    /* margin: 10; */
     text-align: center;
     align-items: center;
 }
@@ -129,6 +146,7 @@ body{
     height: 60px;
     margin: 10;
     border-radius: 5px;
+    text-align: center;
 }
 /* ______________________ MENU _____________________________ */
 
@@ -225,11 +243,9 @@ body{
     text-align: center;
     padding: auto;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    border: 3px solid #95ee29;
+    border: 3px solid #27ca8e;
     border-radius: 20px;
-    background-color: #80f636;
-
-    
+    background-color: #80f636de;
 }
 
 
