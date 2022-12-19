@@ -82,8 +82,8 @@ const genererStat = () => {
     let firstReservationDate = Object.keys(reservations)[0].split(" ")
     let lastReservationDate = Object.keys(reservations).pop().split(" ")
 
-   
-    let donneesSTD = generateClientPerMonth(reservations)
+    console.log(Object.keys(reservations).length)
+    let donneesSTD = generateClientPerMonth(reservations, centre)
     
     
     // Déterminer la période d'activité
@@ -141,7 +141,11 @@ const genererStat = () => {
         return accumulator + value;
     }, 0);
     
+    console.log(donneesSTD)
+
     let std = standardDeviation(donneesSTD, totalJoueur)
+
+    console.log(std)
 
     let potentielsTotal = potentiels.reduce((accumulator, value) =>{
         return accumulator + value
@@ -284,7 +288,7 @@ const genererGraph = (std) =>{
                     {class: "ladderGraph"},
                     React.createElement(
                         'div',
-                        {class:"legendLadderGraph"},
+                        {class:"legendLadderGraph bottom"},
                         '-1'
                     )
                 ),
@@ -309,18 +313,20 @@ const median = (array) =>{
     return
 }
 
-const generateClientPerMonth = (reservations) =>{
+const generateClientPerMonth = (reservations, centre) =>{
     let donnees = {}
 
     for (const i in Object.keys(reservations)){
-        let key = Object.keys(reservations)[i]
-        let date = key.split(" ")[0]
-        date = [date.split("-")[0], date.split("-")[1]].join("-")
-        if (date in donnees){
-            donnees[date] += parseInt(reservations[key]["participant"])
-        }
-        else{
-            donnees[date] = parseInt(reservations[key]["participant"])
+        if (reservations[Object.keys(reservations)[i]].centre == centre){
+            let key = Object.keys(reservations)[i]
+            let date = key.split(" ")[0]
+            date = [date.split("-")[0], date.split("-")[1]].join("-")
+            if (date in donnees){
+                donnees[date] += parseInt(reservations[key]["participant"])
+            }
+            else{
+                donnees[date] = parseInt(reservations[key]["participant"])
+            }
         }
     }
 

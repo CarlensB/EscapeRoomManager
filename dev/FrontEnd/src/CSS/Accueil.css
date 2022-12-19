@@ -458,3 +458,7 @@ button:focus {
     display: flex;
     align-self: center;
 }
+
+.bottom{
+    margin: auto 1%;
+}
