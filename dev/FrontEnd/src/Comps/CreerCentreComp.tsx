@@ -25,7 +25,7 @@ const Formulaire = observer(() => {
 
 const ModifierCentres = observer(() => {
 
-  let errMessage = ""
+  let errMessage = accueilStore.error_message
   let centreChoix = listeCentre()
   let selection = accueilStore.getSelectionCentre()
   let centres = accueilStore.getCentres()
@@ -300,7 +300,7 @@ const ModifierCentres = observer(() => {
 
 const AjouterCentres = observer(() => {
 
-  let errMessage = ""  
+  let errMessage = accueilStore.error_message
   // if (accueilStore.compagnie.newCentreInfos.nom.length < 1 && accueilStore.compagnie.newCentreInfos.adresse.length < 1){
     // errMessage = "Il manque des informations";
     // }

@@ -422,8 +422,8 @@ class GestionSysteme:
             else:
                 result = self.enregistrer(table, info)
 
-            return result.to_json() if table != "reservation" and (action == "selectionner" or action == "selectionner_all") else result
-        
+            return result.to_json() if table == "reservation" and (action =="selectionner" or action == "selectionner_all") else result
+
         elif token is None and table == "reservation":
             liste = []
             for key in info.keys():

@@ -27,8 +27,8 @@ export class ResInfos{
         reset() {
             this.nom = "";
             this.nb_participants = 1;
-            this.num_tel = "";
-            this.courriel = "";
+            this.num_tel = "aucun";
+            this.courriel = "aucun";
             this.paye = true;
         }
 }
@@ -86,6 +86,119 @@ export class SalleInfos{
 
 
 class AccueilStore {
+  ajouterReservation() {
+    console.log("à implémenter")
+  }
+    updateNewResInfoNom(value: string) {
+        this._newResInfo.nom = value
+      }
+      updateNewResInfoParticipants(value: number) {
+        this._newResInfo.nb_participants = value
+      }
+      updateNewResInfoNumeroTelephone(value: string) {
+        this._newResInfo.num_tel = value
+      }
+      updateNewResInfoCourriel(value: string) {
+        this._newResInfo.courriel = value
+      }
+      updateNewResInfoPaye(value: boolean) {
+        this._newResInfo.paye = value
+      }
+    
+    
+  supprimerReservation() {
+    let formdata = new FormData()
+    formdata.append("token", this.token)
+    formdata.append("id", this.selected_reservation["id"].toString())
+    console.log(this.selected_reservation["id"])
+    fetch('http://127.0.0.1:5000/supprimer/reservation',
+    {
+        method: 'POST',
+        body: formdata
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response == "Suppression réussi"){
+            let key = this.convertDate() + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
+            console.log(key)
+            delete this._reservations[key]
+            this.ActivePage = eActivePage.Accueil
+            this.selected_reservation = undefined
+        }
+        else this.error_message = "La suppression a échouée"
+
+})
+  }
+
+  convertDate(){
+    
+    let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+    let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
+    let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
+    let hour = this.selected_horaire.hrDebut.split("h")
+    if (hour[0].length < 2)
+    hour[0] = "0" + hour[0]
+    if (hour[1].length < 2)
+    hour[1] = "00"
+    hour[2] = "00"
+
+    let date = year + "-" + month + "-" + day + " " + hour[0] + ":" + hour[1] + ":" + hour[2];
+
+    return date
+  }
+  modifierReservation() {
+   
+    let valide1 = (this._modResInfo.nom.length > 0 && this._modResInfo.courriel.length > 0 && this._modResInfo.num_tel.length > 0)
+    if (valide1){
+
+        let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
+        let date = this.convertDate()
+
+        let formdata = new FormData()
+        formdata.append("token", this.token)
+        formdata.append("nomClient", this._modResInfo.nom)
+        formdata.append("numTel", this._modResInfo.num_tel)
+        formdata.append("statut", this._modResInfo.paye ? "1" : "0")
+        formdata.append("salle", salle.id.toString())
+        formdata.append("nbPersonne", this._modResInfo.nb_participants.toString())
+        formdata.append("courriel", this._modResInfo.courriel)
+        formdata.append("prix_total", (this._modResInfo.nb_participants * salle.prix).toString())
+        formdata.append("date", date)
+        formdata.append("id", this.selected_reservation["id"].toString())
+        for (const value of formdata.values()) {
+            console.log(value);
+          }
+        
+        
+        fetch('http://127.0.0.1:5000/modifier/reservation',
+        {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response == "Modification réussi"){
+                
+                this.selected_reservation["nom_client"] = this._modResInfo.nom
+                this.selected_reservation["num_tel"] = this._modResInfo.num_tel
+                this.selected_reservation["statut"] = this._modResInfo.paye
+                this.selected_reservation["participant"] = this._modResInfo.nb_participants
+                this.selected_reservation["prix_total"] = this._modResInfo.nb_participants * salle.prix
+
+
+
+                let key = date + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
+                this.reservations[key] = this.selected_reservation
+                this.ActivePage = eActivePage.Accueil
+                this._modResInfo.reset()
+            }
+            else this.error_message = "Erreur coté serveur"
+
+})
+    }
+    else this.error_message = "Les informations sont erronnées"
+    
+  }
     
     private _compagnie: Compagnie;
     private _ActivePage: eActivePage = eActivePage.Accueil;
@@ -98,9 +211,10 @@ class AccueilStore {
     private _token: string = "non"
     private _selected_horaire:Horaire = null;
     private _date: Date = new Date();
+    private _newResInfo: ResInfos = new ResInfos();
     private _modResInfo: ResInfos = new ResInfos();
-    
-    
+    private selected_reservation = null;
+    error_message: string = "";
     private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
@@ -226,7 +340,7 @@ class AccueilStore {
                 salleInfos.description = salles[j][2]
                 salleInfos.description = salles[j][3]
                 salleInfos.nbJrMax = salles[j][5]
-                salleInfos.prix = salles[j][6]
+                salleInfos.prix = salles[j][4]
                 salles[j][7] == 1 ? salleInfos.publique = true : false
 
                 let centre_id = salles[j][9]
@@ -262,6 +376,7 @@ class AccueilStore {
 
     let key = date + " " + horaire_debut + ":00 " + this._compagnie.getCurrentCentre().nom + " " + horaire.nomSalle
     let reservation = this.reservations[key]
+    this.selected_reservation = reservation
     return reservation
     }
 
@@ -318,6 +433,7 @@ class AccueilStore {
     }
     public set ActivePage(value: eActivePage) {
         this._ActivePage = value;
+        this.error_message = ""
         this._modCentreInfos.reset()
         this._modSalleInfos.reset()
         this._newSalleInfos.reset()
@@ -387,8 +503,11 @@ class AccueilStore {
           .then(response => response.json())
           .then(response => {
               
-              if (response == "Modification réussi")
+              if (response == "Modification réussi"){
               this._compagnie.modifierCentre(this._modCentreInfos)
+              this.ActivePage = eActivePage.Accueil
+              }
+              else this.error_message = "Erreur dans les informations données"
 
         
           })
@@ -495,8 +614,11 @@ class AccueilStore {
             })
       .then(response => response.json())
       .then(response => {
-          if (response == "Suppression réussi")
+          if (response == "Suppression réussi"){
           this._compagnie.supprimerCentre();
+          this.ActivePage = eActivePage.Accueil
+          }
+          else this.error_message = "Erreur dans la suppression"
     
       })
           } catch (e) {
@@ -683,8 +805,11 @@ class AccueilStore {
           .then(response => response.json())
           .then(response => {
               console.log(response)
-            if (response == "Modification réussi")
+            if (response == "Modification réussi"){
             this._compagnie.modifierSalle(this._modSalleInfos)
+            this.ActivePage = eActivePage.CreateCentre
+            }
+            else this.error_message = "Erreur dans les informations données"
         
           })
               } catch (e) {
@@ -715,8 +840,11 @@ class AccueilStore {
             })
       .then(response => response.json())
       .then(response => {
-        if (response == "Suppression réussi")
-        this._compagnie.supprimerSalle()
+        if (response == "Suppression réussi"){
+            this._compagnie.supprimerSalle()
+            this.ActivePage = eActivePage.CreateCentre
+        }
+        else this.error_message = "Erreur dans la suppression"
     
       })
           } catch (e) {
