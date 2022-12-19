@@ -60,8 +60,8 @@ class App:
 def main():
     # Démarrage du serveur
     app = App()
-    Serveur.definir_controleur(app.define_app_controleur())
-    Serveur.demarrer_serveur()
+    # Serveur.definir_controleur(app.define_app_controleur())
+    # Serveur.demarrer_serveur()
     
     #Test
     # gs = app.define_app_controleur()
@@ -69,6 +69,10 @@ def main():
     # gs.enregistrer('compagnie', {"nom": "Bonjour1","info_paiement": "test", 'courriel': "Bonjour@courriel.com", "mdp": "testAndroid18!@"})
     
     # print(gs.interaction_dao(gs.retourner_id, "ajouter", "salle", s))
+
+    gs = app.define_app_controleur()
+    gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
+    gs.interaction_dao(gs.retourner_id, "supprimer", "reservation", {'id': 1})
     
     
 if __name__=='__main__':
