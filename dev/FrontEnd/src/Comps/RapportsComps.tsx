@@ -1,3 +1,4 @@
+
 // ===============================================
 // Nom du fichier : AccueuilComp.tsx
 // Ce fichier contient les composantes REACT
@@ -8,31 +9,9 @@
 // Auteur : Maxence
 // Équipe : Carlens Belony et Maxence Guindon
 // ===============================================
-
 import { observer } from "mobx-react"
 import React from "react"
 import accueilStore, { eActivePage } from "../Middlewares/ControlleurApp"
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// }
-// from 'chart.js'
-// import {Bar} from 'react-chartjs-2'
-
-
-// ChartJS.register(
-//     CategoryScale,
-//     LinearScale,
-//     BarElement,
-//     Title,
-//     Tooltip,
-//     Legend
-//   )
 
 export const AppRapport = observer(() => {
 
@@ -216,20 +195,53 @@ const genererLineRapport = (array) =>{
     return listeDiv
 }
 
-const generateData = (dataArray, direction) =>{
+const month = {
+    '01': "janv.",
+    '02': "févr.",
+    '03': "mars",
+    '04': "avr.",
+    '05': "mai",
+    '06': "juin",
+    '07': "juill.",
+    '08': "août",
+    '09': "sept.",
+    '10': "oct.",
+    '11': "nov.",
+    '12': "déc."
+}
+
+const generateData = (dataArray, keyArray, direction) =>{
     let divList = []
 
     for (let i = 0; i < dataArray.length; i++){
+        //let display = "block"
+        let height = (0).toString() + "%"
+        let backgroundColor = "rgb(85, 207, 111)"
+        let value = ""
+        let dataTime = keyArray[i].split("-")
         if (direction == 'top' && dataArray[i] >= 0)
         {
-            divList.push(
-                React.createElement(
-                    'div',
-                    {class: "dataGraph"},
-                    "allô"
-                )
-            )
+            console.log("donnees", dataArray[i])
+            height = ((dataArray[i]/4)*100).toString() + "%"
         }
+        else if (direction == 'bottom' && dataArray[i] < 0){
+            height = (((dataArray[i]*-1)/2)*100).toString() + "%"   
+        }
+        if (direction == 'bottom' && dataArray[i] > 0){
+            value = [month[dataTime[1]], dataTime[0]-2000,].join("/")
+        }
+        else if (direction == 'top' && dataArray[i] <= 0){
+            value = [month[dataTime[1]], dataTime[0]-2000,].join("/")
+            height= "10%"
+            backgroundColor = "rgba(0,0,0,0)"
+        }
+        divList.push(
+            React.createElement(
+                'div',
+                {class:"dataGraph", style:{height:height, backgroundColor:backgroundColor}},
+                value
+            )
+        )
     }
 
     return divList
@@ -262,7 +274,7 @@ const genererGraph = (std) =>{
                     {class: "ladderGraph"},
                     generateLegendYAxis(3)
                 ),
-                generateData(Object.values(std), "top")
+                generateData(Object.values(std), Object.keys(std), "top")
             ),
             React.createElement(
                 'div',
@@ -276,60 +288,12 @@ const genererGraph = (std) =>{
                         '-1'
                     )
                 ),
-                generateData(Object.values(std), "bottom")
-            ),
-            React.createElement(
-                'div',
-                {class:"legendGraph"},
-                Object.keys(std)
+                generateData(Object.values(std), Object.keys(std), "bottom")
             )
         )
     )
 
 }
-// {
-//     let colors = ['rgb(53, 162, 235)', 'rgb(255, 99, 132)']
-//     let datasets = []
-
-//     for (const i in Object.keys(std)){
-//         let entree = Object.keys(std)[i]
-
-//         datasets.push({
-//             label: entree,
-//             data: std[entree],
-//             borderColor: colors[i],
-//             backgroundColor: 'rgba(53, 162, 235, 0.5)',
-//         })
-//     }
-
-//     let data = {
-//         labels: Object.keys(std),
-//         datasets: datasets
-        
-//     }
-
-//     let options = {
-//         indexAxis: 'y' as const,
-//         elements: {
-//             bar: {
-//                 borderWidth: 2,
-//             },
-//         },
-//         responsive: true,
-//         plugins: {
-//             legend: {
-//                 position: 'right' as const,
-//             },
-//             title: {
-//                 display: true,
-//                 text: "Performances selon le mois"
-//             },
-//         },
-//     }
-
-//     return (<Bar options={options} data={data}/>)
-// }
-
 
 /* _________________ Math function ____________________ */
 
@@ -351,7 +315,7 @@ const generateClientPerMonth = (reservations) =>{
     for (const i in Object.keys(reservations)){
         let key = Object.keys(reservations)[i]
         let date = key.split(" ")[0]
-        date = date.split("-")[1]
+        date = [date.split("-")[0], date.split("-")[1]].join("-")
         if (date in donnees){
             donnees[date] += parseInt(reservations[key]["participant"])
         }

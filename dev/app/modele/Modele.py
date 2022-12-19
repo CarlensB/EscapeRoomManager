@@ -96,6 +96,7 @@ class TypeClient:
     prix: float
     
 class Usager:
+    
     def __init__(self, utilisateur: Employe, dao: ActionDAO) -> None:
         self.__dao = dao
         self.__id_compagnie = utilisateur.id_compagnie
@@ -109,6 +110,15 @@ class Usager:
             'rabais': [],
             'typeClient': []
         }
+        self.__usager_fonction = {
+            'employe': self.__obtenir_info_employes,
+            'compagnie': self.__obtenir_info_compagnie,
+            'centre': self.__obtenir_info_centre,
+            'salle': self.__obtenir_info_salles,
+            'reservation': self.__obtenir_info_reservations,
+            'rabais': self.__obtenir_info_rabais,
+            'typeClient': self.__obtenir_info_typeClient
+        }
         print(self.__obtenir_info_initiale())
         
     @property
@@ -120,35 +130,43 @@ class Usager:
         return self.__id_compagnie
     
     def __obtenir_info_initiale(self):
-        msg_erreur = []
+        for key in self.__usager_fonction.keys():
+            msg_erreur = self.__usager_fonction[key]()
+        return msg_erreur
+    
+    def  __obtenir_info_employes(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.EMPLOYE, [(self.__id_compagnie,)])
             for e in info:
                 self.__session_info["employes"].append(Employe(*e[:-1]))
+            return ""
         except:
-            msg_erreur.append("Aucun employe à afficher")
-        
+            return "Aucun employe à afficher"
+    
+    def __obtenir_info_compagnie(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT, ActionDAO.Table.COMPAGNIE, [(self.__id_compagnie,)])[0]
             self.__session_info["compagnie"] = Compagnie(*info[:-1])
         except:
-            msg_erreur.append("Usager invalide, il n'est associé à aucune compagnie")
-        
+            return "Usager invalide, il n'est associé à aucune compagnie"
+
+    def __obtenir_info_centre(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.CENTRE,[(self.__id_compagnie,)])
             for e in info:
                 self.__session_info["centres"].append(Centre(*e))
         except:
-            msg_erreur.append("Aucun centre répertorié")
+            return "Aucun centre répertorié"
             
+    def __obtenir_info_salles(self) -> str:
         try:
             for centre in self.__session_info["centres"]:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.SALLE,[(centre.id,)])
                 for e in info:
                     self.__session_info["salles"].add(Salle(*e))
         except:
-            msg_erreur.append("Aucune salle n'est incluse dans un centre")
-            
+            return "Aucune salle n'est incluse dans un centre"
+        
         try:
             for salle in self.__session_info['salles']:
                 info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.HORAIRE, [(salle.nom,)])
@@ -157,8 +175,9 @@ class Usager:
                     h = Horaire(debut, fin)
                     salle.liste_horaire.append(h)
         except:
-            msg_erreur.append("Aucune horaire répertorié")
-            
+           return "Aucune horaire répertorié"
+        
+    def __obtenir_info_reservations(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RESERVATION,[(self.__id_compagnie,)])
             for e in info:
@@ -166,36 +185,28 @@ class Usager:
                 self.__session_info["reservations"].add_first(reservation.__dict__)
                 
         except Exception as e:
-            msg_erreur.append(("Aucune réservation répertorié", traceback.format_exception(e)))
+            return "Aucune réservation répertorié"
             
+    def __obtenir_info_rabais(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.RABAIS,[(self.__id_compagnie,)])
             for e in info:
                 self.__session_info["rabais"].append(Rabais(*e))
         except:
-            msg_erreur.append("Aucun rabais répertorié")
-
+            return "Aucun rabais répertorié"
+            
+    def __obtenir_info_typeClient(self) -> str:
         try:
             info = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, ActionDAO.Table.TYPECLIENT,[(self.__id_compagnie,)])
             for e in info:
                 self.__session_info["typeClient"].append(TypeClient(*e[:-1]))
         except:
-            msg_erreur.append("Aucun typeclient répertorié")
-                            
-        return msg_erreur
+            return "Aucun typeclient répertorié"
             
     def mise_a_jour_session_info(self, table: ActionDAO.Table):
-        str_table = str(table).split(".")[1]
-        recherche = self.__id_compagnie
-        if str_table == 'SALLE':
-            self.session_info["salles"].clear()
-            for centre in self.session_info["centres"]:
-                result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(centre.id,)])
-                for salle in result:
-                    self.session_info["salles"].add(salle)
-            print(self.session_info["salles"])
-                
-        result = self.__dao.requete_dao(ActionDAO.Requete.SELECT_ALL, table, [(recherche,)])
+        str_table = str(table).split(".")[1].lower()
+        self.__usager_fonction[str_table]()
+            
 
 class Enregistrement:
     '''
@@ -412,7 +423,7 @@ class GestionSysteme:
                 result = self.enregistrer(table, info)
 
             return result.to_json() if table == "reservation" and (action =="selectionner" or action == "selectionner_all") else result
-            
+
         elif token is None and table == "reservation":
             liste = []
             for key in info.keys():

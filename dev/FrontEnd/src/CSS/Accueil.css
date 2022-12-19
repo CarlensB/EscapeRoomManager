@@ -374,7 +374,6 @@ button:focus {
 }
 
 .topGraph{
-    background-color: red;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -384,39 +383,38 @@ button:focus {
 }
 
 .bottomGraph{
-    border-top: black 2px;
-    background-color: green;
+    border-top: black 2px solid;
     display: flex;
     flex-direction: row;
     width: 50%;
-    height: 30%;
+    height: 50%;
     align-self: center;
 }
 
 .ladderGraph{
-    background-color: blue;
     display: flex;
     flex-direction: column;
     width: 5%;
 }
 
 .legendLadderGraph{
-    background-color: black;
     color: white;
     margin: 50% 15%;
     text-align: center;
 }
 
 .dataGraph{
-    background-color: yellow;
-    width: 20%;
-    margin: 0% 5%;
+    background-color: rgb(85, 207, 111);
+    width: 8%;
+    margin-left: 5%;
+    color: white;
+    font-size: xx-small;
     display: block;
-    height: 80%;
 }
 .legendGraph{
     background-color: orange;
     width: 50%;
-    height: 20%;
+    height: 10%;
+    display: flex;
     align-self: center;
 }
