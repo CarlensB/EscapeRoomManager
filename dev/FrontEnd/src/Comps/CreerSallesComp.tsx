@@ -41,7 +41,7 @@ function genererOptionsHeures(ouverture){
 
 const ModifierSalle = observer(() => {
   
-  let errMessage = ""  
+  let errMessage = accueilStore.error_message
 
   let salles = accueilStore.getSalles()
   let sallesChoix = listeSalles()
@@ -330,10 +330,7 @@ const ModifierSalle = observer(() => {
 
 const GererSalle = observer(() => {
 
-  let errMessage = ""  
-//   if (accueilStore.compagnie.newCentreInfos.nom.length < 1 && accueilStore.compagnie.newCentreInfos.adresse.length < 1){
-//     errMessage = "Il manque des informations";
-//     }
+  let errMessage = accueilStore.error_message
   
     
 

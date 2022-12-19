@@ -17,7 +17,9 @@ export const AppAccueil = observer(() => {
 
 const Calendrier = observer(() => {
 
-    function getDate(){let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+    function getDate()
+    {
+    let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
     let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
     let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
     let date = year + "-" + month + "-" + day;
@@ -49,48 +51,48 @@ return(
         
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-365)}},
                 '<- Année'),
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-30)}},
                 '<- Mois'),
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-7)}},
                 '<- Semaine'),
             
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(-1)}},
                 '<- Jour'),
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.resetDate()}},
                 "Aujourd'hui"),
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(1)}},
                 'Jour ->'),
 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(7)}},
                 'Semaine ->'),
                 
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(30)}},
                 'Mois ->'),
                 
                         
             React.createElement(
-                'div',
+                'button',
                 {class: 'FlecheCalendar', onClick: () => {accueilStore.modify_date(365)}},
                 'Année ->')
         )
