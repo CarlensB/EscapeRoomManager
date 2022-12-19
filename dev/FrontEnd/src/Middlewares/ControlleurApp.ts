@@ -66,6 +66,7 @@ export class newCentreInfos{
 
 export class SalleInfos{
 
+
     constructor(
         public nom: string = "",
         public description: string = "",
@@ -74,6 +75,7 @@ export class SalleInfos{
         public hrOuv:string = "7:00",
         public hrFer:string = "12:00",
         public intervalle:string = "0:15",
+        public duree:string = "0:15",
         public publique:boolean = true,
         public id:number = 33
         
@@ -84,6 +86,7 @@ export class SalleInfos{
             this.hrFer = "12:00",
             this.nom = "";
             this.prix = 0;
+            this.duree = "0:15",
             this.intervalle = "0:15",
             this.nbJrMax = 1;
             this.publique = true;
@@ -136,7 +139,6 @@ class AccueilStore {
         date = response[0][8].split('T')
         let key = [date[0], date[1], reservation["centre"], reservation["salle"]].join(" ")
         this._reservations[key] = reservation
-        console.log(key)
 
         this.ActivePage = eActivePage.Accueil
 
@@ -167,7 +169,6 @@ class AccueilStore {
     let formdata = new FormData()
     formdata.append("token", this.token)
     formdata.append("id", this.selected_reservation["id"].toString())
-    console.log(this.selected_reservation["id"])
     fetch('http://127.0.0.1:5000/supprimer/reservation',
     {
         method: 'POST',
@@ -370,6 +371,7 @@ class AccueilStore {
     }
 
     initialiserHoraires(horaires){
+        
         for (let j = 0; j< horaires.length; j++){
             let id_salle = horaires[j][0][0]
             let salle = this._compagnie.getSalleById(id_salle)
@@ -377,6 +379,8 @@ class AccueilStore {
                let nomsalle = horaires[j][i][1]
                 let hr_debut = horaires[j][i][2]
                 let hr_fin = horaires[j][i][3]
+
+
                 salle.ajouterHoraire([nomsalle, hr_debut, hr_fin])
             }
         }
@@ -391,10 +395,9 @@ class AccueilStore {
                 salleInfos.id = salles[j][0]
                 salleInfos.nom = salles[j][1]
                 salleInfos.description = salles[j][2]
-                salleInfos.description = salles[j][3]
-                salleInfos.nbJrMax = salles[j][5]
+                salleInfos.nbJrMax = salles[j][3]
                 salleInfos.prix = salles[j][4]
-                salles[j][7] == 1 ? salleInfos.publique = true : false
+                salles[j][5] == 1 ? salleInfos.publique = true : false
 
                 let centre_id = salles[j][9]
                 let index = this._compagnie.getCentreIndexById(centre_id)
@@ -414,7 +417,6 @@ class AccueilStore {
             dict[key] = reservations[i]
         }
         this._reservations = dict
-        console.log(this._reservations)
     }
 
     matchReservation(horaire){
@@ -424,8 +426,17 @@ class AccueilStore {
     let date = year + "-" + month + "-" + day;
     let horaire_debut = horaire._hrDebut.replace("h", ":");
 
-    if (horaire_debut.length < 4)
-        horaire_debut = horaire_debut + "00"
+    if (horaire_debut.length < 4){
+        if (horaire_debut.split(":")[1].length == 1)
+        horaire_debut = horaire_debut + "0"
+        else horaire_debut = horaire_debut + "00"
+        if (horaire_debut.split(":")[0].length == 1)
+        horaire_debut = "0" + horaire_debut
+    }
+
+        if (horaire_debut.split(":")[1].length == 1)
+        horaire_debut = horaire_debut + "0"
+    
 
     let key = date + " " + horaire_debut + ":00 " + this._compagnie.getCurrentCentre().nom + " " + horaire.nomSalle
     let reservation = this.reservations[key]
@@ -434,24 +445,28 @@ class AccueilStore {
     }
 
 
-    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, intervalle:string, nom_salle:string){
+    private calculer_qte_horaires_dans_salle(hr_debut:string, hr_fin:string, duree:string, nom_salle:string, intervalle:string){
             let hr = hr_debut.split(":")
             let hr_debut_min = parseInt(hr[0])*60 + parseInt(hr[1])
             hr = hr_fin.split(":")
             let hr_fin_min = parseInt(hr[0])*60 + parseInt(hr[1])
-            let temps_total = hr_fin_min - hr_debut_min
+
+            hr = duree.split(":")
+            let duree_min = parseInt(hr[0])*60 + parseInt(hr[1])
+
             hr = intervalle.split(":")
             let intervalle_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            // let temps_total = hr_fin_min - hr_debut_min
             // let nombre_dhoraires = Math.floor(temps_total / intervalle_min)
             // console.log("il y aura " + nombre_dhoraires.toString() + " slots d'horaires")
 
             let array_horaires = []
 
-            for (let horaire_debut = hr_debut_min; horaire_debut<= (hr_fin_min - intervalle_min); horaire_debut += intervalle_min){
+            for (let horaire_debut = hr_debut_min; horaire_debut<= (hr_fin_min - duree_min); horaire_debut += (duree_min + intervalle_min)){
                 let horaire = []
                 horaire[0] = nom_salle
                 horaire[1] = Math.floor(horaire_debut / 60).toString() + ":" + (horaire_debut%60).toString()
-                let horaire_fin = horaire_debut + intervalle_min
+                let horaire_fin = horaire_debut + duree_min
                 horaire[2] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
                 array_horaires.push(horaire)
             }
@@ -549,7 +564,7 @@ class AccueilStore {
             formData.append("pays", this._modCentreInfos.pays);
             formData.append("code_postal", this._modCentreInfos.code_postal);
             formData.append("id", this._compagnie.getCurrentCentreID().toString());
-            try {
+            
                 fetch('http://127.0.0.1:5000/modifier/centre',
                 {
                     method: 'POST',
@@ -566,17 +581,14 @@ class AccueilStore {
 
         
           })
-              } catch (e) {
-                  console.log("CA MARCHE POOOH")
-                  
-              } 
+             
 
 
 
 
             
         }
-        else console.log("Il n'y a pas assez d'infos :(")
+        else this.error_message = "Erreur dans les informations données"
     }
 
     updateNewCentreInfosNom(nom:string){
@@ -620,7 +632,7 @@ class AccueilStore {
             formData.append("ville", this._newCentreInfos.ville);
             formData.append("pays", this._newCentreInfos.pays);
             formData.append("code_postal", this._newCentreInfos.code_postal);
-            try {
+           
                 fetch('http://127.0.0.1:5000/ajouter/centre',
                 {
                     method: 'POST',
@@ -636,7 +648,7 @@ class AccueilStore {
             }
 
             let msgSucces = document.createElement("div")
-            msgSucces.innerHTML = "Centre enregistrer"
+            msgSucces.innerHTML = "Centre enregistré!"
             msgSucces.addEventListener("click", (() =>{
                 document.querySelector(".nouveauCentreFormulaire").removeChild(msgSucces)
             }))
@@ -644,10 +656,7 @@ class AccueilStore {
             document.querySelector(".nouveauCentreFormulaire").append(msgSucces)
         
           })
-              } catch (e) {
-                  console.log("CA MARCHE POOOH")
-                  
-              } 
+              
 
 
            
@@ -661,8 +670,7 @@ class AccueilStore {
         let formData = new FormData();
         formData.append("token", this.token)
         formData.append("id", id.toString());
-        console.log(id)
-        try {
+     
             fetch('http://127.0.0.1:5000/supprimer/centre',
             {
                 method: 'POST',
@@ -677,9 +685,7 @@ class AccueilStore {
           else this.error_message = "Erreur dans la suppression"
     
       })
-          } catch (e) {
-              console.log("CA MARCHE POOOH")        
-          } 
+          
     }
 
     getCompany(){
@@ -730,6 +736,10 @@ class AccueilStore {
         this._newSalleInfos.prix = prix
     }
     updateNewSalleInfosDuree(duree:string){
+        this._newSalleInfos.duree = duree
+    }
+
+    updateNewSalleInfosIntervalle(duree:string){
         this._newSalleInfos.intervalle = duree
     }
 
@@ -760,7 +770,7 @@ class AccueilStore {
         this._modSalleInfos.prix = prix
     }
     updatemodSalleInfosDuree(duree:string){
-        this._modSalleInfos.intervalle = duree
+        this._modSalleInfos.duree = duree
     }
 
     updatemodSalleInfosNbJoueur(nbjr:number){
@@ -778,23 +788,21 @@ class AccueilStore {
         let formData = new FormData()
         formData.append("token", this.token)
         formData.append("id_salle", this._newSalleInfos.id.toString())
-
         for (let i =0; i < listeHoraire.length; i++){
             formData.append("horaire"+[i], listeHoraire[i])
         }
 
-        try{
+       
             fetch('http://127.0.0.1:5000/ajouter/horaire', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(response => {
-                console.log(response)
+                this._compagnie.ajouterSalle(this._newSalleInfos, listeHoraire)
+                this.ActivePage = eActivePage.CreateCentre
             })
-        }catch(e){
-            console.log("horaire invalide")
-        }
+       
     }
 
     ajouterSalle(){
@@ -807,6 +815,7 @@ class AccueilStore {
         }
         if (valide)
         {
+            this.error_message = "Chargement..."
             let formData = new FormData();
             formData.append("token", this.token)
             formData.append("nom", this._newSalleInfos.nom);
@@ -816,7 +825,7 @@ class AccueilStore {
             formData.append("prix", this._newSalleInfos.prix.toString());
             formData.append("prive", this._newSalleInfos.publique ? (1).toString() : (0).toString());
 
-            try {
+            
                 fetch('http://127.0.0.1:5000/ajouter/salle',
                 {
                     method: 'POST',
@@ -826,16 +835,15 @@ class AccueilStore {
           .then(response => {
               
             this._newSalleInfos.id = response[0][0]         
-            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer, this._newSalleInfos.intervalle, this._newSalleInfos.nom)
-            this._compagnie.ajouterSalle(this._newSalleInfos, list_horaire)
-            this.ajouterHoraire(list_horaire)
+            let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer,
+                 this._newSalleInfos.duree, this._newSalleInfos.nom, this._newSalleInfos.intervalle)
+                 this.ajouterHoraire(list_horaire)
+                 
+            
           })
-              } catch (e) {
-                  console.log("CA MARCHE POOOH")
-                  
-              }  
+              
         }
-        else console.log("Il n'y a pas assez d'infos :(")
+        else this.error_message = "Erreur dans les informations données"
     }
 
     modifierSalle(){
@@ -852,7 +860,7 @@ class AccueilStore {
             formData.append("prix", this._modSalleInfos.prix.toString());
             formData.append("privee", this._modSalleInfos.publique ? (1).toString() : (0).toString());
             formData.append("id", this._modSalleInfos.id.toString());
-            try {
+          
                 fetch('http://127.0.0.1:5000/modifier/salle',
                 {
                     method: 'POST',
@@ -860,7 +868,6 @@ class AccueilStore {
                 })
           .then(response => response.json())
           .then(response => {
-              console.log(response)
             if (response == "Modification réussi"){
             this._compagnie.modifierSalle(this._modSalleInfos)
             this.ActivePage = eActivePage.CreateCentre
@@ -868,15 +875,12 @@ class AccueilStore {
             else this.error_message = "Erreur dans les informations données"
         
           })
-              } catch (e) {
-                  console.log("CA MARCHE POOOH")
-                  
-              } 
+            
 
 
            
         }
-        else console.log("Il n'y a pas assez d'infos :(")
+        else this.error_message = "Erreur dans les informations données"
     }
         
 
@@ -888,7 +892,7 @@ class AccueilStore {
         let id = this.getCurrentSalle().id.toString()
         formData.append("token", this.token)
         formData.append("id", this.getCurrentSalle().id.toString());
-        try {
+      
             fetch('http://127.0.0.1:5000/supprimer/salle',
             {
                 method: 'POST',
@@ -903,10 +907,7 @@ class AccueilStore {
         else this.error_message = "Erreur dans la suppression"
     
       })
-          } catch (e) {
-              console.log("CA MARCHE POOOH")
-              
-          } 
+         
 
 
         

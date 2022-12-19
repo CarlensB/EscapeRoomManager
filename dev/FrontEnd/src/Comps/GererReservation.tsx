@@ -39,6 +39,7 @@ const AjouterRerservation = observer(() => {
   let errMessage = accueilStore.error_message
   let horaire = accueilStore.selected_horaire
   let salle = accueilStore.getSalleByName(horaire.nomSalle)
+  console.log(salle.nbJrMax.toString())
   let date = accueilStore.convertDate()
     return(
         React.createElement(
