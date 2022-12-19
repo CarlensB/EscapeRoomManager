@@ -47,11 +47,11 @@ class ReservationsDAO:
         val = compagnie[0]
         return self.__select(sql, val)
 
-    def modifier(self, args: list[tuple[str, str, int, int, int, str, str, float, str, int]]) -> None:
+    def modifier(self, args: list[tuple[str, str, int, int, int, str, float, str, int]]) -> None:
         sql = '''
         UPDATE reservations
             SET nom_client= %s, num_telephone= %s, statut_reservation= %s,
-            salle= %s, nb_personnes= %s, courriel= %s, heure= %s,
+            salle= %s, nb_personnes= %s, courriel= %s,
             prix_total= %s, date= %s
                 WHERE id= %s
         '''
