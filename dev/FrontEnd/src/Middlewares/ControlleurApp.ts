@@ -87,8 +87,56 @@ export class SalleInfos{
 
 class AccueilStore {
   ajouterReservation() {
-    console.log("à implémenter")
+    
+    let valide1 = (this._newResInfo.nom.length > 0 && this._newResInfo.courriel.length > 0 && this._newResInfo.num_tel.length > 0)
+    if (valide1){
+
+        let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
+        let date = this.convertDate()
+
+        let formdata = new FormData()
+        formdata.append("token", this.token)
+        formdata.append("nomClient", this._newResInfo.nom)
+        formdata.append("numTel", this._newResInfo.num_tel)
+        formdata.append("statut", this._newResInfo.paye ? "1" : "0")
+        formdata.append("salle", salle.id.toString())
+        formdata.append("nbPersonne", this._newResInfo.nb_participants.toString())
+        formdata.append("courriel", this._newResInfo.courriel)
+        formdata.append("prix_total", (this._newResInfo.nb_participants * salle.prix).toString())
+        formdata.append("date", date)
+
+        fetch('http://127.0.0.1:5000/ajouter/reservation',
+    {
+        method: 'POST',
+        body: formdata
+    })
+    .then(response => response.json())
+    .then(response => {
+        let reservation = {}
+
+        reservation["centre"] = salle.centre
+        reservation["courriel"] =response[0][6]
+        reservation["date"] =response[0][8]
+        reservation["id"] =response[0][0]
+        reservation["nom_client"] =response[0][1]
+        reservation["num_telephone"] =response[0][2]
+        reservation["participant"] =response[0][5]
+        reservation["prix_total"] =response[0][7]
+        reservation["salle"] = salle.nom
+        reservation["statut"] =response[0][3]
+
+        date = response[0][8].split('T')
+        let key = [date[0], date[1], reservation["centre"], reservation["salle"]].join(" ")
+        this._reservations[key] = reservation
+
+        this.ActivePage = eActivePage.Accueil
+
+})
+
+
+
   }
+}
     updateNewResInfoNom(value: string) {
         this._newResInfo.nom = value
       }
@@ -120,7 +168,6 @@ class AccueilStore {
     .then(response => {
         if (response == "Suppression réussi"){
             let key = this.convertDate() + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
-            console.log(key)
             delete this._reservations[key]
             this.ActivePage = eActivePage.Accueil
             this.selected_reservation = undefined
@@ -165,9 +212,7 @@ class AccueilStore {
         formdata.append("prix_total", (this._modResInfo.nb_participants * salle.prix).toString())
         formdata.append("date", date)
         formdata.append("id", this.selected_reservation["id"].toString())
-        for (const value of formdata.values()) {
-            console.log(value);
-          }
+
         
         
         fetch('http://127.0.0.1:5000/modifier/reservation',
@@ -285,7 +330,6 @@ class AccueilStore {
             .then(response => {
         
             this.initialiserReservations(response)
-            // console.log(response[0]["centre"])
 
 })
 
@@ -434,6 +478,8 @@ class AccueilStore {
     public set ActivePage(value: eActivePage) {
         this._ActivePage = value;
         this.error_message = ""
+        this._modResInfo.reset()
+        this._newResInfo.reset()
         this._modCentreInfos.reset()
         this._modSalleInfos.reset()
         this._newSalleInfos.reset()
@@ -597,7 +643,7 @@ class AccueilStore {
 
            
         }
-        else console.log("Il n'y a pas assez d'infos :(")
+        else this.error_message = "Les infos sont erronés"
     }
 
     supprimerCentre(){
@@ -606,6 +652,7 @@ class AccueilStore {
         let formData = new FormData();
         formData.append("token", this.token)
         formData.append("id", id.toString());
+        console.log(id)
         try {
             fetch('http://127.0.0.1:5000/supprimer/centre',
             {
