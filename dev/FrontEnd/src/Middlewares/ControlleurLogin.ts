@@ -1,3 +1,13 @@
+// ===============================================
+// Nom du fichier : ControlleurApp.tsx
+// Ce fichier contient le Controlleur de la page de
+// connection qui fait le lien entre la base de
+// donnée et le modèle ainsi que le modèle et
+// les pages React concernées.
+// Auteur : Carlens Belony et Maxence Guindon
+// Équipe : Carlens Belony et Maxence Guindon
+// ===============================================
+
 import { configure, makeAutoObservable } from "mobx";
 import remotedev from "mobx-remotedev"
 import { collectStoredAnnotations } from "mobx/dist/internal";
