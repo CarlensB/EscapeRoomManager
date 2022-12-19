@@ -74,6 +74,7 @@ class Serveur():
             token = info["token"]
             del info["token"]
             result = Serveur.__controleur.interaction_dao(token, action, table, info)
+            print(result)
             return json.dumps(result, default=Serveur.rendre_json_compatible)
         else:
             return json.dumps(Serveur.__GET_MSG)

@@ -130,8 +130,6 @@ const genererStat = () => {
     
     let std = standardDeviation(donneesSTD, totalJoueur)
 
-    console.log("deviation standard",std)
-
     let potentielsTotal = potentiels.reduce((accumulator, value) =>{
         return accumulator + value
     },0)
@@ -211,7 +209,6 @@ const generateData = (dataArray, keyArray, direction) =>{
         let dataTime = keyArray[i].split("-")
         if (direction == 'top' && dataArray[i] >= 0)
         {
-            console.log("donnees", dataArray[i])
             height = ((dataArray[i]/4)*100).toString() + "%"
         }
         else if (direction == 'bottom' && dataArray[i] < 0){
