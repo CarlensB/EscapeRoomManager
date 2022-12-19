@@ -46,7 +46,7 @@ class ReservationsDAO:
         return self.__select(sql, val)
 
     def selectionner_all(self, compagnie: list[tuple[int]]) -> list:
-        sql = "SELECT * FROM view_reservation_compagnie WHERE id_compagnie = %s ORDER BY date"
+        sql = "SELECT * FROM view_reservation_compagnie WHERE id_compagnie = %s ORDER BY Date"
         val = compagnie[0]
         return self.__select(sql, val)
 
