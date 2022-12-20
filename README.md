@@ -90,15 +90,27 @@ Il est également possible de créer un horaire automatiquement à une salle et 
 
 Sur la page rapport vous pourrez consulter les statistiques sur les performances de vos salles.
 
+Finalement, lorsque tout sera prêt vous pourrez commencer à ajouter des réservations au fur et à mesure que des clients voudront réserver vos services.
+
+![Image création de salle](/C61/Sprint3/doc/Accueil.PNG)
+
 
 ## Références
-Indiquer les références et sources
+Source principale : 
+- CNIL. (2017, Janvier 27). CNIL. Récupéré sur Les conseils de la CNIL pour un bon mot de passe : https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-un-bon-mot-de-passe#:~:text=Un%20bon%20mot%20de%20passe%20doit%20contenir%20au%20moins%2012,est%20%C3%A9quip%C3%A9%20de%20s%C3%A9curit%C3%A9s%20compl%C3%A9mentaires%20 !
+- Shvets, A. (2018, Décembre 5). Strategy. Récupéré sur refactoring guru : https://refactoring.guru/design-patterns/strategy
+- Wang, X. (2022, Janvier 10). What is HTTP middleware? Best practices for building, designing and using middleware. Récupéré sur moesif blog : https://www.moesif.com/blog/engineering/middleware/What-Is-HTTP-Middleware/#:~:text=Middleware%20is%20a%20design%20pattern,on%20the%20core%20business%20logic.
+- https://medium.com/algorithms-and-leetcode/backtracking-e001561b9f28
+- https://www.tutorialspoint.com/python_data_structure/python_backtracking.htm#:~:text=Practical%20Data%20Science%20using%20Python&text=Backtracking%20is%20a%20form%20of,not%20give%20the%20required%20solution.
+- https://medium.com/algorithms-and-leetcode/backtracking-with-leetcode-problems-part-2-705c9cc70e52
+- https://medium.com/algorithms-and-leetcode/in-depth-backtracking-with-leetcode-problems-part-3-b225f19e0d51
+
 
 ## Remerciement
 Nous tenons à remercier Pierre-Paul Monty et Frédéric Thériault qui ont généreusement répondu à nos questions tout au long du projet synthèse. Grâce à eux nous avons pu relever le niveau de notre application sur plusieurs niveaux.
 
 ## Licence
-To the extent possible under law, Carlens Belony, Maxence Guindon has waived all copyright and related or neighboring rights to this work. (exemple, voir avec le cégep)
+Dans la mesure du possible en vertu de la loi, Carlens Belony et Maxence Guindon renoncent à tous les droits d'auteur et droits connexes ou voisins sur ce projet.
 
 
 
