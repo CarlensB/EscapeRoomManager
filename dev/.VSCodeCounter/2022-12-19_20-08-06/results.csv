@@ -1,0 +1,49 @@
+"filename", "language", "SQL", "JSON", "JSON with Comments", "Python", "JavaScript", "TypeScript React", "HTML", "TypeScript", "XML", "CSS", "comment", "blank", "total"
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\dist\accueil_bundled.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\dist\login_bundled.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\package-lock.json", "JSON", 0, 5462, 0, 0, 0, 0, 0, 0, 0, 0, 0, 132985, 138447
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\package.json", "JSON", 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 481, 519
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\public\accueilEmp.html", "HTML", 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 2, 1, 15
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\public\login.html", "HTML", 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 1, 2, 19
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\CSS\Accueil.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 382, 7, 72, 461
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\CSS\login.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 4, 74
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\AccueilComps.tsx", "TypeScript React", 0, 0, 0, 0, 0, 221, 0, 0, 0, 0, 8, 48, 277
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerCentreComp.tsx", "TypeScript React", 0, 0, 0, 0, 0, 322, 0, 0, 0, 0, 13, 101, 436
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerCompteComp.tsx", "TypeScript React", 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 10, 17, 96
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerSallesComp.tsx", "TypeScript React", 0, 0, 0, 0, 0, 463, 0, 0, 0, 0, 10, 152, 625
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\GererReservation.tsx", "TypeScript React", 0, 0, 0, 0, 0, 353, 0, 0, 0, 0, 13, 105, 471
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\LoginPageComp.tsx", "TypeScript React", 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 10, 21, 81
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\RapportsComps.tsx", "TypeScript React", 0, 0, 0, 0, 0, 275, 0, 0, 0, 0, 26, 51, 352
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\ControlleurApp.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 808, 0, 0, 12, 224, 1044
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\ControlleurLogin.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 120, 0, 0, 9, 29, 158
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\Modele\ModeleApp.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 327, 0, 0, 5, 62, 394
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\Modele\ModeleLogin.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 45, 111
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\accueil_REACT.tsx", "TypeScript React", 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 7, 24, 90
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\login_REACT.tsx", "TypeScript React", 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 9, 11, 46
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\tsconfig.json", "JSON with Comments", 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\webpack.config.js", "JavaScript", 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 3, 21
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\.idea\misc.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 7
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\.idea\workspace.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 39
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\CentresDAO.py", "Python", 0, 0, 0, 48, 0, 0, 0, 0, 0, 0, 8, 13, 69
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\CompagniesDAO.py", "Python", 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 8, 12, 65
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\ConnectionDAO.py", "Python", 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 9, 11, 55
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\EmployesDAO.py", "Python", 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 24, 11, 81
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\HorairesDAO.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 13, 10, 67
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\RabaisDAO.py", "Python", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 12, 11, 64
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\ReservationsDAO.py", "Python", 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 18, 10, 71
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\SallesDAO.py", "Python", 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 13, 14, 80
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\TypeClientsDAO.py", "Python", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 10, 10, 61
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\UTILS.py", "Python", 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 11, 4, 19
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\app.py", "Python", 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 18, 16, 77
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\dependancy.py", "Python", 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 6, 4, 25
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\flask_utils.py", "Python", 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 8, 4, 16
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\insertion_reservation_test.py", "Python", 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 17, 30, 129
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Algorithme.py", "Python", 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 72, 43, 227
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Liste_chainee.py", "Python", 0, 0, 0, 195, 0, 0, 0, 0, 0, 0, 37, 55, 287
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Modele.py", "Python", 0, 0, 0, 322, 0, 0, 0, 0, 0, 0, 49, 75, 446
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\actionDAO.py", "Python", 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 7, 15, 88
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\serveur_api.py", "Python", 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 19, 20, 131
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\app\templates\login.html", "HTML", 0, 0, 0, 0, 0, 0, 31, 0, 0, 0, 11, 5, 47
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\sql\compagnie_test.sql", "SQL", 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 13, 98
+"c:\Users\1826732\Documents\EscapeRoomManager\dev\sql\sql_query_do.sql", "SQL", 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 34, 239
+"Total", "-", 271, 5500, 14, 1331, 20, 1838, 59, 1321, 46, 452, 533, 134858, 146243

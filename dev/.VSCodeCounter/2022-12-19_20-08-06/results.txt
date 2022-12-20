@@ -1,0 +1,94 @@
+Date : 2022-12-19 20:08:06
+Directory : c:\Users\1826732\Documents\EscapeRoomManager\dev
+Total : 47 files,  10852 codes, 533 comments, 134858 blanks, all 146243 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          2 |      5,500 |          0 |    133,466 |    138,966 |
+| TypeScript React   |          9 |      1,838 |        106 |        530 |      2,474 |
+| Python             |         19 |      1,331 |        359 |        368 |      2,058 |
+| TypeScript         |          4 |      1,321 |         26 |        360 |      1,707 |
+| CSS                |          2 |        452 |          7 |         76 |        535 |
+| SQL                |          2 |        271 |         19 |         47 |        337 |
+| HTML               |          3 |         59 |         14 |          8 |         81 |
+| XML                |          2 |         46 |          0 |          0 |         46 |
+| JavaScript         |          3 |         20 |          2 |          3 |         25 |
+| JSON with Comments |          1 |         14 |          0 |          0 |         14 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                            | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                               |         47 |     10,852 |        533 |    134,858 |    146,243 |
+| FrontEnd                                                                                        |         23 |      9,173 |        144 |    134,438 |    143,755 |
+| FrontEnd\dist                                                                                   |          2 |          2 |          2 |          0 |          4 |
+| FrontEnd\public                                                                                 |          2 |         28 |          3 |          3 |         34 |
+| FrontEnd\src                                                                                    |         15 |      3,611 |        139 |        966 |      4,716 |
+| FrontEnd\src\CSS                                                                                |          2 |        452 |          7 |         76 |        535 |
+| FrontEnd\src\Comps                                                                              |          7 |      1,753 |         90 |        495 |      2,338 |
+| FrontEnd\src\Middlewares                                                                        |          4 |      1,321 |         26 |        360 |      1,707 |
+| FrontEnd\src\Middlewares\Modele                                                                 |          2 |        393 |          5 |        107 |        505 |
+| app                                                                                             |         22 |      1,408 |        370 |        373 |      2,151 |
+| app\.idea                                                                                       |          2 |         46 |          0 |          0 |         46 |
+| app\DAO                                                                                         |         10 |        400 |        126 |        106 |        632 |
+| app\modele                                                                                      |          4 |        695 |        165 |        188 |      1,048 |
+| app\templates                                                                                   |          1 |         31 |         11 |          5 |         47 |
+| sql                                                                                             |          2 |        271 |         19 |         47 |        337 |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                        | language           | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\dist\accueil_bundled.js               | JavaScript         |          1 |          1 |          0 |          2 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\dist\login_bundled.js                 | JavaScript         |          1 |          1 |          0 |          2 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\package-lock.json                     | JSON               |      5,462 |          0 |    132,985 |    138,447 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\package.json                          | JSON               |         38 |          0 |        481 |        519 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\public\accueilEmp.html                | HTML               |         12 |          2 |          1 |         15 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\public\login.html                     | HTML               |         16 |          1 |          2 |         19 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\CSS\Accueil.css                   | CSS                |        382 |          7 |         72 |        461 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\CSS\login.css                     | CSS                |         70 |          0 |          4 |         74 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\AccueilComps.tsx            | TypeScript React   |        221 |          8 |         48 |        277 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerCentreComp.tsx         | TypeScript React   |        322 |         13 |        101 |        436 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerCompteComp.tsx         | TypeScript React   |         69 |         10 |         17 |         96 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\CreerSallesComp.tsx         | TypeScript React   |        463 |         10 |        152 |        625 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\GererReservation.tsx        | TypeScript React   |        353 |         13 |        105 |        471 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\LoginPageComp.tsx           | TypeScript React   |         50 |         10 |         21 |         81 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Comps\RapportsComps.tsx           | TypeScript React   |        275 |         26 |         51 |        352 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\ControlleurApp.ts     | TypeScript         |        808 |         12 |        224 |      1,044 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\ControlleurLogin.ts   | TypeScript         |        120 |          9 |         29 |        158 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\Modele\ModeleApp.ts   | TypeScript         |        327 |          5 |         62 |        394 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\Middlewares\Modele\ModeleLogin.ts | TypeScript         |         66 |          0 |         45 |        111 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\accueil_REACT.tsx                 | TypeScript React   |         59 |          7 |         24 |         90 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\src\login_REACT.tsx                   | TypeScript React   |         26 |          9 |         11 |         46 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\tsconfig.json                         | JSON with Comments |         14 |          0 |          0 |         14 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\FrontEnd\webpack.config.js                     | JavaScript         |         18 |          0 |          3 |         21 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\.idea\misc.xml                             | XML                |          7 |          0 |          0 |          7 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\.idea\workspace.xml                        | XML                |         39 |          0 |          0 |         39 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\CentresDAO.py                          | Python             |         48 |          8 |         13 |         69 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\CompagniesDAO.py                       | Python             |         45 |          8 |         12 |         65 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\ConnectionDAO.py                       | Python             |         35 |          9 |         11 |         55 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\EmployesDAO.py                         | Python             |         46 |         24 |         11 |         81 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\HorairesDAO.py                         | Python             |         44 |         13 |         10 |         67 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\RabaisDAO.py                           | Python             |         41 |         12 |         11 |         64 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\ReservationsDAO.py                     | Python             |         43 |         18 |         10 |         71 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\SallesDAO.py                           | Python             |         53 |         13 |         14 |         80 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\TypeClientsDAO.py                      | Python             |         41 |         10 |         10 |         61 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\DAO\UTILS.py                               | Python             |          4 |         11 |          4 |         19 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\app.py                                     | Python             |         43 |         18 |         16 |         77 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\dependancy.py                              | Python             |         15 |          6 |          4 |         25 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\flask_utils.py                             | Python             |          4 |          8 |          4 |         16 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\insertion_reservation_test.py              | Python             |         82 |         17 |         30 |        129 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Algorithme.py                       | Python             |        112 |         72 |         43 |        227 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Liste_chainee.py                    | Python             |        195 |         37 |         55 |        287 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\Modele.py                           | Python             |        322 |         49 |         75 |        446 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\modele\actionDAO.py                        | Python             |         66 |          7 |         15 |         88 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\serveur_api.py                             | Python             |         92 |         19 |         20 |        131 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\app\templates\login.html                       | HTML               |         31 |         11 |          5 |         47 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\sql\compagnie_test.sql                         | SQL                |         79 |          6 |         13 |         98 |
+| c:\Users\1826732\Documents\EscapeRoomManager\dev\sql\sql_query_do.sql                           | SQL                |        192 |         13 |         34 |        239 |
+| Total                                                                                           |                    |     10,852 |        533 |    134,858 |    146,243 |
++-------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
