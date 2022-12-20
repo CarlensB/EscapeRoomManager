@@ -82,7 +82,6 @@ const genererStat = () => {
     let firstReservationDate = Object.keys(reservations)[0].split(" ")
     let lastReservationDate = Object.keys(reservations).pop().split(" ")
 
-    console.log(Object.keys(reservations).length)
     let donneesSTD = generateClientPerMonth(reservations, centre)
     
     
@@ -141,11 +140,9 @@ const genererStat = () => {
         return accumulator + value;
     }, 0);
     
-    console.log(donneesSTD)
 
     let std = standardDeviation(donneesSTD, totalJoueur)
 
-    console.log(std)
 
     let potentielsTotal = potentiels.reduce((accumulator, value) =>{
         return accumulator + value

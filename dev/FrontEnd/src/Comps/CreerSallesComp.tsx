@@ -603,7 +603,7 @@ const GererSalle = observer(() => {
       React.createElement(
         'button',
         {class:"submit_button bouton_salle", onClick:()=>{accueilStore.ajouterSalle()}},
-        'Ajouter une succursale'),
+        'Ajouter une salle'),
 
       React.createElement(
         'button',

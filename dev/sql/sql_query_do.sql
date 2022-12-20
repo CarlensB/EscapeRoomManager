@@ -76,11 +76,13 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 
 	CREATE TABLE horaires(
 		id              INT         NOT NULL AUTO_INCREMENT,
+		id_salle		INT			NOT NULL,
 		heure_debut     VARCHAR(10) NOT NULL,
 		heure_fin       VARCHAR(10)	NOT NULL,
 
 		PRIMARY KEY pk_horaire(id),
-		UNIQUE(heure_debut, heure_fin)
+		FOREIGN KEY fk_salle(salles) REFERENCES salles(id) ON DELETE CASCADE,
+		UNIQUE(id_salle, heure_debut, heure_fin)
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE centres(
@@ -109,14 +111,14 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-	CREATE TABLE hor_salle(
-		id_horaire	INT	 NOT NULL,
-		id_salle	INT	 NOT NULL,
+	-- CREATE TABLE hor_salle(
+	-- 	id_horaire	INT	 NOT NULL,
+	-- 	id_salle	INT	 NOT NULL,
 		
-		PRIMARY KEY(id_horaire, id_salle),
-		FOREIGN KEY fk_lien_horaire(id_horaire) REFERENCES horaires(id) ON DELETE CASCADE,
-		FOREIGN KEY fk_lien_salle(id_salle) REFERENCES salles(id) ON DELETE CASCADE
-	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
+	-- 	PRIMARY KEY(id_horaire, id_salle),
+	-- 	FOREIGN KEY fk_lien_horaire(id_horaire) REFERENCES horaires(id) ON DELETE CASCADE,
+	-- 	FOREIGN KEY fk_lien_salle(id_salle) REFERENCES salles(id) ON DELETE CASCADE
+	-- )ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE employes(
 		id              INT         NOT NULL AUTO_INCREMENT,
@@ -189,8 +191,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	CREATE VIEW view_salle_horaire AS
 	SELECT salles.nom AS 'salle', horaires.heure_debut AS 'depart', horaires.heure_fin AS 'fin'
 	FROM salles
-	INNER JOIN hor_salle ON salles.id = hor_salle.id_salle
-	INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
+	INNER JOIN horaires ON horaires.id_salle = hor_salle.id_horaire;
 
 	CREATE VIEW view_reservation_compagnie AS
 	SELECT reservations.id AS 'id_reservation',

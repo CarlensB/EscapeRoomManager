@@ -240,15 +240,15 @@ class AccueilStore {
     HoraireAlgoConverter(horaire, index, hr_duree_min){
         let liste = []
         for (let i = 0; i< horaire.length; i++){
+            
+            let testFloat = (parseFloat(horaire[i]).toFixed(2)).toString()
             let hr = horaire[i].toString()
             if (hr.includes(".")){
-               hr = hr.split(".")
-               hr = parseInt(hr[0]) * 60 + parseInt(hr[1].slice(0, 2)) / 100 * 60 
+                hr = testFloat.split(".")
+                hr = parseInt(hr[0]) * 60 + parseInt(hr[1].slice(0, 2)) / 100 * 60 
             }
             else
-            hr = parseInt(hr) * 60
-
-            
+            hr = parseInt(hr) * 60         
             
             let nv_horaire = []
             nv_horaire[0] = this.infoAlgoNom[index.toString()]
@@ -526,7 +526,6 @@ class AccueilStore {
                let nomsalle = horaires[j][i][1]
                 let hr_debut = horaires[j][i][2]
                 let hr_fin = horaires[j][i][3]
-
 
                 salle.ajouterHoraire([nomsalle, hr_debut, hr_fin])
             }
@@ -955,8 +954,6 @@ class AccueilStore {
                 this._newSalleInfos.nom = this._infoAlgoNom[index.toString()]
                 this._newSalleInfos.description = this._infoAlgoDesc[index.toString()]
                 this._compagnie.ajouterSalle(this._newSalleInfos, listeHoraire)
-
-                
             })
        
     }
@@ -997,7 +994,7 @@ class AccueilStore {
             this._newSalleInfos.id = response[0][0]         
             let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer,
                  this._newSalleInfos.duree, this._newSalleInfos.nom, this._newSalleInfos.intervalle)
-                 this.ajouterHoraire(list_horaire, response[0][0] )
+                 this.ajouterHoraire(list_horaire, response[0][0])
                  
             
           })

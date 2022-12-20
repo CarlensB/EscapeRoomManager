@@ -350,6 +350,8 @@ class GestionSysteme:
                 horaire[idx+1] = "h".join((heure_debut, minute_debut if minute_debut != '0' else "")), "h".join((heure_fin, minute_fin if minute_fin != '0' else ""))
             print(horaire)
             
+# Changer l'insertion d'horaire ici de cette façon : (id_salle, h_debut, h_fin)
+
             for h in horaire[1:]:
                 result = self.__dao.requete_dao(ActionDAO.Requete.SELECT, table, [h])
                 if result:

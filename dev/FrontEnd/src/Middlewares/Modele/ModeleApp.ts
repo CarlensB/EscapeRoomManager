@@ -108,6 +108,7 @@ class Salle{
         // horaire.hrDebut = horaire.hrDebut + "0"
         // if (horaire.hrFin.split("h")[1].length < 2)
         // horaire.hrFin = horaire.hrFin + "0"
+        console.log(this._listeHoraire)
         this._listeHoraire.push(horaire)
     }
 
