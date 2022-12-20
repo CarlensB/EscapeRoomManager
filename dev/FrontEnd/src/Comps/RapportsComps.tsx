@@ -271,6 +271,11 @@ const genererGraph = (std) =>{
             'div',
             {class:"RapportGraph"},
             React.createElement(
+              "h3",
+              {class:"graphTitle"},
+              "Le resultat des variations de cote z des clients en fonction des mois"  
+            ),
+            React.createElement(
                 'div',
                 {class: "topGraph"},
                 React.createElement(
