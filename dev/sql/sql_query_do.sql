@@ -187,7 +187,7 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 	INNER JOIN centres ON emp_cent.id_centre = centres.id;
 
 	CREATE VIEW view_salle_horaire AS
-	SELECT salles.nom AS 'salle', horaires.heure_debut AS 'depart', horaires.heure_fin AS 'fin'
+	SELECT salles.id AS "id_salle", salles.nom AS 'salle', horaires.heure_debut AS 'depart', horaires.heure_fin AS 'fin'
 	FROM salles
 	INNER JOIN hor_salle ON salles.id = hor_salle.id_salle
 	INNER JOIN horaires ON horaires.id = hor_salle.id_horaire;
