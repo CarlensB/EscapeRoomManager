@@ -343,6 +343,60 @@ const GererSalle = observer(() => {
         return durees
     }
 
+    function generateOptionAlgoNoms(){
+      let noms = []
+      for (let i =0; i < accueilStore.algoNb; i++){
+        
+        noms.push(React.createElement(
+          'div',
+          {class:'labelContainer'},
+  
+        React.createElement(
+            'label',
+            {for: 'nom'},
+            'Nom ' + i.toString() + ': '),
+  
+          React.createElement(
+            'input',
+            {type: 'text', name: 'nom', onChange:evt => {
+                accueilStore.updateInfoNomAlgo(i, evt.currentTarget.value)
+              }},
+            null),
+        ))
+           
+        }
+      
+
+      return noms
+    }
+
+    function generateOptionAlgoDesc(){
+      let noms = []
+      for (let i =0; i < accueilStore.algoNb; i++){
+        
+        noms.push(React.createElement(
+          'div',
+          {class:'labelContainer'},
+  
+        React.createElement(
+            'label',
+            {for: 'nom'},
+            'Desc ' + i.toString() + ': '),
+  
+          React.createElement(
+            'input',
+            {type: 'text', name: 'nom', onChange:evt => {
+              accueilStore.updateInfoDescAlgo(i, evt.currentTarget.value)
+              }},
+            null),
+        ))
+           
+        }
+      
+
+      return noms
+    }
+
 
   return(React.createElement('div',
   {class:'ContainerFormulaire'},
@@ -359,7 +413,7 @@ const GererSalle = observer(() => {
       ),
     
       
-      React.createElement(
+     !accueilStore.algo ? React.createElement(
         'div',
         {class:'labelContainer'},
 
@@ -374,7 +428,9 @@ const GererSalle = observer(() => {
               accueilStore.updateNewSalleInfosNom(evt.currentTarget.value)
             }},
           null),
-      ),
+      ) :
+      
+      generateOptionAlgoNoms(), 
 
       React.createElement(
         'div',
@@ -428,6 +484,25 @@ const GererSalle = observer(() => {
           ),
 
       ),
+
+      accueilStore.algo ? React.createElement(
+        'div',
+        {class:'labelContainer'},
+
+      React.createElement(
+          'label',
+          {for: 'nom'},
+          'Buffer: '),
+
+        React.createElement(
+          'input',
+          {type: 'number', min:"5", max:"45", name: 'nb_jr', onChange:evt => {
+              accueilStore.buffer = parseInt(evt.currentTarget.value)
+            }},
+          null),
+      ) :
+      
+      "",
 
 
       React.createElement(
@@ -503,7 +578,7 @@ const GererSalle = observer(() => {
           null),
       ),
 
-      React.createElement(
+      !accueilStore.algo ? React.createElement(
         'div',
         {class:'labelContainer'},
 
@@ -512,24 +587,35 @@ const GererSalle = observer(() => {
           {for: 'nom'},
           'Description: '),
 
-        React.createElement(
-          'textarea',
-            {onChange:evt => {
-              accueilStore.updateNewSalleInfosDescription(evt.currentTarget.value)
-            }},
-          null),
-        ),
+      React.createElement(
+        'textarea',
+          {onChange:evt => {
+            accueilStore.updateNewSalleInfosDescription(evt.currentTarget.value)
+          }},
+        null),
+      ) : generateOptionAlgoDesc(),
 
-        React.createElement(
-          'div',
-          {class:"error_msg"},
-          errMessage),
+      React.createElement(
+        'div',
+        {class:"error_msg"},
+        errMessage),
 
-          React.createElement(
-            'button',
-            {class:"submit_button bouton_salle", onClick:()=>{accueilStore.ajouterSalle()}},
-            'Ajouter une succursale'),
-          
+      React.createElement(
+        'button',
+        {class:"submit_button bouton_salle", onClick:()=>{accueilStore.ajouterSalle()}},
+        'Ajouter une succursale'),
+
+      React.createElement(
+        'button',
+        {class:"submit_button bouton_salle", onClick:()=>{accueilStore.algo = !accueilStore.algo}},
+        'Algorithme'),
+
+      React.createElement(
+        'input',
+        {type: 'number', min:"1", name: 'nb_jr', onChange:evt => {
+            accueilStore.algoNb = parseInt(evt.currentTarget.value)
+          }},
+        null),
           ),
   )
       )
