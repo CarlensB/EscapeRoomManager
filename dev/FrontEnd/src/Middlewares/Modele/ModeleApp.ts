@@ -44,7 +44,7 @@ class Salle{
         private _sallePrive: boolean = false,
         private _description: string = "Description de la salle",
         private _id: number = -1,
-        private _listeHoraire = [] // TODO getter setter
+        private _listeHoraire: Horaire[] = [] // TODO getter setter
         )
         {
             makeAutoObservable(this);
@@ -102,19 +102,30 @@ class Salle{
     ajouterHoraire(infos:string[]){
         let horaire = new Horaire()
         horaire.nomSalle = infos[0]
-        horaire.hrDebut = infos[1]
-        horaire.hrFin = infos[2]
+        horaire.hrDebut = infos[1].replace(":","h")
+        horaire.hrFin = infos[2].replace(":","h")
+        // if (horaire.hrDebut.split("h")[1].length < 2)
+        // horaire.hrDebut = horaire.hrDebut + "0"
+        // if (horaire.hrFin.split("h")[1].length < 2)
+        // horaire.hrFin = horaire.hrFin + "0"
         this._listeHoraire.push(horaire)
     }
 
-    public get listeHoraire() {
+    public get listeHoraire():Horaire[] {
         return this._listeHoraire;
     }
+
+    public set listeHoraire(liste:Horaire[]){
+        this._listeHoraire = liste;
+    }
+
 
 
 }
 
 class Centre{
+    
+    
     constructor(
         private _nom: string = "Centre Montreal",
         private _adresse: string = "adresse de la Compagnie",
@@ -172,6 +183,9 @@ class Centre{
     public get salles(): Salle[] {
         return this._salles;
     }
+    public set salles(value: Salle[]) {
+        this._salles = value;
+    }
     
     public get adresse(): string {
         return this._adresse;
@@ -210,6 +224,7 @@ class Centre{
 
     modifierSalle(infos:SalleInfos){
         let salle = this.salleGenerator(infos, this.nom)
+        salle.listeHoraire = this._salles[this._selectionSalle].listeHoraire     
         this._salles[this._selectionSalle] = salle
     }
 
@@ -336,6 +351,7 @@ export class Compagnie{
     modifierCentre(infos: newCentreInfos){
         let centre = new Centre(infos.nom, infos.adresse, infos.ville, infos.pays, infos.code_postal);
         centre.id = this._centres[this.selectionnee].id
+        centre.salles = this._centres[this.selectionnee].salles
         this._centres[this.selectionnee] = centre;
     }
 
