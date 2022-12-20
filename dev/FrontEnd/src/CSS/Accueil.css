@@ -207,6 +207,7 @@ body{
     padding: 20;
     text-align: center;
     background-color: #c2dca3aa;
+    overflow: auto;
 }
 
 .title{
@@ -332,6 +333,7 @@ button:focus {
     display: inline-flex;
     width: 70%;
     padding: 1% 5% 1% 5%;
+    overflow: auto;
 }
 
 .miniNomSalle{
