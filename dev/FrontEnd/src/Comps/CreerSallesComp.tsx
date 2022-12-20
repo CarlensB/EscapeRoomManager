@@ -239,26 +239,6 @@ const ModifierSalle = observer(() => {
 
       ),
 
-
-
-      React.createElement(
-        'div',
-        {class:'labelContainer'},
-
-        React.createElement(
-          'label',
-          {for: 'duree'},
-          "Durée d'une réservation:"),
-      
-        React.createElement(
-          'select',
-          {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)
-          }},
-          genererOptionsDuree()
-          ),
-
-      ),
-
       React.createElement(
         'div',
         {class:'labelContainer'},
@@ -366,11 +346,18 @@ const GererSalle = observer(() => {
 
   return(React.createElement('div',
   {class:'ContainerFormulaire'},
-
+  
 
     React.createElement(
       'div',
       {class:'nouveauSalleFormulaire'},
+
+      React.createElement(
+        'div',
+        {class:'title'},
+        'Ajouter une Salle'
+      ),
+    
       
       React.createElement(
         'div',
@@ -420,6 +407,23 @@ const GererSalle = observer(() => {
         React.createElement(
           'select',
           {name: 'duree', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosDuree(evt.currentTarget.value)}},
+          genererOptionsDuree()
+          ),
+
+      ),
+
+      React.createElement(
+        'div',
+        {class:'labelContainer'},
+
+        React.createElement(
+          'label',
+          {for: 'hrOuv'},
+          "intervalle:"),
+      
+        React.createElement(
+          'select',
+          {name: 'hrOuv', class:'dropdown', onChange:evt => {accueilStore.updateNewSalleInfosIntervalle(evt.currentTarget.value)}},
           genererOptionsDuree()
           ),
 
