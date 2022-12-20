@@ -97,163 +97,7 @@ export class SalleInfos{
 
 
 class AccueilStore {
-  ajouterReservation() {
-    
-    let valide1 = (this._newResInfo.nom.length > 0 && this._newResInfo.courriel.length > 0 && this._newResInfo.num_tel.length > 0)
-    if (valide1){
-
-        let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
-        let date = this.convertDate()
-
-        let formdata = new FormData()
-        formdata.append("token", this.token)
-        formdata.append("nomClient", this._newResInfo.nom)
-        formdata.append("numTel", this._newResInfo.num_tel)
-        formdata.append("statut", this._newResInfo.paye ? "1" : "0")
-        formdata.append("salle", salle.id.toString())
-        formdata.append("nbPersonne", this._newResInfo.nb_participants.toString())
-        formdata.append("courriel", this._newResInfo.courriel)
-        formdata.append("prix_total", (this._newResInfo.nb_participants * salle.prix).toString())
-        formdata.append("date", date)
-
-        fetch('http://127.0.0.1:5000/ajouter/reservation',
-    {
-        method: 'POST',
-        body: formdata
-    })
-    .then(response => response.json())
-    .then(response => {
-        let reservation = {}
-        let centre_nom = this._compagnie.getCurrentCentre().nom
-        reservation["centre"] = centre_nom
-        reservation["courriel"] =response[0][6]
-        reservation["date"] =response[0][8]
-        reservation["id"] =response[0][0]
-        reservation["nom_client"] =response[0][1]
-        reservation["num_telephone"] =response[0][2]
-        reservation["participant"] =response[0][5]
-        reservation["prix_total"] =response[0][7]
-        reservation["salle"] = salle.nom
-        reservation["statut"] =response[0][3]
-
-        date = response[0][8].split('T')
-        let key = [date[0], date[1], reservation["centre"], reservation["salle"]].join(" ")
-        this._reservations[key] = reservation
-
-        this.ActivePage = eActivePage.Accueil
-
-})
-
-
-
-  }
-}
-    updateNewResInfoNom(value: string) {
-        this._newResInfo.nom = value
-      }
-      updateNewResInfoParticipants(value: number) {
-        this._newResInfo.nb_participants = value
-      }
-      updateNewResInfoNumeroTelephone(value: string) {
-        this._newResInfo.num_tel = value
-      }
-      updateNewResInfoCourriel(value: string) {
-        this._newResInfo.courriel = value
-      }
-      updateNewResInfoPaye(value: boolean) {
-        this._newResInfo.paye = value
-      }
-    
-    
-  supprimerReservation() {
-    let formdata = new FormData()
-    formdata.append("token", this.token)
-    formdata.append("id", this.selected_reservation["id"].toString())
-    fetch('http://127.0.0.1:5000/supprimer/reservation',
-    {
-        method: 'POST',
-        body: formdata
-    })
-    .then(response => response.json())
-    .then(response => {
-        if (response == "Suppression réussi"){
-            let key = this.convertDate() + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
-            delete this._reservations[key]
-            this.ActivePage = eActivePage.Accueil
-            this.selected_reservation = undefined
-        }
-        else this.error_message = "La suppression a échouée"
-
-})
-  }
-
-  convertDate(){
-    
-    let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
-    let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
-    let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
-    let hour = this.selected_horaire.hrDebut.split("h")
-    if (hour[0].length < 2)
-    hour[0] = "0" + hour[0]
-    if (hour[1].length < 2)
-    hour[1] = "00"
-    hour[2] = "00"
-
-    let date = year + "-" + month + "-" + day + " " + hour[0] + ":" + hour[1] + ":" + hour[2];
-
-    return date
-  }
-  modifierReservation() {
-   
-    let valide1 = (this._modResInfo.nom.length > 0 && this._modResInfo.courriel.length > 0 && this._modResInfo.num_tel.length > 0)
-    if (valide1){
-
-        let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
-        let date = this.convertDate()
-
-        let formdata = new FormData()
-        formdata.append("token", this.token)
-        formdata.append("nomClient", this._modResInfo.nom)
-        formdata.append("numTel", this._modResInfo.num_tel)
-        formdata.append("statut", this._modResInfo.paye ? "1" : "0")
-        formdata.append("salle", salle.id.toString())
-        formdata.append("nbPersonne", this._modResInfo.nb_participants.toString())
-        formdata.append("courriel", this._modResInfo.courriel)
-        formdata.append("prix_total", (this._modResInfo.nb_participants * salle.prix).toString())
-        formdata.append("date", date)
-        formdata.append("id", this.selected_reservation["id"].toString())
-
-        
-        
-        fetch('http://127.0.0.1:5000/modifier/reservation',
-        {
-            method: 'POST',
-            body: formdata
-        })
-        .then(response => response.json())
-        .then(response => {
-            if (response == "Modification réussi"){
-                
-                this.selected_reservation["nom_client"] = this._modResInfo.nom
-                this.selected_reservation["num_tel"] = this._modResInfo.num_tel
-                this.selected_reservation["statut"] = this._modResInfo.paye
-                this.selected_reservation["participant"] = this._modResInfo.nb_participants
-                this.selected_reservation["prix_total"] = this._modResInfo.nb_participants * salle.prix
-
-
-
-                let key = date + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
-                this.reservations[key] = this.selected_reservation
-                this.ActivePage = eActivePage.Accueil
-                this._modResInfo.reset()
-            }
-            else this.error_message = "Erreur coté serveur"
-
-})
-    }
-    else this.error_message = "Les informations sont erronnées"
-    
-  }
+  
     
     private _compagnie: Compagnie;
     private _ActivePage: eActivePage = eActivePage.Accueil;
@@ -273,7 +117,280 @@ class AccueilStore {
     private _niveau_acces: number = 1
     private _id_emp: number = 0
     private _courriel: string = ""
-    public _reservations:{}
+    private _reservations:{}
+    private _algo: boolean = false;
+    private _algoNb:number = 2;
+    private _infoAlgoNom: {} = {};
+    private _infoAlgoDesc: {} = {};
+    private _buffer: number = 15;
+
+
+    public get buffer(): number {
+        return this._buffer;
+    }
+    public set buffer(value: number) {
+        this._buffer = value;
+    }
+
+    public get infoAlgoNom(): {} {
+        return this._infoAlgoNom;
+    }
+    
+    public get infoAlgoDesc(): {} {
+        return this._infoAlgoDesc;
+    }
+
+    updateInfoNomAlgo(index:number, value:string){
+        this._infoAlgoNom[index.toString()] = value 
+    }
+
+    updateInfoDescAlgo(index:number, value:string){
+        this._infoAlgoDesc[index.toString()] = value 
+    }
+
+    public get algo(): boolean {
+        return this._algo;
+    }
+    public set algo(value: boolean) {
+        this._algo = value;
+    }
+
+    public get algoNb(): number {
+        return this._algoNb;
+    }
+    
+    public set algoNb(value: number) {
+        this._algoNb = value;
+    }
+    
+    algoGenererSalle(){
+
+        let formData = new FormData();
+            // formData.append("token", this.token)
+            let hr = this._newSalleInfos.hrOuv.split(":")
+            let hr_debut_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            formData.append("h_start", hr_debut_min.toString())
+
+            hr = this._newSalleInfos.hrFer.split(":")
+            let hr_fin_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            formData.append("h_end", hr_fin_min.toString())
+
+            hr = this._newSalleInfos.duree.split(":")
+            let hr_duree_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            formData.append("duration", hr_duree_min.toString())
+
+            hr = this._newSalleInfos.intervalle.split(":")
+            let hr_intervalle_min = parseInt(hr[0])*60 + parseInt(hr[1])
+            formData.append("interval", hr_intervalle_min.toString())
+            formData.append("buffer", this.buffer.toString())
+            formData.append("nb_room", this.algoNb.toString())
+            console.log(this.algoNb.toString())
+
+            
+            
+                fetch('http://127.0.0.1:5000/creation/horaire',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+              console.log(response)
+            for (let i = 0; i< response.length; i++){
+                
+                let horaire_algo = this.HoraireAlgoConverter(response[i], i, hr_duree_min)
+                
+            }
+                 
+            
+          })
+    }
+
+    HoraireAlgoConverter(horaire, index, hr_duree_min){
+        let liste = []
+        for (let i = 0; i< horaire.length; i++){
+            let hr = horaire[i].toString()
+            if (hr.includes(".")){
+               hr = hr.split(".")
+               hr = parseInt(hr[0]) * 60 + parseInt(hr[1]) / 100 * 60 
+            }
+            else
+            hr = parseInt(hr) * 60
+            
+            let nv_horaire = []
+            nv_horaire[0] = this.infoAlgoNom[index.toString()]
+            nv_horaire[1] = Math.floor(hr / 60).toString() + ":" + (hr%60).toString()
+            let horaire_fin = hr + hr_duree_min
+            nv_horaire[2] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
+            liste.push(nv_horaire)
+
+            return liste
+
+
+
+    }
+
+}
+
+    ajouterReservation() {
+    
+        let valide1 = (this._newResInfo.nom.length > 0 && this._newResInfo.courriel.length > 0 && this._newResInfo.num_tel.length > 0)
+        if (valide1){
+    
+            let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
+            let date = this.convertDate()
+    
+            let formdata = new FormData()
+            formdata.append("token", this.token)
+            formdata.append("nomClient", this._newResInfo.nom)
+            formdata.append("numTel", this._newResInfo.num_tel)
+            formdata.append("statut", this._newResInfo.paye ? "1" : "0")
+            formdata.append("salle", salle.id.toString())
+            formdata.append("nbPersonne", this._newResInfo.nb_participants.toString())
+            formdata.append("courriel", this._newResInfo.courriel)
+            formdata.append("prix_total", (this._newResInfo.nb_participants * salle.prix).toString())
+            formdata.append("date", date)
+    
+            fetch('http://127.0.0.1:5000/ajouter/reservation',
+        {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => response.json())
+        .then(response => {
+            let reservation = {}
+            let centre_nom = this._compagnie.getCurrentCentre().nom
+            reservation["centre"] = centre_nom
+            reservation["courriel"] =response[0][6]
+            reservation["date"] =response[0][8]
+            reservation["id"] =response[0][0]
+            reservation["nom_client"] =response[0][1]
+            reservation["num_telephone"] =response[0][2]
+            reservation["participant"] =response[0][5]
+            reservation["prix_total"] =response[0][7]
+            reservation["salle"] = salle.nom
+            reservation["statut"] =response[0][3]
+    
+            date = response[0][8].split('T')
+            let key = [date[0], date[1], reservation["centre"], reservation["salle"]].join(" ")
+            this._reservations[key] = reservation
+    
+            this.ActivePage = eActivePage.Accueil
+    
+    })
+    
+    
+    
+      }
+    }
+        updateNewResInfoNom(value: string) {
+            this._newResInfo.nom = value
+          }
+          updateNewResInfoParticipants(value: number) {
+            this._newResInfo.nb_participants = value
+          }
+          updateNewResInfoNumeroTelephone(value: string) {
+            this._newResInfo.num_tel = value
+          }
+          updateNewResInfoCourriel(value: string) {
+            this._newResInfo.courriel = value
+          }
+          updateNewResInfoPaye(value: boolean) {
+            this._newResInfo.paye = value
+          }
+        
+        
+      supprimerReservation() {
+        let formdata = new FormData()
+        formdata.append("token", this.token)
+        formdata.append("id", this.selected_reservation["id"].toString())
+        fetch('http://127.0.0.1:5000/supprimer/reservation',
+        {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response == "Suppression réussi"){
+                let key = this.convertDate() + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
+                delete this._reservations[key]
+                this.ActivePage = eActivePage.Accueil
+                this.selected_reservation = undefined
+            }
+            else this.error_message = "La suppression a échouée"
+    
+    })
+      }
+    
+      convertDate(){
+        
+        let year = accueilStore.date.toLocaleString("default", { year: "numeric" });
+        let month = accueilStore.date.toLocaleString("default", { month: "2-digit" });
+        let day = accueilStore.date.toLocaleString("default", { day: "2-digit" });
+        let hour = this.selected_horaire.hrDebut.split("h")
+        if (hour[0].length < 2)
+        hour[0] = "0" + hour[0]
+        if (hour[1].length < 2)
+        hour[1] = "00"
+        hour[2] = "00"
+    
+        let date = year + "-" + month + "-" + day + " " + hour[0] + ":" + hour[1] + ":" + hour[2];
+    
+        return date
+      }
+
+
+      modifierReservation() {
+       
+        let valide1 = (this._modResInfo.nom.length > 0 && this._modResInfo.courriel.length > 0 && this._modResInfo.num_tel.length > 0)
+        if (valide1){
+    
+            let salle = this._compagnie.getSalleByName(this.selected_horaire.nomSalle)
+            let date = this.convertDate()
+    
+            let formdata = new FormData()
+            formdata.append("token", this.token)
+            formdata.append("nomClient", this._modResInfo.nom)
+            formdata.append("numTel", this._modResInfo.num_tel)
+            formdata.append("statut", this._modResInfo.paye ? "1" : "0")
+            formdata.append("salle", salle.id.toString())
+            formdata.append("nbPersonne", this._modResInfo.nb_participants.toString())
+            formdata.append("courriel", this._modResInfo.courriel)
+            formdata.append("prix_total", (this._modResInfo.nb_participants * salle.prix).toString())
+            formdata.append("date", date)
+            formdata.append("id", this.selected_reservation["id"].toString())
+    
+            
+            
+            fetch('http://127.0.0.1:5000/modifier/reservation',
+            {
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response == "Modification réussi"){
+                    
+                    this.selected_reservation["nom_client"] = this._modResInfo.nom
+                    this.selected_reservation["num_tel"] = this._modResInfo.num_tel
+                    this.selected_reservation["statut"] = this._modResInfo.paye
+                    this.selected_reservation["participant"] = this._modResInfo.nb_participants
+                    this.selected_reservation["prix_total"] = this._modResInfo.nb_participants * salle.prix
+    
+    
+    
+                    let key = date + " " + this.selected_reservation["centre"] + " " + this.selected_reservation["salle"]
+                    this.reservations[key] = this.selected_reservation
+                    this.ActivePage = eActivePage.Accueil
+                    this._modResInfo.reset()
+                }
+                else this.error_message = "Erreur coté serveur"
+    
+    })
+        }
+        else this.error_message = "Les informations sont erronnées"
+        
+      }
 
     public get reservations() {
         return this._reservations;
@@ -806,6 +923,10 @@ class AccueilStore {
     }
 
     ajouterSalle(){
+        if (this.algo){
+            this.algoGenererSalle()
+        }
+        else{
         let valide = (this._newSalleInfos.nom.length > 0 && this._newSalleInfos.prix != null &&
             this._newSalleInfos.nbJrMax != null )
         let salles = this._compagnie.getCurrentCenterSalles()
@@ -844,6 +965,7 @@ class AccueilStore {
               
         }
         else this.error_message = "Erreur dans les informations données"
+    }
     }
 
     modifierSalle(){

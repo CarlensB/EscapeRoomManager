@@ -61,6 +61,7 @@ class Serveur():
         if request.method == 'POST':
             info = request.form.to_dict()
             result = Serveur.__controleur.creation_horaire(info=info)
+            print(result)
             return json.dumps(result)
         else:
             return json.dumps(Serveur.__GET_MSG)

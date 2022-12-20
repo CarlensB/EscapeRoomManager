@@ -427,6 +427,7 @@ class GestionSysteme:
         buffer: float -> Le temps à planifier entre les départs
         '''
         info = info['info']
+        print(info)
 
         for key in info.keys():
             if key != 'nb_room':
