@@ -29,11 +29,6 @@ def main():
     Serveur.definir_controleur(app.define_app_controleur())
     Serveur.demarrer_serveur()
     
-    #Test
-    # gs = app.define_app_controleur()
-    # gs.valider_connexion({'courriel':"Bonjour@courriel.com", 'mdp':"testAndroid18!@"})
-
-    
     
 if __name__=='__main__':
     quit(main())
