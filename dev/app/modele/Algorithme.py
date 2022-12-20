@@ -8,6 +8,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class AlgoContext():
     '''
     Une classe de context pour des tests et s'organiser avec le design pattern
@@ -32,6 +33,8 @@ class AlgoContext():
         
         h_end is receive here as the last start of the activity.
         '''
+        self.__strategy_naive.schedule.clear()
+        self.__strategy_bc.schedule.clear()
         
         keys = set(kwargs.keys())
         if keys == set():
