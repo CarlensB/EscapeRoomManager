@@ -413,6 +413,12 @@ button:focus {
     align-self: center;
 }
 
+.graphTitle{
+    color: white;
+    text-align: center;
+    margin: 0.5% auto;
+}
+
 .topGraph{
     display: flex;
     flex-direction: row;
@@ -457,4 +463,8 @@ button:focus {
     height: 10%;
     display: flex;
     align-self: center;
+}
+
+.bottom{
+    margin: auto 1%;
 }
