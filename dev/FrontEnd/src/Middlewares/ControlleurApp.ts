@@ -956,6 +956,7 @@ class AccueilStore {
                 this._newSalleInfos.description = this._infoAlgoDesc[index.toString()]
                 }
                 this._compagnie.ajouterSalle(this._newSalleInfos, listeHoraire)
+                this.ActivePage = eActivePage.Accueil
             })
        
     }
