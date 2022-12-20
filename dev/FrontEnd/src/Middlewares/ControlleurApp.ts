@@ -942,6 +942,7 @@ class AccueilStore {
         for (let i =0; i < listeHoraire.length; i++){
             formData.append("horaire"+[i], listeHoraire[i])
         }
+        console.log("ici", listeHoraire)
 
        
             fetch('http://127.0.0.1:5000/ajouter/horaire', {
@@ -950,9 +951,10 @@ class AccueilStore {
             })
             .then(response => response.json())
             .then(response => {
-                if (id != null)
+                if (index != null){
                 this._newSalleInfos.nom = this._infoAlgoNom[index.toString()]
                 this._newSalleInfos.description = this._infoAlgoDesc[index.toString()]
+                }
                 this._compagnie.ajouterSalle(this._newSalleInfos, listeHoraire)
             })
        

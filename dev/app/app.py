@@ -15,7 +15,7 @@ class App:
     def __init__(self) -> None:
         dependance = ["bcrypt", "mysql-connector-python"]
         path = [r"C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts\pip.exe", r"C:\Python310\Scripts\pip.exe"]
-        self.__dependancy_install = DependancyInstall(*dependance, path=path[0])
+        self.__dependancy_install = DependancyInstall(*dependance, path=path[1])
         
     def define_app_controleur(self):
         self.__dependancy_install.install_stuff()
