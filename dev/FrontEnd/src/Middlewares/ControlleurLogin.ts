@@ -132,10 +132,7 @@ class LoginStore {
     }
 
     CreateAccount(){
-        console.log(this.createAccountInfos.username)
-        console.log(this.createAccountInfos.companyName)
-        console.log(this.createAccountInfos.password)
-        console.log(this.createAccountInfos.repeatpassword)
+        
 
         this.loginpage.CreateAcountAction(this.createAccountInfos)
     }
