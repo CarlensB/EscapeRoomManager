@@ -164,7 +164,7 @@ class AccueilStore {
     }
     
     algoGenererSalle(){
-
+        this.error_message = "Chargement..."
         let formData = new FormData();
             // formData.append("token", this.token)
             let hr = this._newSalleInfos.hrOuv.split(":")
@@ -184,7 +184,6 @@ class AccueilStore {
             formData.append("interval", hr_intervalle_min.toString())
             formData.append("buffer", this.buffer.toString())
             formData.append("nb_room", this.algoNb.toString())
-            console.log(this.algoNb.toString())
 
             
             
@@ -195,13 +194,45 @@ class AccueilStore {
                 })
           .then(response => response.json())
           .then(response => {
-              console.log(response)
+              
+            
+
             for (let i = 0; i< response.length; i++){
+                let horaire_algo = this.HoraireAlgoConverter(response[i][0], i, hr_duree_min)
                 
-                let horaire_algo = this.HoraireAlgoConverter(response[i], i, hr_duree_min)
+                let valide = (this.infoAlgoDesc[i.toString()].length > 0 && this.infoAlgoDesc[i.toString()].length > 0)
+                if (valide)
+        {
+            
+            let formData = new FormData();
+            formData.append("token", this.token)
+            formData.append("nom", this.infoAlgoNom[i.toString()]);
+            formData.append("description", this.infoAlgoDesc[i.toString()]);
+            formData.append("centre", this._compagnie.getCurrentCentreID().toString());
+            formData.append("nb_max_joueur", this._newSalleInfos.nbJrMax.toString());
+            formData.append("prix", this._newSalleInfos.prix.toString());
+            formData.append("prive", this._newSalleInfos.publique ? (1).toString() : (0).toString());
+
+            
+                fetch('http://127.0.0.1:5000/ajouter/salle',
+                {
+                    method: 'POST',
+                    body: formData
+                })
+          .then(response => response.json())
+          .then(response => {
+            this._newSalleInfos.id = response[0][0]     
+            this.ajouterHoraire(horaire_algo, response[0][0], i)
+                 
+            
+          })
+
                 
             }
-                 
+            
+        }
+        
+        setTimeout(() =>{ accueilStore.ActivePage = eActivePage.Accueil }, 2000)
             
           })
     }
@@ -212,24 +243,23 @@ class AccueilStore {
             let hr = horaire[i].toString()
             if (hr.includes(".")){
                hr = hr.split(".")
-               hr = parseInt(hr[0]) * 60 + parseInt(hr[1]) / 100 * 60 
+               hr = parseInt(hr[0]) * 60 + parseInt(hr[1].slice(0, 2)) / 100 * 60 
             }
             else
             hr = parseInt(hr) * 60
+
+            
             
             let nv_horaire = []
             nv_horaire[0] = this.infoAlgoNom[index.toString()]
-            nv_horaire[1] = Math.floor(hr / 60).toString() + ":" + (hr%60).toString()
+            nv_horaire[1] = Math.floor(hr / 60).toString() + ":" + Math.floor(hr%60).toString()
             let horaire_fin = hr + hr_duree_min
-            nv_horaire[2] = Math.floor(horaire_fin / 60).toString() + ":" + (horaire_fin%60).toString()
+            nv_horaire[2] = Math.floor(horaire_fin / 60).toString() + ":" + Math.floor(horaire_fin%60).toString()
+            
             liste.push(nv_horaire)
+        }
 
-            return liste
-
-
-
-    }
-
+        return liste
 }
 
     ajouterReservation() {
@@ -573,9 +603,7 @@ class AccueilStore {
 
             hr = intervalle.split(":")
             let intervalle_min = parseInt(hr[0])*60 + parseInt(hr[1])
-            // let temps_total = hr_fin_min - hr_debut_min
-            // let nombre_dhoraires = Math.floor(temps_total / intervalle_min)
-            // console.log("il y aura " + nombre_dhoraires.toString() + " slots d'horaires")
+
 
             let array_horaires = []
 
@@ -625,6 +653,13 @@ class AccueilStore {
         this._modSalleInfos.reset()
         this._newSalleInfos.reset()
         this._newCentreInfos.reset()
+        for (let k in this._infoAlgoDesc) {
+            delete this._infoAlgoDesc[k]
+        }
+
+        for (let l in this._infoAlgoNom) {
+            delete this._infoAlgoDesc[l]
+        }
     }
 
     updateModResInfoNom(value: string) {
@@ -901,10 +936,10 @@ class AccueilStore {
         this._modSalleInfos.description = description
     }
     
-    ajouterHoraire (listeHoraire){
+    ajouterHoraire (listeHoraire, id=null, index=null){
         let formData = new FormData()
         formData.append("token", this.token)
-        formData.append("id_salle", this._newSalleInfos.id.toString())
+        id == null ? formData.append("id_salle", this._newSalleInfos.id.toString()) : formData.append("id_salle", id)
         for (let i =0; i < listeHoraire.length; i++){
             formData.append("horaire"+[i], listeHoraire[i])
         }
@@ -916,8 +951,12 @@ class AccueilStore {
             })
             .then(response => response.json())
             .then(response => {
+                if (id != null)
+                this._newSalleInfos.nom = this._infoAlgoNom[index.toString()]
+                this._newSalleInfos.description = this._infoAlgoDesc[index.toString()]
                 this._compagnie.ajouterSalle(this._newSalleInfos, listeHoraire)
-                this.ActivePage = eActivePage.CreateCentre
+
+                
             })
        
     }
@@ -940,7 +979,7 @@ class AccueilStore {
             let formData = new FormData();
             formData.append("token", this.token)
             formData.append("nom", this._newSalleInfos.nom);
-            formData.append("adresse", this._newSalleInfos.description);
+            formData.append("description", this._newSalleInfos.description);
             formData.append("centre", this._compagnie.getCurrentCentreID().toString());
             formData.append("nb_max_joueur", this._newSalleInfos.nbJrMax.toString());
             formData.append("prix", this._newSalleInfos.prix.toString());
@@ -958,7 +997,7 @@ class AccueilStore {
             this._newSalleInfos.id = response[0][0]         
             let list_horaire = this.calculer_qte_horaires_dans_salle(this._newSalleInfos.hrOuv, this._newSalleInfos.hrFer,
                  this._newSalleInfos.duree, this._newSalleInfos.nom, this._newSalleInfos.intervalle)
-                 this.ajouterHoraire(list_horaire)
+                 this.ajouterHoraire(list_horaire, response[0][0] )
                  
             
           })
