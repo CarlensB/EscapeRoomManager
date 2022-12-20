@@ -111,14 +111,14 @@ GRANT ALl on erm_db.* TO 'erm_user'@'localhost';
 		FOREIGN KEY fk_s_centre(centre) REFERENCES centres(id) ON DELETE CASCADE
 	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-	-- CREATE TABLE hor_salle(
-	-- 	id_horaire	INT	 NOT NULL,
-	-- 	id_salle	INT	 NOT NULL,
+	CREATE TABLE hor_salle(
+		id_horaire	INT	 NOT NULL,
+		id_salle	INT	 NOT NULL,
 		
-	-- 	PRIMARY KEY(id_horaire, id_salle),
-	-- 	FOREIGN KEY fk_lien_horaire(id_horaire) REFERENCES horaires(id) ON DELETE CASCADE,
-	-- 	FOREIGN KEY fk_lien_salle(id_salle) REFERENCES salles(id) ON DELETE CASCADE
-	-- )ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
+		PRIMARY KEY(id_horaire, id_salle),
+		FOREIGN KEY fk_lien_horaire(id_horaire) REFERENCES horaires(id) ON DELETE CASCADE,
+		FOREIGN KEY fk_lien_salle(id_salle) REFERENCES salles(id) ON DELETE CASCADE
+	)ENGINE = innoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 	CREATE TABLE employes(
 		id              INT         NOT NULL AUTO_INCREMENT,
